@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ThriveHQ — Login</title>
+  <title>ThriveHQ — Sign In</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#003366">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,80 +12,288 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230D9488' width='100' height='100'/><text x='50' y='65' font-size='60' fill='white' text-anchor='middle' font-weight='bold'>T</text></svg>">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(135deg, #003366 0%, #0D9488 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-    .login-container { background: white; border-radius: 12px; padding: 40px; max-width: 400px; width: 100%; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
-    .logo { text-align: center; margin-bottom: 32px; }
-    .logo h1 { font-size: 28px; color: #003366; font-weight: 800; }
-    .form-group { margin-bottom: 20px; }
-    label { display: block; font-size: 14px; font-weight: 600; color: #212529; margin-bottom: 8px; }
-    input { width: 100%; padding: 12px; border: 1px solid #DEE2E6; border-radius: 4px; font-size: 14px; font-family: inherit; transition: border-color 0.2s; }
-    input:focus { outline: none; border-color: #0D9488; box-shadow: 0 0 0 3px rgba(13,148,136,0.1); }
-    button { width: 100%; padding: 12px; background: #0D9488; color: white; border: none; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-    button:hover { background: #0F766E; }
-    button:disabled { background: #6C757D; cursor: not-allowed; }
-    .message { margin-top: 16px; padding: 12px; border-radius: 4px; font-size: 14px; display: none; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #003366 0%, #0D9488 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .logo h1 {
+      font-size: 32px;
+      color: #003366;
+      font-weight: 800;
+    }
+
+    .logo p {
+      font-size: 14px;
+      color: #6C757D;
+      margin-top: 4px;
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #212529;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #DEE2E6;
+      border-radius: 6px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      color: #212529;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #0D9488;
+      box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #6C757D;
+      font-size: 13px;
+      padding: 4px;
+    }
+
+    .toggle-password:hover { color: #0D9488; }
+
+    .forgot-link {
+      display: block;
+      text-align: right;
+      font-size: 13px;
+      color: #0D9488;
+      margin-top: 6px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      padding: 0;
+    }
+
+    .forgot-link:hover { text-decoration: underline; color: #0F766E; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      background: #0D9488;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+
+    .submit-btn:hover { background: #0F766E; }
+    .submit-btn:disabled { background: #6C757D; cursor: not-allowed; }
+
+    .message {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      display: none;
+    }
+
     .message.success { background: #D4EDDA; color: #155724; display: block; }
-    .message.error { background: #F8D7DA; color: #721C24; display: block; }
-    .info { background: #EBF5FB; border-left: 4px solid #0D9488; padding: 12px; border-radius: 4px; font-size: 13px; color: #003366; margin-top: 20px; }
+    .message.error   { background: #F8D7DA; color: #721C24; display: block; }
+    .message.info    { background: #EBF5FB; color: #003366; display: block; }
   </style>
 </head>
 <body>
   <div class="login-container">
-    <div class="logo"><h1>ThriveHQ</h1></div>
-    <form id="loginForm">
+    <div class="logo">
+      <h1>ThriveHQ</h1>
+      <p>ADHD-friendly coaching community</p>
+    </div>
+
+    <!-- Sign In Form -->
+    <form id="signInForm">
       <div class="form-group">
         <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" required placeholder="your@email.com">
+        <input type="email" id="email" name="email" required placeholder="your@email.com" autocomplete="email">
       </div>
-      <button type="submit" id="submitBtn">Send Magic Link</button>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="password" name="password" required placeholder="Enter your password" autocomplete="current-password">
+          <button type="button" class="toggle-password" onclick="togglePassword()">Show</button>
+        </div>
+        <button type="button" class="forgot-link" onclick="showForgotPassword()">Forgot password?</button>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">Sign In</button>
       <div id="message" class="message"></div>
-      <div class="info">We'll send you a magic link to sign in. No password needed.</div>
+    </form>
+
+    <!-- Forgot Password Form (hidden by default) -->
+    <form id="forgotForm" style="display:none;">
+      <div class="form-group">
+        <label for="resetEmail">Email Address</label>
+        <input type="email" id="resetEmail" name="resetEmail" required placeholder="your@email.com" autocomplete="email">
+      </div>
+      <button type="submit" class="submit-btn" id="resetBtn">Send Reset Link</button>
+      <button type="button" class="forgot-link" style="text-align:center; width:100%; margin-top:12px;" onclick="showSignIn()">&#8592; Back to Sign In</button>
+      <div id="resetMessage" class="message"></div>
     </form>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/supabase.js"></script>
-  <script src="js/auth.js"></script>
   <script>
-    const form = document.getElementById('loginForm');
-    const emailInput = document.getElementById('email');
-    const submitBtn = document.getElementById('submitBtn');
-    const message = document.getElementById('message');
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending...';
-      try {
-        await signInWithMagicLink(emailInput.value);
-        message.textContent = 'Check your email for the magic link!';
-        message.className = 'message success';
-        form.reset();
-      } catch (error) {
-        message.textContent = error.message || 'Error sending link';
-        message.className = 'message error';
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Magic Link';
+    function togglePassword() {
+      const input = document.getElementById('password');
+      const btn = document.querySelector('.toggle-password');
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = 'Hide';
+      } else {
+        input.type = 'password';
+        btn.textContent = 'Show';
       }
+    }
+
+    function showForgotPassword() {
+      document.getElementById('signInForm').style.display = 'none';
+      document.getElementById('forgotForm').style.display = 'block';
+    }
+
+    function showSignIn() {
+      document.getElementById('forgotForm').style.display = 'none';
+      document.getElementById('signInForm').style.display = 'block';
+    }
+
+    // Sign In
+    document.getElementById('signInForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const msg = document.getElementById('message');
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+      msg.className = 'message';
+      msg.style.display = 'none';
+
+      try {
+        const sb = window.getSupabase();
+        if (!sb) throw new Error('Service unavailable. Please refresh.');
+
+        const { data, error } = await sb.auth.signInWithPassword({
+          email: document.getElementById('email').value.trim(),
+          password: document.getElementById('password').value
+        });
+
+        if (error) throw error;
+
+        // Check membership
+        const { data: userData } = await sb
+          .from('users')
+          .select('membership_status')
+          .eq('id', data.user.id)
+          .single();
+
+        if (userData?.membership_status !== 'active') {
+          throw new Error('Your membership has expired. Contact support@coach4u.com.au to renew.');
+        }
+
+        window.location.href = 'dashboard.html';
+      } catch (error) {
+        msg.textContent = error.message || 'Invalid email or password.';
+        msg.className = 'message error';
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+      }
+    });
+
+    // Forgot Password
+    document.getElementById('forgotForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('resetBtn');
+      const msg = document.getElementById('resetMessage');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      try {
+        const sb = window.getSupabase();
+        if (!sb) throw new Error('Service unavailable. Please refresh.');
+
+        const { error } = await sb.auth.resetPasswordForEmail(
+          document.getElementById('resetEmail').value.trim(),
+          { redirectTo: window.location.origin + '/index.html' }
+        );
+
+        if (error) throw error;
+
+        msg.textContent = 'Password reset link sent! Check your email.';
+        msg.className = 'message success';
+      } catch (error) {
+        msg.textContent = error.message || 'Error sending reset link.';
+        msg.className = 'message error';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send Reset Link';
+      }
+    });
+
+    // Redirect if already signed in
+    window.addEventListener('DOMContentLoaded', async () => {
+      const sb = window.getSupabase();
+      if (!sb) return;
+      try {
+        const { data: { user } } = await sb.auth.getUser();
+        if (user) {
+          const { data: ud } = await sb.from('users').select('membership_status').eq('id', user.id).single();
+          if (ud?.membership_status === 'active') window.location.href = 'dashboard.html';
+        }
+      } catch (_) {}
     });
 
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(err => console.log('SW failed:', err));
+      navigator.serviceWorker.register('sw.js').catch(() => {});
     }
-
-    getCurrentUser().then(async user => {
-      if (user) {
-        const sb = window.getSupabase();
-        const { data } = await sb.from('users').select('membership_status').eq('id', user.id).single();
-        if (data?.membership_status === 'active') {
-          window.location.href = 'dashboard.html';
-        } else {
-          message.textContent = 'Your membership has expired. Contact support to renew.';
-          message.className = 'message error';
-          message.style.display = 'block';
-        }
-      }
-    });
   </script>
 </body>
 </html>
