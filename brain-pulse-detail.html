@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThriveHQ — Brain Pulse Detail</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#003366">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <a href="dashboard.html" class="back-link">← Back</a>
+        <h1 class="brand-name">Brain Pulse Detail</h1>
+        <button class="sign-out-btn" onclick="window.signOut()">Sign Out</button>
+      </div>
+    </div>
+  </header>
+  <main class="main-content">
+    <div id="loading" class="loading">Loading...</div>
+    <div id="error" class="error" style="display:none;"></div>
+    <div id="content" style="display:none;">
+      <div class="detail-card" id="detailCard"></div>
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+    window.addEventListener('DOMContentLoaded', async () => {
+      const user = await getCurrentUser();
+      if (!user) { window.location.href = 'index.html'; return; }
+      const sb = window.getSupabase();
+      const { data: ud } = await sb.from('users').select('membership_status').eq('id', user.id).single();
+      if (ud?.membership_status !== 'active') {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('error').textContent = 'Your membership has expired.';
+        return;
+      }
+      const params = new URLSearchParams(window.location.search);
+      const section = params.get('section');
+      if (!section) { window.location.href = 'dashboard.html'; return; }
+      try { await loadPulseDetail(section); } catch(e) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('error').textContent = 'Error loading details.';
+      }
+    });
+  </script>
+</body>
+</html>
