@@ -32,27 +32,11 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     }
 
-    .logo {
-      text-align: center;
-      margin-bottom: 8px;
-    }
+    .logo { text-align: center; margin-bottom: 8px; }
+    .logo h1 { font-size: 32px; color: #003366; font-weight: 800; }
+    .logo p { font-size: 14px; color: #6C757D; margin-top: 4px; margin-bottom: 28px; }
 
-    .logo h1 {
-      font-size: 32px;
-      color: #003366;
-      font-weight: 800;
-    }
-
-    .logo p {
-      font-size: 14px;
-      color: #6C757D;
-      margin-top: 4px;
-      margin-bottom: 28px;
-    }
-
-    .form-group {
-      margin-bottom: 18px;
-    }
+    .form-group { margin-bottom: 18px; }
 
     label {
       display: block;
@@ -79,9 +63,7 @@
       box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
     }
 
-    .password-wrapper {
-      position: relative;
-    }
+    .password-wrapper { position: relative; }
 
     .toggle-password {
       position: absolute;
@@ -103,12 +85,9 @@
       text-align: right;
       font-size: 13px;
       color: #0D9488;
+      text-decoration: none;
       margin-top: 6px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      font-family: inherit;
-      padding: 0;
+      font-weight: 500;
     }
 
     .forgot-link:hover { text-decoration: underline; color: #0F766E; }
@@ -140,7 +119,6 @@
 
     .message.success { background: #D4EDDA; color: #155724; display: block; }
     .message.error   { background: #F8D7DA; color: #721C24; display: block; }
-    .message.info    { background: #EBF5FB; color: #003366; display: block; }
   </style>
 </head>
 <body>
@@ -150,7 +128,6 @@
       <p>ADHD-friendly coaching community</p>
     </div>
 
-    <!-- Sign In Form -->
     <form id="signInForm">
       <div class="form-group">
         <label for="email">Email Address</label>
@@ -163,22 +140,11 @@
           <input type="password" id="password" name="password" required placeholder="Enter your password" autocomplete="current-password">
           <button type="button" class="toggle-password" onclick="togglePassword()">Show</button>
         </div>
-        <button type="button" class="forgot-link" onclick="showForgotPassword()">Forgot password?</button>
+        <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
       </div>
 
       <button type="submit" class="submit-btn" id="submitBtn">Sign In</button>
       <div id="message" class="message"></div>
-    </form>
-
-    <!-- Forgot Password Form (hidden by default) -->
-    <form id="forgotForm" style="display:none;">
-      <div class="form-group">
-        <label for="resetEmail">Email Address</label>
-        <input type="email" id="resetEmail" name="resetEmail" required placeholder="your@email.com" autocomplete="email">
-      </div>
-      <button type="submit" class="submit-btn" id="resetBtn">Send Reset Link</button>
-      <button type="button" class="forgot-link" style="text-align:center; width:100%; margin-top:12px;" onclick="showSignIn()">&#8592; Back to Sign In</button>
-      <div id="resetMessage" class="message"></div>
     </form>
   </div>
 
@@ -197,17 +163,6 @@
       }
     }
 
-    function showForgotPassword() {
-      document.getElementById('signInForm').style.display = 'none';
-      document.getElementById('forgotForm').style.display = 'block';
-    }
-
-    function showSignIn() {
-      document.getElementById('forgotForm').style.display = 'none';
-      document.getElementById('signInForm').style.display = 'block';
-    }
-
-    // Sign In
     document.getElementById('signInForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('submitBtn');
@@ -228,7 +183,6 @@
 
         if (error) throw error;
 
-        // Check membership
         const { data: userData } = await sb
           .from('users')
           .select('membership_status')
@@ -248,37 +202,6 @@
       }
     });
 
-    // Forgot Password
-    document.getElementById('forgotForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('resetBtn');
-      const msg = document.getElementById('resetMessage');
-      btn.disabled = true;
-      btn.textContent = 'Sending...';
-
-      try {
-        const sb = window.getSupabase();
-        if (!sb) throw new Error('Service unavailable. Please refresh.');
-
-        const { error } = await sb.auth.resetPasswordForEmail(
-          document.getElementById('resetEmail').value.trim(),
-          { redirectTo: window.location.origin + '/index.html' }
-        );
-
-        if (error) throw error;
-
-        msg.textContent = 'Password reset link sent! Check your email.';
-        msg.className = 'message success';
-      } catch (error) {
-        msg.textContent = error.message || 'Error sending reset link.';
-        msg.className = 'message error';
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Send Reset Link';
-      }
-    });
-
-    // Redirect if already signed in
     window.addEventListener('DOMContentLoaded', async () => {
       const sb = window.getSupabase();
       if (!sb) return;
