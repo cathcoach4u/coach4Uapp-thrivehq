@@ -12,112 +12,25 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230D9488' width='100' height='100'/><text x='50' y='65' font-size='60' fill='white' text-anchor='middle' font-weight='bold'>T</text></svg>">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #003366 0%, #0D9488 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .login-container {
-      background: white;
-      border-radius: 12px;
-      padding: 40px;
-      max-width: 400px;
-      width: 100%;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-    }
-
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(135deg, #003366 0%, #0D9488 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .login-container { background: white; border-radius: 12px; padding: 40px; max-width: 400px; width: 100%; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
     .logo { text-align: center; margin-bottom: 28px; }
     .logo h1 { font-size: 32px; color: #003366; font-weight: 800; }
-
     .form-group { margin-bottom: 18px; }
-
-    label {
-      display: block;
-      font-size: 14px;
-      font-weight: 600;
-      color: #212529;
-      margin-bottom: 6px;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid #DEE2E6;
-      border-radius: 6px;
-      font-size: 15px;
-      font-family: inherit;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      color: #212529;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: #0D9488;
-      box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
-    }
-
+    label { display: block; font-size: 14px; font-weight: 600; color: #212529; margin-bottom: 6px; }
+    input { width: 100%; padding: 12px 14px; border: 1.5px solid #DEE2E6; border-radius: 6px; font-size: 15px; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s; color: #212529; }
+    input:focus { outline: none; border-color: #0D9488; box-shadow: 0 0 0 3px rgba(13,148,136,0.12); }
     .password-wrapper { position: relative; }
-
-    .toggle-password {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #6C757D;
-      font-size: 13px;
-      padding: 4px;
-    }
-
+    .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #6C757D; font-size: 13px; padding: 4px; }
     .toggle-password:hover { color: #0D9488; }
-
-    .forgot-link {
-      display: block;
-      text-align: right;
-      font-size: 13px;
-      color: #0D9488;
-      text-decoration: none;
-      margin-top: 6px;
-      font-weight: 500;
-    }
-
+    .forgot-link { display: block; text-align: right; font-size: 13px; color: #0D9488; text-decoration: none; margin-top: 6px; font-weight: 500; }
     .forgot-link:hover { text-decoration: underline; color: #0F766E; }
-
-    .submit-btn {
-      width: 100%;
-      padding: 13px;
-      background: #0D9488;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-      margin-top: 8px;
-    }
-
+    .submit-btn { width: 100%; padding: 13px; background: #0D9488; color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 8px; }
     .submit-btn:hover { background: #0F766E; }
     .submit-btn:disabled { background: #6C757D; cursor: not-allowed; }
-
-    .message {
-      margin-top: 16px;
-      padding: 12px 14px;
-      border-radius: 6px;
-      font-size: 14px;
-      display: none;
-    }
-
-    .message.success { background: #D4EDDA; color: #155724; display: block; }
-    .message.error   { background: #F8D7DA; color: #721C24; display: block; }
+    .message { margin-top: 16px; padding: 12px 14px; border-radius: 6px; font-size: 14px; display: none; }
+    .message.success { background: #D4EDDA; color: #155724; }
+    .message.error { background: #F8D7DA; color: #721C24; }
   </style>
 </head>
 <body>
@@ -129,56 +42,60 @@
     <form id="signInForm">
       <div class="form-group">
         <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" required placeholder="your@email.com" autocomplete="email">
+        <input type="email" id="email" required placeholder="your@email.com" autocomplete="email">
       </div>
-
       <div class="form-group">
         <label for="password">Password</label>
         <div class="password-wrapper">
-          <input type="password" id="password" name="password" required placeholder="Enter your password" autocomplete="current-password">
+          <input type="password" id="password" required placeholder="Enter your password" autocomplete="current-password">
           <button type="button" class="toggle-password" onclick="togglePassword()">Show</button>
         </div>
         <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
       </div>
-
       <button type="submit" class="submit-btn" id="submitBtn">Sign In</button>
       <div id="message" class="message"></div>
     </form>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script src="js/supabase.js"></script>
   <script>
+    const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
+    let _sb = null;
+
+    function getSupabase() {
+      if (!_sb) _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      return _sb;
+    }
+
+    function showMessage(text, type) {
+      const msg = document.getElementById('message');
+      msg.textContent = text;
+      msg.className = 'message ' + type;
+      msg.style.display = 'block';
+    }
+
     function togglePassword() {
       const input = document.getElementById('password');
       const btn = document.querySelector('.toggle-password');
-      if (input.type === 'password') {
-        input.type = 'text';
-        btn.textContent = 'Hide';
-      } else {
-        input.type = 'password';
-        btn.textContent = 'Show';
-      }
+      if (input.type === 'password') { input.type = 'text'; btn.textContent = 'Hide'; }
+      else { input.type = 'password'; btn.textContent = 'Show'; }
     }
 
     document.getElementById('signInForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('submitBtn');
       const msg = document.getElementById('message');
+      msg.style.display = 'none';
       btn.disabled = true;
       btn.textContent = 'Signing in...';
-      msg.className = 'message';
-      msg.style.display = 'none';
 
       try {
-        const sb = window.getSupabase();
-        if (!sb) throw new Error('Service unavailable. Please refresh.');
-
+        const sb = getSupabase();
         const { data, error } = await sb.auth.signInWithPassword({
           email: document.getElementById('email').value.trim(),
           password: document.getElementById('password').value
         });
-
         if (error) throw error;
 
         const { data: userData } = await sb
@@ -192,18 +109,17 @@
         }
 
         window.location.href = 'dashboard.html';
-      } catch (error) {
-        msg.textContent = error.message || 'Invalid email or password.';
-        msg.className = 'message error';
+      } catch (err) {
+        showMessage(err.message || 'Invalid email or password.', 'error');
         btn.disabled = false;
         btn.textContent = 'Sign In';
       }
     });
 
+    // Redirect if already signed in
     window.addEventListener('DOMContentLoaded', async () => {
-      const sb = window.getSupabase();
-      if (!sb) return;
       try {
+        const sb = getSupabase();
         const { data: { user } } = await sb.auth.getUser();
         if (user) {
           const { data: ud } = await sb.from('users').select('membership_status').eq('id', user.id).single();
@@ -212,9 +128,7 @@
       } catch (_) {}
     });
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
-    }
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
   </script>
 </body>
 </html>
