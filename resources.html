@@ -14,7 +14,7 @@
       <div class="brand">
         <a href="dashboard.html" class="back-link">← Back</a>
         <h1 class="brand-name">Resources</h1>
-        <button class="sign-out-btn" onclick="window.signOut()">Sign Out</button>
+        <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
       </div>
     </div>
   </header>
@@ -27,26 +27,44 @@
     </div>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script src="js/supabase.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/app.js"></script>
   <script>
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+    const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    function showError(msg) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error').style.display = 'block';
+      document.getElementById('error').textContent = msg;
+    }
+
+    async function signOut() { await sb.auth.signOut(); window.location.href = 'index.html'; }
+
     window.addEventListener('DOMContentLoaded', async () => {
-      const user = await getCurrentUser();
-      if (!user) { window.location.href = 'index.html'; return; }
-      const sb = window.getSupabase();
-      const { data: ud } = await sb.from('users').select('membership_status').eq('id', user.id).single();
-      if (ud?.membership_status !== 'active') {
+      try {
+        const { data: { user }, error: authErr } = await sb.auth.getUser();
+        if (authErr || !user) { window.location.href = 'index.html'; return; }
+
+        const { data: ud } = await sb.from('users').select('membership_status').eq('id', user.id).single();
+        if (ud?.membership_status !== 'active') { showError('Your membership has expired.'); return; }
+
+        const { data: resources } = await sb.from('resources').select('*').order('created_at', { ascending: false });
+
         document.getElementById('loading').style.display = 'none';
-        document.getElementById('error').style.display = 'block';
-        document.getElementById('error').textContent = 'Your membership has expired.';
-        return;
-      }
-      try { await loadResources(); } catch(e) {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('error').style.display = 'block';
-        document.getElementById('error').textContent = 'Error loading resources.';
+        document.getElementById('content').style.display = 'block';
+
+        if (!resources || resources.length === 0) {
+          document.getElementById('emptyState').style.display = 'block';
+        } else {
+          document.getElementById('resourcesList').innerHTML = resources.map(r => `
+            <a href="${r.url}" target="_blank" class="resource-item">
+              <div class="resource-title">${r.title}</div>
+              <div class="resource-description">${r.description || 'ADHD resource'}</div>
+              <div class="resource-link">View Resource →</div>
+            </a>`).join('');
+        }
+      } catch (err) {
+        showError('Error loading resources. Please refresh.');
       }
     });
   </script>
