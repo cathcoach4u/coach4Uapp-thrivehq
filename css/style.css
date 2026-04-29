@@ -39,9 +39,8 @@ html { font-size: 16px; scroll-behavior: smooth; }
 
 /*
   IMPORTANT: Do NOT add display:flex or flex-direction:column to body.
-  Auth pages (login, forgot-password, reset-password) use their own
-  body layout to centre the card. Adding flex-direction:column here
-  will break those pages.
+  Auth pages use their own body layout. Adding flex-direction:column
+  here will break the login page centering.
 */
 body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
 
@@ -74,6 +73,90 @@ img { max-width: 100%; display: block; }
   box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
 }
 .form-group textarea { min-height: 100px; resize: vertical; }
+
+/* ----- Login Page (shared pattern) ----- */
+.login-page {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  border-radius: 16px;
+  padding: 48px 40px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login-logo h1 {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.5px;
+}
+
+.login-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--primary);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.login-subtitle {
+  font-size: 15px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 8px;
+  font-family: var(--font);
+}
+
+.login-btn:hover { background: #002244; }
+.login-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.login-forgot {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.login-forgot:hover { color: var(--accent-dark); text-decoration: underline; }
+
+.login-message { margin-top: 16px; padding: 12px 14px; border-radius: var(--radius); font-size: 14px; display: none; }
+.login-message.success { background: #D4EDDA; color: #155724; }
+.login-message.error   { background: #F8D7DA; color: #721C24; }
+
+.password-wrapper { position: relative; }
+.toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 13px; padding: 4px; font-family: var(--font); }
+.toggle-password:hover { color: var(--accent); }
 
 /* ============================================
    ThriveHQ App-Specific Styles
@@ -178,6 +261,7 @@ img { max-width: 100%; display: block; }
   .section-title { font-size: 18px; }
   .detail-card { padding: 20px; }
   .pulse-grid { grid-template-columns: 1fr; }
+  .login-card { padding: 36px 24px; }
 }
 
 @media (max-width: 390px) {
