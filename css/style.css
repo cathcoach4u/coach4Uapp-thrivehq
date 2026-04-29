@@ -7,8 +7,8 @@
 /* ----- CSS Variables (shared design tokens) ----- */
 :root {
   --primary:       #1B3664;
-  --accent:        #0D9488;
-  --accent-dark:   #0F766E;
+  --accent:        #5684C4;
+  --accent-dark:   #4A73B0;
 
   /* Pulse pillars */
   --capacity:      #0D9488;
@@ -70,7 +70,7 @@ img { max-width: 100%; display: block; }
 .form-group textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
+  box-shadow: 0 0 0 3px rgba(86,132,196,0.12);
 }
 .form-group textarea { min-height: 100px; resize: vertical; }
 
