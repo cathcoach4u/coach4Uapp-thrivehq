@@ -11,11 +11,11 @@
 <body>
   <header class="site-header">
     <div class="header-inner">
-      <div class="brand">
-        <a href="dashboard.html" class="back-link">← Back</a>
-        <h1 class="brand-name">Brain Pulse Detail</h1>
-        <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
+      <div class="header-left">
+        <a href="dashboard.html" class="header-back">← Back</a>
+        <span class="header-title">Brain Pulse Detail</span>
       </div>
+      <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
     </div>
   </header>
   <main class="main-content">
@@ -35,7 +35,7 @@
       capacity:  { name: 'Capacity',  icon: 'C', details: 'How calm you feel, how quickly you recover, and how much energy you have.', focus: ['Notice when your tank is running low and refill before you crash.', 'Use your regulation tools (breathing, movement, connection) early, not only in crisis.', 'Honour the recovery you need — rest is part of the rhythm, not a reward.'] },
       wellbeing: { name: 'Wellbeing', icon: 'W', details: 'Your sense of purpose, connection, security, health, and belonging.', focus: ['Protect one thing each week that gives your life meaning.', 'Strengthen one relationship that supports you most.', 'Attend to one pillar at a time (purpose, social, financial, physical, community).'] },
       strengths: { name: 'Strengths', icon: 'S', details: 'Your confidence in decisions, self-compassion, and ability to reframe setbacks.', focus: ['Catch the critical inner voice earlier and soften it.', 'Name one thing you did well this week, even if it feels small.', 'Accept how you are built rather than fighting it.'] },
-      execution: { name: 'Execution', icon: 'E', details: 'Starting, finishing, pausing, prioritizing, and remembering.', focus: ['Start the one task you keep avoiding before the day\'s energy drops.', 'Use a visible cue to bring you back when you drift off-track.', 'Pair a hard task with a small anchor to make starting easier.'] }
+      execution: { name: 'Execution', icon: 'E', details: 'Starting, finishing, pausing, prioritizing, and remembering.', focus: ["Start the one task you keep avoiding before the day's energy drops.", 'Use a visible cue to bring you back when you drift off-track.', 'Pair a hard task with a small anchor to make starting easier.'] }
     };
 
     function showError(msg) {
