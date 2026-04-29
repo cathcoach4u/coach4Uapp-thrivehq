@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&family=Montserrat:wght@400&display=swap');
+
 /* ============================================
    ThriveHQ — css/style.css
    Base: coach4u-shared design system
@@ -25,8 +27,8 @@
   --text-light:    #ADB5BD;
 
   /* Typography */
-  --font:          'Inter', system-ui, -apple-system, sans-serif;
-  --font-heading:  'Montserrat', 'Inter', system-ui, sans-serif;
+  --font:          'Montserrat', Aptos, Calibri, sans-serif;
+  --font-heading:  'Inter', Aptos, Calibri, sans-serif;
   --radius:        8px;
   --radius-lg:     12px;
   --shadow-sm:     0 1px 3px rgba(0,0,0,0.08);
