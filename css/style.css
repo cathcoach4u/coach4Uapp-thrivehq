@@ -36,7 +36,15 @@
 /* ----- Reset & Base ----- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; }
-body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+
+/*
+  IMPORTANT: Do NOT add display:flex or flex-direction:column to body.
+  Auth pages (login, forgot-password, reset-password) use their own
+  body layout to centre the card. Adding flex-direction:column here
+  will break those pages.
+*/
+body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+
 a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
 a:hover { color: var(--accent-dark); text-decoration: underline; }
 button { font-family: inherit; cursor: pointer; border: none; }
@@ -82,7 +90,7 @@ img { max-width: 100%; display: block; }
 .sign-out-btn:hover { background: rgba(255,255,255,0.1); color: white; }
 
 /* ----- Layout ----- */
-.main-content { flex: 1; max-width: 1200px; margin: 0 auto; padding: 28px 24px; width: 100%; }
+.main-content { max-width: 1200px; margin: 0 auto; padding: 28px 24px; }
 .loading { text-align: center; padding: 40px 20px; color: var(--text-muted); }
 .error { background: #F8D7DA; border: 1px solid #F5C6CB; color: #721C24; padding: 16px; border-radius: var(--radius); margin-bottom: 24px; }
 
