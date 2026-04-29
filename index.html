@@ -11,32 +11,18 @@
   <meta name="apple-mobile-web-app-title" content="ThriveHQ">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230D9488' width='100' height='100'/><text x='50' y='65' font-size='60' fill='white' text-anchor='middle' font-weight='bold'>T</text></svg>">
   <link rel="stylesheet" href="css/style.css">
-  <style>
-    body { background: linear-gradient(135deg, #003366 0%, #0D9488 100%); display: flex; flex-direction: row; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-    .login-container { background: white; border-radius: 12px; padding: 40px; max-width: 400px; width: 100%; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
-    .logo { text-align: center; margin-bottom: 28px; }
-    .logo h1 { font-size: 32px; color: var(--primary); font-weight: 800; }
-    .password-wrapper { position: relative; }
-    .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 13px; padding: 4px; }
-    .toggle-password:hover { color: var(--accent); }
-    .forgot-link { display: block; text-align: right; font-size: 13px; color: var(--accent); text-decoration: none; margin-top: 6px; font-weight: 500; }
-    .forgot-link:hover { text-decoration: underline; color: var(--accent-dark); }
-    .submit-btn { width: 100%; padding: 13px; background: var(--accent); color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 8px; }
-    .submit-btn:hover { background: var(--accent-dark); }
-    .submit-btn:disabled { opacity: 0.55; cursor: not-allowed; }
-    .message { margin-top: 16px; padding: 12px 14px; border-radius: 6px; font-size: 14px; display: none; }
-    .message.success { background: #D4EDDA; color: #155724; }
-    .message.error { background: #F8D7DA; color: #721C24; }
-  </style>
 </head>
-<body>
-  <div class="login-container">
-    <div class="logo">
+<body class="login-page">
+  <div class="login-card">
+    <div class="login-logo">
       <h1>ThriveHQ</h1>
     </div>
+    <p class="login-title">Welcome back</p>
+    <p class="login-subtitle">Sign in to access your coaching resources.</p>
+
     <form id="signInForm">
       <div class="form-group">
-        <label for="email">Email Address</label>
+        <label for="email">Email</label>
         <input type="email" id="email" required placeholder="your@email.com" autocomplete="email">
       </div>
       <div class="form-group">
@@ -45,11 +31,12 @@
           <input type="password" id="password" required placeholder="Enter your password" autocomplete="current-password">
           <button type="button" class="toggle-password" onclick="togglePassword()">Show</button>
         </div>
-        <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
       </div>
-      <button type="submit" class="submit-btn" id="submitBtn">Sign In</button>
-      <div id="message" class="message"></div>
+      <div id="message" class="login-message"></div>
+      <button type="submit" class="login-btn" id="submitBtn">Sign In</button>
     </form>
+
+    <a href="forgot-password.html" class="login-forgot">Forgot password?</a>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -66,7 +53,7 @@
     function showMessage(text, type) {
       const msg = document.getElementById('message');
       msg.textContent = text;
-      msg.className = 'message ' + type;
+      msg.className = 'login-message ' + type;
       msg.style.display = 'block';
     }
 
@@ -80,10 +67,9 @@
     document.getElementById('signInForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('submitBtn');
-      const msg = document.getElementById('message');
-      msg.style.display = 'none';
       btn.disabled = true;
       btn.textContent = 'Signing in...';
+      document.getElementById('message').style.display = 'none';
 
       try {
         const sb = getSupabase();
