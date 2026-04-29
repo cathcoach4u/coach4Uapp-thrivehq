@@ -17,6 +17,7 @@
       <div class="header-left">
         <span class="header-title">ThriveHQ</span>
       </div>
+      <span class="header-version" id="headerVersion"></span>
       <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
     </div>
   </header>
@@ -133,6 +134,8 @@
     });
 
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+
+    document.getElementById('headerVersion').textContent = 'v1.3 — ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
   </script>
 </body>
 </html>
