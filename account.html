@@ -18,6 +18,7 @@
         <a href="dashboard.html" class="header-back">← Back</a>
         <span class="header-title">Account</span>
       </div>
+      <span class="header-version" id="headerVersion"></span>
       <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
     </div>
   </header>
@@ -84,6 +85,8 @@
         showError('Error loading account. Please refresh.');
       }
     });
+
+    document.getElementById('headerVersion').textContent = 'v1.3 — ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
   </script>
 </body>
 </html>
