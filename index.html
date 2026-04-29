@@ -12,7 +12,7 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230D9488' width='100' height='100'/><text x='50' y='65' font-size='60' fill='white' text-anchor='middle' font-weight='bold'>T</text></svg>">
   <link rel="stylesheet" href="css/style.css">
   <style>
-    body { background: linear-gradient(135deg, #003366 0%, #0D9488 100%); display: flex; align-items: center; justify-content: center; padding: 20px; }
+    body { background: linear-gradient(135deg, #003366 0%, #0D9488 100%); display: flex; flex-direction: row; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
     .login-container { background: white; border-radius: 12px; padding: 40px; max-width: 400px; width: 100%; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
     .logo { text-align: center; margin-bottom: 28px; }
     .logo h1 { font-size: 32px; color: var(--primary); font-weight: 800; }
@@ -34,7 +34,6 @@
     <div class="logo">
       <h1>ThriveHQ</h1>
     </div>
-
     <form id="signInForm">
       <div class="form-group">
         <label for="email">Email Address</label>
@@ -95,10 +94,7 @@
         if (error) throw error;
 
         const { data: userData } = await sb
-          .from('users')
-          .select('membership_status')
-          .eq('id', data.user.id)
-          .single();
+          .from('users').select('membership_status').eq('id', data.user.id).single();
 
         if (userData?.membership_status !== 'active') {
           throw new Error('Your membership has expired. Contact support@coach4u.com.au to renew.');
