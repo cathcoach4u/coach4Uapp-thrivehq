@@ -1,6 +1,6 @@
 /* Service Worker for ThriveHQ PWA */
 
-const CACHE_VERSION = 'thrivehq-v1.0.1';
+const CACHE_VERSION = 'thrivehq-v2';
 const STATIC_CACHE = CACHE_VERSION + '-static';
 const PAGES_CACHE = CACHE_VERSION + '-pages';
 const API_CACHE = CACHE_VERSION + '-api';
@@ -12,11 +12,10 @@ const STATIC_ASSETS = [
   '/brain-pulse-detail.html',
   '/resources.html',
   '/account.html',
+  '/forgot-password.html',
+  '/reset-password.html',
   '/manifest.json',
   '/css/style.css',
-  '/js/app.js',
-  '/js/auth.js',
-  '/js/supabase.js',
   'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js'
 ];
 
