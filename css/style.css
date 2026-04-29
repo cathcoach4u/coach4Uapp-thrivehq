@@ -19,8 +19,8 @@
   /* Neutrals */
   --bg:            #F8F9FA;
   --surface:       #ffffff;
-  --border:        #DEE2E6;
-  --text:          #212529;
+  --border:        #DDDDDD;
+  --text:          #2D2D2D;
   --text-muted:    #6C757D;
   --text-light:    #ADB5BD;
 
@@ -137,7 +137,7 @@ img { max-width: 100%; display: block; }
   font-family: var(--font);
 }
 
-.login-btn:hover { background: #002244; }
+.login-btn:hover { background: #152C52; }
 .login-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .login-forgot {
