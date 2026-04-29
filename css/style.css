@@ -44,6 +44,7 @@ html { font-size: 16px; scroll-behavior: smooth; }
   here will break the login page centering.
 */
 body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+h1, h2, h3, h4 { font-family: var(--font-heading); }
 
 a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
 a:hover { color: var(--accent-dark); text-decoration: underline; }
