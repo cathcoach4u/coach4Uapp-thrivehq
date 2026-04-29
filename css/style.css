@@ -6,9 +6,9 @@
 
 /* ----- CSS Variables (shared design tokens) ----- */
 :root {
-  --primary:       #003366;
-  --accent:        #0D9488;
-  --accent-dark:   #0F766E;
+  --primary:       #1B3664;
+  --accent:        #5684C4;
+  --accent-dark:   #4A73B0;
 
   /* Pulse pillars */
   --capacity:      #0D9488;
@@ -19,13 +19,14 @@
   /* Neutrals */
   --bg:            #F8F9FA;
   --surface:       #ffffff;
-  --border:        #DEE2E6;
-  --text:          #212529;
+  --border:        #DDDDDD;
+  --text:          #2D2D2D;
   --text-muted:    #6C757D;
   --text-light:    #ADB5BD;
 
   /* Typography */
-  --font:          'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font:          'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading:  'Montserrat', 'Inter', system-ui, sans-serif;
   --radius:        8px;
   --radius-lg:     12px;
   --shadow-sm:     0 1px 3px rgba(0,0,0,0.08);
@@ -70,7 +71,7 @@ img { max-width: 100%; display: block; }
 .form-group textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
+  box-shadow: 0 0 0 3px rgba(86,132,196,0.12);
 }
 .form-group textarea { min-height: 100px; resize: vertical; }
 
@@ -136,7 +137,7 @@ img { max-width: 100%; display: block; }
   font-family: var(--font);
 }
 
-.login-btn:hover { background: #002244; }
+.login-btn:hover { background: #152C52; }
 .login-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .login-forgot {
@@ -165,10 +166,10 @@ img { max-width: 100%; display: block; }
 /* ----- Header ----- */
 .site-header { background: var(--primary); color: white; padding: 16px 24px; box-shadow: var(--shadow-md); position: sticky; top: 0; z-index: 100; }
 .header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
-.brand { display: flex; align-items: center; gap: 16px; }
-.brand-name { font-size: 24px; font-weight: 800; color: white; }
-.back-link { color: rgba(255,255,255,0.8); font-size: 14px; transition: color 0.2s; }
-.back-link:hover { color: white; text-decoration: none; }
+.header-left { display: flex; align-items: center; gap: 16px; }
+.header-title { font-size: 18px; font-weight: 700; color: white; }
+.header-back { color: rgba(255,255,255,0.8); font-size: 14px; transition: color 0.2s; }
+.header-back:hover { color: white; text-decoration: none; }
 .sign-out-btn { background: transparent; color: rgba(255,255,255,0.8); padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: 500; transition: background 0.2s; }
 .sign-out-btn:hover { background: rgba(255,255,255,0.1); color: white; }
 
