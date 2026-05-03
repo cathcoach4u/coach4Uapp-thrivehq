@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ThriveHQ — Sign In</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1B3664">
+  <meta name="theme-color" content="#003366">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="ThriveHQ">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%231B3664' width='100' height='100'/><text x='50' y='65' font-size='60' fill='white' text-anchor='middle' font-weight='bold'>T</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23003366' width='100' height='100'/><text x='50' y='65' font-size='60' fill='white' text-anchor='middle' font-weight='bold'>T</text></svg>">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="login-page">
@@ -17,17 +17,17 @@
     <div class="login-logo">
       <h1>ThriveHQ</h1>
     </div>
-    <p class="login-subtitle">Sign in to access your account.</p>
+    <p class="login-subtitle">Sign in to access your coaching resources.</p>
 
     <form id="signInForm">
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" required placeholder="your@email.com" autocomplete="email">
+        <input type="email" id="email" required autocomplete="email">
       </div>
       <div class="form-group">
         <label for="password">Password</label>
         <div class="password-wrapper">
-          <input type="password" id="password" required placeholder="Enter your password" autocomplete="current-password">
+          <input type="password" id="password" required autocomplete="current-password">
           <button type="button" class="toggle-password" onclick="togglePassword()">Show</button>
         </div>
       </div>
@@ -37,6 +37,10 @@
 
     <a href="forgot-password.html" class="login-forgot">Forgot password?</a>
   </div>
+
+  <footer style="position:fixed; bottom:0; width:100%; text-align:center; font-size:14px; color:#999; padding:12px 0;">
+    Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au" style="color:#999;">coach4u.com.au</a>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
@@ -82,7 +86,8 @@
           .from('users').select('membership_status').eq('id', data.user.id).single();
 
         if (userData?.membership_status !== 'active') {
-          throw new Error('Your membership has expired. Contact support@coach4u.com.au to renew.');
+          window.location.href = 'inactive.html';
+          return;
         }
 
         window.location.href = 'dashboard.html';
@@ -100,6 +105,7 @@
         if (user) {
           const { data: ud } = await sb.from('users').select('membership_status').eq('id', user.id).single();
           if (ud?.membership_status === 'active') window.location.href = 'dashboard.html';
+          else if (ud) window.location.href = 'inactive.html';
         }
       } catch (_) {}
     });
