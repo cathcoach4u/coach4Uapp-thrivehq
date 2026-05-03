@@ -1,15 +1,29 @@
 /* ============================================
    ThriveHQ — css/style.css
-   Synced with coach4u-shared design system v1.1
+   Synced with coach4u-shared design system v1.2
    ============================================ */
 
-/* ----- CSS Variables (synced with coach4u-shared) ----- */
-:root {
-  --primary:       #003366;
-  --accent:        #0D9488;
-  --accent-dark:   #0F766E;
+/*
+  REQUIRED FONTS — every page that uses this stylesheet must also
+  import Inter and Montserrat in <head>:
 
-  /* Pulse pillars */
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+*/
+
+/* ----- CSS Variables (synced with coach4u-shared v1.2) ----- */
+:root {
+  /* Brand Lock — must match templates/PROFILE.md */
+  --primary:       #1B3664;   /* navy: headings and titles */
+  --primary-dark:  #142850;   /* navy hover */
+  --accent:        #5684C4;   /* accent blue: links, secondary */
+  --accent-dark:   #3A6BA5;   /* accent hover */
+  --text:          #2D2D2D;   /* body text */
+  --text-muted:    #6B7280;   /* secondary UI text only */
+  --divider:       #DDDDDD;   /* dividers and subtle backgrounds */
+
+  /* ThriveHQ pulse pillars (app-specific UI accents, not brand) */
   --capacity:      #0D9488;
   --wellbeing:     #5DADE2;
   --strengths:     #B19CD9;
@@ -19,19 +33,19 @@
   --bg:            #f0f4f8;
   --surface:       #ffffff;
   --border:        #e2e8f0;
-  --text:          #1a202c;
-  --text-muted:    #64748b;
-  --text-light:    #ADB5BD;
 
-  /* Typography — system fonts, no external dependency */
-  --font:          'Segoe UI', system-ui, -apple-system, sans-serif;
-  --font-heading:  'Segoe UI', system-ui, -apple-system, sans-serif;
+  /* ThriveHQ extensions (not in shared base) */
+  --text-light:    #ADB5BD;
+  --shadow-sm:     0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md:     0 4px 12px rgba(0,0,0,0.10);
+  --radius-lg:     16px;
+
+  /* Typography — Inter for headings, Montserrat for body */
+  --font-body:     'Montserrat', sans-serif;
+  --font-heading:  'Inter', sans-serif;
   --radius:        12px;
   --radius-sm:     8px;
-  --radius-lg:     16px;
-  --shadow-sm:     0 1px 3px rgba(0,0,0,0.08);
   --shadow:        0 2px 12px rgba(0,0,0,0.08);
-  --shadow-md:     0 4px 12px rgba(0,0,0,0.10);
   --shadow-lg:     0 8px 32px rgba(0,0,0,0.12);
 }
 
@@ -43,8 +57,15 @@ html { font-size: 16px; scroll-behavior: smooth; }
   IMPORTANT: Do NOT add display:flex or flex-direction:column to body.
   Auth pages use their own centred layout. Adding it globally breaks login.
 */
-body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
-h1, h2, h3, h4 { font-family: var(--font-heading); }
+body { font-family: var(--font-body); background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+
+/* Inter Bold for all headings (per PROFILE.md brand lock) */
+h1, h2, h3, h4, h5, h6,
+.login-title, .page-title, .header-title,
+.login-logo h1 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
 
 a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
 a:hover { color: var(--accent-dark); text-decoration: underline; }
@@ -62,7 +83,7 @@ img { max-width: 100%; display: block; }
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   font-size: 0.95rem;
-  font-family: var(--font);
+  font-family: var(--font-body);
   color: var(--text);
   background: var(--surface);
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -72,7 +93,7 @@ img { max-width: 100%; display: block; }
 .form-group textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(13,148,136,0.15);
+  box-shadow: 0 0 0 3px rgba(86,132,196,0.2);
 }
 .form-group textarea { min-height: 100px; resize: vertical; }
 
@@ -100,9 +121,9 @@ img { max-width: 100%; display: block; }
 .login-btn {
   width: 100%; padding: 16px; background: var(--primary); color: white;
   border: none; border-radius: var(--radius-sm); font-size: 16px; font-weight: 600;
-  cursor: pointer; transition: background 0.2s; margin-top: 8px; font-family: var(--font);
+  cursor: pointer; transition: background 0.2s; margin-top: 8px; font-family: var(--font-body);
 }
-.login-btn:hover { background: #002244; }
+.login-btn:hover { background: var(--primary-dark); }
 .login-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 .login-forgot { display: block; text-align: center; margin-top: 20px; font-size: 14px; color: var(--accent); font-weight: 500; }
 .login-forgot:hover { color: var(--accent-dark); text-decoration: underline; }
@@ -110,7 +131,7 @@ img { max-width: 100%; display: block; }
 .login-message.success { background: #d1fae5; color: #065f46; }
 .login-message.error   { background: #fee2e2; color: #991b1b; }
 .password-wrapper { position: relative; }
-.toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 13px; padding: 4px; font-family: var(--font); }
+.toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 13px; padding: 4px; font-family: var(--font-body); }
 .toggle-password:hover { color: var(--accent); }
 
 /* ----- Shared Utilities: Alert ----- */
@@ -120,7 +141,7 @@ img { max-width: 100%; display: block; }
 .alert-info    { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
 
 /* ----- Shared Utilities: Buttons ----- */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 600; cursor: pointer; border: none; transition: background 0.2s, transform 0.1s; text-decoration: none; font-family: var(--font); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 600; cursor: pointer; border: none; transition: background 0.2s, transform 0.1s; text-decoration: none; font-family: var(--font-body); }
 .btn:active { transform: scale(0.98); }
 .btn-primary { background: var(--accent); color: #fff; }
 .btn-primary:hover { background: var(--accent-dark); color: #fff; text-decoration: none; }
@@ -169,9 +190,9 @@ img { max-width: 100%; display: block; }
 .welcome-section { margin-bottom: 32px; }
 .welcome-heading { font-size: 28px; color: var(--primary); font-weight: 600; margin-bottom: 16px; }
 
-/* Membership Card (gradient — shared style) */
+/* Membership Card (gradient — synced with shared) */
 .membership-card {
-  background: linear-gradient(135deg, var(--primary) 0%, #005599 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   color: #fff;
   border-radius: var(--radius);
   padding: 28px 24px;
@@ -266,7 +287,7 @@ img { max-width: 100%; display: block; }
   color: var(--text-muted);
   cursor: pointer;
   transition: all 0.15s;
-  font-family: var(--font);
+  font-family: var(--font-body);
 }
 .rating-btn:hover { border-color: var(--accent); color: var(--accent); background: white; }
 .rating-btn.selected { background: var(--accent); border-color: var(--accent); color: white; }
@@ -286,9 +307,9 @@ img { max-width: 100%; display: block; }
   text-align: center;
   text-decoration: none;
   display: block;
-  font-family: var(--font);
+  font-family: var(--font-body);
 }
-.pulse-nav-btn:hover { background: #002244; color: white; text-decoration: none; }
+.pulse-nav-btn:hover { background: var(--primary-dark); color: white; text-decoration: none; }
 .pulse-nav-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 .pulse-nav-btn.secondary {
   background: var(--bg);
