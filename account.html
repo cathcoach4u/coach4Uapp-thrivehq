@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ThriveHQ — Account</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1B3664">
+  <meta name="theme-color" content="#003366">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -40,15 +40,15 @@
       </section>
       <section class="account-section">
         <h2 class="section-title">Support</h2>
-        <p class="help-text">Need help? Reach out at <a href="mailto:support@coach4u.com.au">support@coach4u.com.au</a></p>
+        <p class="help-text">Need help? Reach out at <a href="mailto:contact@coach4u.com.au">contact@coach4u.com.au</a></p>
       </section>
     </div>
   </main>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
     const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     function showError(msg) {
       document.getElementById('loading').style.display = 'none';
@@ -60,7 +60,7 @@
       return new Date(d).toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' });
     }
 
-    async function signOut() { await sb.auth.signOut(); window.location.href = 'index.html'; }
+    window.signOut = async function() { await sb.auth.signOut(); window.location.href = 'index.html'; };
 
     window.addEventListener('DOMContentLoaded', async () => {
       try {
@@ -83,7 +83,7 @@
       }
     });
 
-    document.getElementById('headerVersion').textContent = 'v1.3 — ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+    document.getElementById('headerVersion').textContent = 'v2.1 — ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
   </script>
 </body>
 </html>
