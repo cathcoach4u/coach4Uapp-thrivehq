@@ -16,6 +16,7 @@
 | `links.html` | No | Public Linktree-style links page (Teams, WhatsApp, coaching flow) |
 | `weekly-coaching-flow.html` | No | Public weekly coaching flow page (Planning Tuesday, Focus Thursday). Dashboard design. |
 | `session-rhythm.html` | No | Public 2026 session rhythm calendar (session blocks and breaks). Dashboard design. |
+| `live-sessions.html` | No | Public live session times (Planning Tuesdays, Focus Thursdays). Dashboard design. |
 | `dashboard.html` | Yes | Main member dashboard with Brain Pulse results and quick links |
 | `brain-pulse.html` | Yes | 4-pillar Brain Pulse assessment form |
 | `brain-pulse-detail.html` | Yes | Per-pillar coaching focus detail |
