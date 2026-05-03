@@ -44,11 +44,11 @@
       </section>
     </div>
   </main>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
     const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     function showError(msg) {
       document.getElementById('loading').style.display = 'none';
@@ -60,7 +60,7 @@
       return new Date(d).toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' });
     }
 
-    async function signOut() { await sb.auth.signOut(); window.location.href = 'index.html'; }
+    window.signOut = async function() { await sb.auth.signOut(); window.location.href = 'index.html'; };
 
     window.addEventListener('DOMContentLoaded', async () => {
       try {
@@ -83,7 +83,7 @@
       }
     });
 
-    document.getElementById('headerVersion').textContent = 'v2.0 — ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+    document.getElementById('headerVersion').textContent = 'v2.1 — ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
   </script>
 </body>
 </html>

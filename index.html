@@ -42,16 +42,11 @@
     Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au" style="color:#999;">coach4u.com.au</a>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
     const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-    let _sb = null;
-
-    function getSupabase() {
-      if (!_sb) _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      return _sb;
-    }
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     function showMessage(text, type) {
       const msg = document.getElementById('message');
@@ -60,12 +55,12 @@
       msg.style.display = 'block';
     }
 
-    function togglePassword() {
+    window.togglePassword = function() {
       const input = document.getElementById('password');
       const btn = document.querySelector('.toggle-password');
       if (input.type === 'password') { input.type = 'text'; btn.textContent = 'Hide'; }
       else { input.type = 'password'; btn.textContent = 'Show'; }
-    }
+    };
 
     document.getElementById('signInForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -75,7 +70,6 @@
       document.getElementById('message').style.display = 'none';
 
       try {
-        const sb = getSupabase();
         const { data, error } = await sb.auth.signInWithPassword({
           email: document.getElementById('email').value.trim(),
           password: document.getElementById('password').value
@@ -100,7 +94,6 @@
 
     window.addEventListener('DOMContentLoaded', async () => {
       try {
-        const sb = getSupabase();
         const { data: { user } } = await sb.auth.getUser();
         if (user) {
           const { data: ud } = await sb.from('users').select('membership_status').eq('id', user.id).single();

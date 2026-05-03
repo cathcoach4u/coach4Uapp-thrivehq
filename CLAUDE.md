@@ -77,7 +77,9 @@ On auth/login pages the footer is `position:fixed; bottom:0; width:100%` so it s
 
 ## Critical Rules
 
-**Supabase init — always inline.** GitHub Pages does not reliably load external `.js` modules. Always initialise Supabase inline in a `<script>` block. Never import from an external config file.
+**Supabase init — always ESM, always inline.** Use `<script type="module">` with `import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'` inline in each page. Never use the UMD CDN bundle (`supabase.min.js`). Never load Supabase from an external config file.
+
+**Inline onclick handlers with module scripts.** Module scripts are scoped — functions defined inside them are not available to inline `onclick` attributes. Any function called from an inline `onclick` must be exposed on the global scope: `window.funcName = function() {...}`.
 
 **Reset password redirect.** Use `window.location.href` (not `window.location.origin`) when building the `redirectTo` URL.
 
@@ -87,7 +89,7 @@ On auth/login pages the footer is `position:fixed; bottom:0; width:100%` so it s
 
 **theme-color meta** on every page: `<meta name="theme-color" content="#003366">`
 
-**Header version** on authenticated pages: `v2.0 — [date]` shown in `.header-version` span (hidden on screens ≤640px).
+**Header version** on authenticated pages: `v2.1 — [date]` shown in `.header-version` span.
 
 ## Auth Flow
 
@@ -175,14 +177,13 @@ Sign Out is **always top-right of the header** on every authenticated page. Neve
 ```
 
 ```js
-async function signOut() {
-  await supabase.auth.signOut();
+window.signOut = async function() {
+  await sb.auth.signOut();
   window.location.href = 'index.html';
-}
+};
 
-// Set version in header
 document.getElementById('headerVersion').textContent =
-  'v2.0 — ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+  'v2.1 — ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
 ```
 
 ## Add a New Member (SQL)

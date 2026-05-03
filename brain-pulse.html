@@ -47,11 +47,11 @@
     </div>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
     const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const PILLARS = [
       {
@@ -121,7 +121,7 @@
       document.getElementById('error').textContent = msg;
     }
 
-    async function signOut() { await sb.auth.signOut(); window.location.href = 'index.html'; }
+    window.signOut = async function() { await sb.auth.signOut(); window.location.href = 'index.html'; };
 
     function renderSteps() {
       const container = document.getElementById('stepsContainer');
@@ -158,13 +158,13 @@
       });
     }
 
-    function selectRating(stepIdx, questionIdx, value) {
+    window.selectRating = function(stepIdx, questionIdx, value) {
       answers[PILLARS[stepIdx].key][questionIdx] = value;
       const row = document.getElementById(`rating-${stepIdx}-${questionIdx}`);
       row.querySelectorAll('.rating-btn').forEach(btn => {
         btn.classList.toggle('selected', parseInt(btn.dataset.val) === value);
       });
-    }
+    };
 
     function updateUI() {
       PILLARS.forEach((_, idx) => {
@@ -184,7 +184,7 @@
       return answers[PILLARS[stepIdx].key].every(v => v > 0);
     }
 
-    function nextStep() {
+    window.nextStep = function() {
       if (!allAnswered(currentStep)) {
         alert('Please answer all ' + PILLARS[currentStep].questions.length + ' questions before continuing.');
         return;
@@ -196,15 +196,15 @@
       } else {
         submitPulse();
       }
-    }
+    };
 
-    function prevStep() {
+    window.prevStep = function() {
       if (currentStep > 0) {
         currentStep--;
         updateUI();
         window.scrollTo(0, 0);
       }
-    }
+    };
 
     async function submitPulse() {
       const nextBtn = document.getElementById('nextBtn');
@@ -255,7 +255,7 @@
       window.scrollTo(0, 0);
     }
 
-    function restartPulse() {
+    window.restartPulse = function() {
       PILLARS.forEach(p => { answers[p.key] = [0, 0, 0, 0, 0]; });
       currentStep = 0;
       renderSteps();
@@ -264,7 +264,7 @@
       document.getElementById('results').style.display = 'none';
       document.getElementById('pulse-form').style.display = 'block';
       window.scrollTo(0, 0);
-    }
+    };
 
     window.addEventListener('DOMContentLoaded', async () => {
       try {
@@ -284,7 +284,7 @@
       }
     });
 
-    document.getElementById('headerVersion').textContent = 'v2.0 — ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+    document.getElementById('headerVersion').textContent = 'v2.1 — ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
   </script>
 </body>
 </html>
