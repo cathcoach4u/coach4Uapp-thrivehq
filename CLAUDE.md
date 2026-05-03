@@ -186,6 +186,25 @@ document.getElementById('headerVersion').textContent =
   'v2.1 — ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
 ```
 
+## Users Table — Key Columns
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | UUID | Matches `auth.users.id` |
+| `email` | text | Member email |
+| `full_name` | text | Display name — always use this for member name |
+| `membership_status` | text | `'active'` or `'inactive'` |
+| `membership_start_date` | date | |
+| `membership_end_date` | date | |
+
+**Always read the member's name from `userData.full_name`.** Do not use `userData.name` or fall back to the email prefix.
+
+### Dashboard name pattern
+
+```js
+document.getElementById('memberName').textContent = userData.full_name || '—';
+```
+
 ## Add a New Member (SQL)
 
 ```sql
