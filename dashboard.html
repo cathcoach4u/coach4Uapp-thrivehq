@@ -28,7 +28,6 @@
         <div class="member-name" id="memberName">—</div>
         <div class="member-email" id="memberEmail">—</div>
         <span class="membership-badge">Active Member</span>
-        <div class="membership-expires">Expires: <span id="expiryDate">—</span></div>
       </div>
 
       <div class="app-section-header">
@@ -83,10 +82,6 @@
       return 'Anchored';
     }
 
-    function formatDate(d) {
-      return new Date(d).toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' });
-    }
-
     function showError(msg) {
       document.getElementById('loading').style.display = 'none';
       document.getElementById('error').style.display = 'block';
@@ -103,11 +98,10 @@
         const { data: userData } = await sb.from('users').select('*').eq('id', user.id).single();
         if (userData?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
 
+        const rawName = userData.full_name || userData.email?.split('@')[0] || '—';
         document.getElementById('memberName').textContent =
-          userData.full_name || userData.email?.split('@')[0] || '—';
+          rawName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         document.getElementById('memberEmail').textContent = userData.email || '—';
-        if (userData?.membership_end_date)
-          document.getElementById('expiryDate').textContent = formatDate(userData.membership_end_date);
 
         const { data: assessments } = await sb
           .from('brain_pulse_assessments').select('*')
