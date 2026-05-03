@@ -14,27 +14,48 @@
 | `reset-password.html` | No | Password reset form |
 | `inactive.html` | No | Shown to authenticated members with inactive/expired membership |
 | `links.html` | No | Public Linktree-style links page (Teams, WhatsApp, coaching flow) |
-| `weekly-coaching-flow.html` | No | Public weekly coaching flow page (Planning Tuesday, Focus Thursday) |
-| `session-rhythm.html` | No | Public 2026 session rhythm calendar (session blocks and breaks) |
+| `weekly-coaching-flow.html` | No | Public weekly coaching flow page (Planning Tuesday, Focus Thursday). Dashboard design. |
+| `session-rhythm.html` | No | Public 2026 session rhythm calendar (session blocks and breaks). Dashboard design. |
 | `dashboard.html` | Yes | Main member dashboard with Brain Pulse results and quick links |
 | `brain-pulse.html` | Yes | 4-pillar Brain Pulse assessment form |
 | `brain-pulse-detail.html` | Yes | Per-pillar coaching focus detail |
 | `resources.html` | Yes | Member resources from Supabase |
 | `account.html` | Yes | Member profile and membership details |
+| `best-of-us.html` | Yes | Activity — Best of Us values worksheet. Uses `css/activity.css` (`act-*` classes, Inter/Montserrat, `#1B3664`) |
 
-## Shared Stylesheet
+---
+
+## Two Design Systems
+
+This repo uses two separate design systems. Use the right one — do not mix them.
+
+| | Dashboard | Activity |
+|---|---|---|
+| CSS file | `css/style.css` | `css/activity.css` |
+| Font | Aptos system stack (no Google Fonts) | Inter + Montserrat (Google Fonts required) |
+| Primary colour | `#003366` navy | `#1B3664` dark blue |
+| Accent | `#0D9488` teal | `#5684C4` mid blue |
+| Background | `#ffffff` (grey on public pages) | `#ffffff` white |
+| CSS prefix | none | `act-` |
+| Used for | All dashboard, auth, and public info pages | Pages where user produces a personal output |
+
+**What is an activity?** A page where the user produces a personal output through interaction — selections, reflections, multi-step flows. Static or informational pages are NOT activities and use the dashboard system.
+
+---
+
+## Dashboard Stylesheet
 
 Copy `css/style.css` from `coach4u-shared` into this repo. Each app owns its own local copy.
 
-Link in every HTML page `<head>`:
+Link in every dashboard/auth/public HTML page `<head>`:
 
 ```html
 <link rel="stylesheet" href="css/style.css">
 ```
 
-Do NOT add Google Fonts link tags. The stylesheet uses the Aptos system font stack — no external fonts needed.
+Do NOT add Google Fonts link tags to dashboard pages. The stylesheet uses the Aptos system font stack — no external fonts needed.
 
-## Brand Lock (v2.0)
+## Brand Lock — Dashboard (v2.0)
 
 | Token | Value | Usage |
 |---|---|---|
@@ -45,7 +66,7 @@ Do NOT add Google Fonts link tags. The stylesheet uses the Aptos system font sta
 | `--text-muted` | `#888888` | Secondary / muted text |
 | Font | Aptos system stack | No Google Fonts. Stack: `'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif` |
 
-**Do NOT introduce:** black, additional blues, alternate teals, extra greys, or Google Fonts.
+**Do NOT introduce:** black, additional blues, alternate teals, extra greys, or Google Fonts on dashboard pages.
 
 ### Card rule
 All cards use `border: 2px solid var(--accent)` (teal) with teal box-shadow and hover lift (`transform: translateY(-2px)`). Use `.card-neutral` only for structural/admin panels where the teal border is too strong.
@@ -54,7 +75,50 @@ All cards use `border: 2px solid var(--accent)` (teal) with teal box-shadow and 
 13px uppercase, `letter-spacing: 0.8px`, `border-bottom: 2px solid var(--accent)`. Use `.section-title` on h3 elements or `.section-heading` as a div.
 
 ### Gradient panels
-`linear-gradient(135deg, #003366 0%, #0D9488 100%)` — used for membership card, about-panel, login page background.
+`linear-gradient(135deg, #003366 0%, #0D9488 100%)` — used for membership card, about-panel, login page background, public page heroes.
+
+---
+
+## Activity Stylesheet
+
+Copy `css/activity.css` from `coach4u-shared` into this repo. Each app owns its own local copy.
+
+Link in every activity page `<head>`, alongside the Google Fonts import:
+
+```html
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/activity.css">
+```
+
+Add `class="activity-page"` to `<body>`.
+
+For authenticated activity pages, also keep `site-header` from `style.css` for the Sign Out button — link both stylesheets.
+
+## Brand Lock — Activity
+
+| Token | Value | Usage |
+|---|---|---|
+| `--act-dark-blue` | `#1B3664` | Headings, selected tiles, primary button |
+| `--act-light-blue` | `#5684C4` | Accent, step labels, progress done |
+| `--act-dark-grey` | `#2D2D2D` | Body text |
+| `--act-light-grey` | `#DDDDDD` | Borders, inactive progress |
+| `--act-bg` | `#ffffff` | White page background |
+| `--act-soft` | `#F5F7FB` | Tile resting background |
+| Font body | Montserrat | Tiles, body text |
+| Font heading | Inter | Titles, labels, buttons |
+
+**Never use teal (`#0D9488`) on activity pages.** Teal belongs to the dashboard only.
+
+### Activity CSS class reference
+See `coach4u-shared/templates/CLAUDE.md` → "Activity / Tool Pattern" for the full `act-*` class reference, tile types, wizard vs worksheet distinction, and structural rules.
+
+### Activity pages in this repo
+
+| Page | Pattern | Notes |
+|---|---|---|
+| `best-of-us.html` | Worksheet | All steps visible, sticky `.act-save-bar`. Authenticated — uses `site-header` + Sign Out. |
+
+---
 
 ## Footer
 
@@ -118,9 +182,12 @@ Public links page (no authentication). Used as a Linktree replacement.
 
 ## weekly-coaching-flow.html and session-rhythm.html
 
-Public pages (no authentication). Linked from `links.html`.
-- Same brand: navy-to-teal gradient hero, white body, teal-bordered cards
-- "Back to Links" button returns to `links.html`
+Public pages (no authentication). Linked from `links.html`. Use the **dashboard design system**.
+- Uses `css/style.css` only. No `activity.css`, no Google Fonts.
+- Navy-to-teal gradient hero (inline `<style>` block, page-specific layout)
+- Cards use `.card` from `style.css` (teal 2px border)
+- Back link uses `.btn.btn-navy` from `style.css`
+- Section labels use `.section-title` from `style.css`
 - No Supabase — static content only
 - To update content, edit the HTML directly
 
