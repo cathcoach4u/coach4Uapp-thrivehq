@@ -68,7 +68,7 @@
         if (authErr || !user) { window.location.href = 'index.html'; return; }
 
         const { data: userData } = await sb.from('users').select('*').eq('id', user.id).single();
-        if (userData?.membership_status !== 'active') { showError('Your membership has expired.'); return; }
+        if (userData?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
 
         document.getElementById('userEmail').textContent = user.email || '—';
         document.getElementById('userName').textContent = userData?.name || '—';
