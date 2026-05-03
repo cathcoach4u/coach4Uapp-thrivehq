@@ -14,6 +14,8 @@
 | `reset-password.html` | No | Password reset form |
 | `inactive.html` | No | Shown to authenticated members with inactive/expired membership |
 | `links.html` | No | Public Linktree-style links page (Teams, WhatsApp, coaching flow) |
+| `weekly-coaching-flow.html` | No | Public weekly coaching flow page (Planning Tuesday, Focus Thursday) |
+| `session-rhythm.html` | No | Public 2026 session rhythm calendar (session blocks and breaks) |
 | `dashboard.html` | Yes | Main member dashboard with Brain Pulse results and quick links |
 | `brain-pulse.html` | Yes | 4-pillar Brain Pulse assessment form |
 | `brain-pulse-detail.html` | Yes | Per-pillar coaching focus detail |
@@ -109,7 +111,16 @@ Public links page (no authentication). Used as a Linktree replacement.
 - Teal-bordered link cards with hover lift
 - Sections: Connection Tools (Teams, WhatsApp), Weekly Flow & Calendar
 - "Sign In to Members Portal" button linking to `index.html`
+- Coaching flow and session rhythm link to local pages (`weekly-coaching-flow.html`, `session-rhythm.html`)
 - To update links, edit `links.html` directly — no Supabase involved
+
+## weekly-coaching-flow.html and session-rhythm.html
+
+Public pages (no authentication). Linked from `links.html`.
+- Same brand: navy-to-teal gradient hero, white body, teal-bordered cards
+- "Back to Links" button returns to `links.html`
+- No Supabase — static content only
+- To update content, edit the HTML directly
 
 ## Login Page Pattern
 
@@ -119,7 +130,6 @@ All auth pages use `<body class="login-page">` with the shared CSS classes:
 <body class="login-page">
   <div class="login-card">
     <div class="login-logo"><h1>[App Name]</h1></div>
-    <p class="login-title">Welcome back</p>
     <p class="login-subtitle">Sign in to access your coaching resources.</p>
     <form id="signInForm">
       <div class="form-group">
