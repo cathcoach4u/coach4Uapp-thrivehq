@@ -25,8 +25,10 @@
       <section class="welcome-section">
         <h2 class="welcome-heading">Welcome back</h2>
         <div class="membership-card">
-          <div class="membership-status">Active Member</div>
-          <div class="membership-expires">Membership expires: <span id="expiryDate">—</span></div>
+          <div class="member-name" id="memberName">—</div>
+          <div class="member-email" id="memberEmail">—</div>
+          <span class="membership-badge">Active Member</span>
+          <div class="membership-expires">Expires: <span id="expiryDate">—</span></div>
         </div>
       </section>
       <section class="brain-pulse-section">
@@ -111,14 +113,15 @@
         if (authErr || !user) { window.location.href = 'index.html'; return; }
 
         const { data: userData } = await sb.from('users').select('*').eq('id', user.id).single();
-        if (userData?.membership_status !== 'active') {
-          showError('Your membership has expired. Contact support@coach4u.com.au to renew.');
-          return;
-        }
+        if (userData?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
 
         const { data: assessments } = await sb
           .from('brain_pulse_assessments').select('*')
           .eq('user_id', user.id).order('assessment_date', { ascending: false }).limit(1);
+
+        document.getElementById('memberName').textContent =
+          userData.full_name || userData.email?.split('@')[0] || '—';
+        document.getElementById('memberEmail').textContent = userData.email || '—';
 
         if (userData?.membership_end_date)
           document.getElementById('expiryDate').textContent = formatDate(userData.membership_end_date);

@@ -47,7 +47,7 @@
         if (authErr || !user) { window.location.href = 'index.html'; return; }
 
         const { data: ud } = await sb.from('users').select('membership_status').eq('id', user.id).single();
-        if (ud?.membership_status !== 'active') { showError('Your membership has expired.'); return; }
+        if (ud?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
 
         const { data: resources } = await sb.from('resources').select('*').order('created_at', { ascending: false });
 
