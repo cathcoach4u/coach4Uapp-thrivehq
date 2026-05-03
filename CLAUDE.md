@@ -3,7 +3,7 @@
 > Template: https://github.com/cathcoach4u/coach4u-shared/blob/main/templates/CLAUDE.md
 > Shared design system: https://github.com/cathcoach4u/coach4u-shared
 > Full setup guide: https://github.com/cathcoach4u/coach4u-shared/blob/main/SETUP.md
-> **Design system version: 1.3**
+> **Design system version: 2.0**
 
 ## Shared Stylesheet
 
@@ -14,6 +14,30 @@ Link in every HTML page `<head>`:
 ```html
 <link rel="stylesheet" href="css/style.css">
 ```
+
+Do NOT add Google Fonts link tags. The stylesheet uses the Aptos system font stack — no external fonts needed.
+
+## Brand Lock (v2.0)
+
+| Token | Value | Usage |
+|---|---|---|
+| `--primary` | `#003366` | Navy — header bg, headings, titles |
+| `--accent` | `#0D9488` | Teal — card borders, buttons, links, section heading underlines |
+| `--bg` | `#ffffff` | White page background |
+| `--text` | `#333333` | Body text |
+| `--text-muted` | `#888888` | Secondary / muted text |
+| Font | Aptos system stack | No Google Fonts. Stack: `'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif` |
+
+**Do NOT introduce:** black, additional blues, alternate teals, extra greys, or Google Fonts.
+
+### Card rule
+All cards use `border: 2px solid var(--accent)` (teal) with teal box-shadow and hover lift (`transform: translateY(-2px)`). Use `.card-neutral` only for structural/admin panels where the teal border is too strong.
+
+### Section headings
+13px uppercase, `letter-spacing: 0.8px`, `border-bottom: 2px solid var(--accent)`. Use `.section-title` on h3 elements or `.section-heading` as a div.
+
+### Gradient panels
+`linear-gradient(135deg, #003366 0%, #0D9488 100%)` — used for membership card, about-panel, login page background.
 
 ## Supabase Project
 
@@ -31,6 +55,8 @@ Link in every HTML page `<head>`:
 **Membership gating.** Every page except login/forgot/reset must verify `users.membership_status = 'active'` after confirming a session. Redirect to `inactive.html` if not.
 
 **Do NOT set `flex-direction: column` on `body`.** Auth pages use their own centred layout. Adding it globally breaks the login page.
+
+**theme-color meta** on every page: `<meta name="theme-color" content="#003366">`
 
 ## Auth Flow
 
@@ -69,7 +95,7 @@ All auth pages use `<body class="login-page">` with the shared CSS classes:
 ```
 
 - Background: navy → teal gradient
-- Card: white, centred, max 420px
+- Card: white, centred, max 380px
 - Button: full-width, navy (`var(--primary)`)
 - Forgot password link: teal (`var(--accent)`), below the button
 - Same layout applies to `forgot-password.html` and `reset-password.html`
