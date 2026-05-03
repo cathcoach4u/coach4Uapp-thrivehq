@@ -31,6 +31,7 @@
       </section>
       <section class="brain-pulse-section">
         <h3 class="section-title">Your Brain Pulse Results</h3>
+        <a id="takePulseBtn" href="brain-pulse.html" class="take-pulse-btn" style="display:none;">Take Brain Pulse →</a>
         <div class="pulse-grid" id="pulseGrid"></div>
       </section>
       <section class="session-section">
@@ -121,6 +122,10 @@
 
         if (userData?.membership_end_date)
           document.getElementById('expiryDate').textContent = formatDate(userData.membership_end_date);
+
+        const btn = document.getElementById('takePulseBtn');
+        btn.textContent = assessments?.[0] ? 'Retake Brain Pulse →' : 'Take Brain Pulse →';
+        btn.style.display = 'inline-flex';
 
         renderPulseCards(assessments?.[0] || null);
         document.getElementById('loading').style.display = 'none';
