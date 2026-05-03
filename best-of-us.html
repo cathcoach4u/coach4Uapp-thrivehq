@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThriveHQ — Best of Us</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#003366">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .activity-hero {
+      background: linear-gradient(135deg, #003366 0%, #0D9488 100%);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 28px;
+      color: white;
+    }
+    .activity-hero-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .activity-hero-subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+    .activity-goal-list {
+      margin-top: 14px;
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .activity-goal-list li {
+      font-size: 13px;
+      opacity: 0.9;
+      padding-left: 18px;
+      position: relative;
+    }
+    .activity-goal-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: rgba(255,255,255,0.7);
+      font-weight: 700;
+    }
+    .step-card {
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .step-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .step-instruction {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .step-reference {
+      background: #f0fdfa;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+    }
+    .step-reference-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .step-reference-text {
+      font-size: 13px;
+      color: #065f46;
+      line-height: 1.5;
+    }
+    .step-textarea {
+      width: 100%;
+      min-height: 110px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--surface);
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+    .step-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .step-textarea::placeholder {
+      color: var(--text-light);
+    }
+    .reports-section {
+      margin-top: 32px;
+    }
+    .report-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 12px;
+    }
+    .report-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    .report-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 7px;
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .report-item-label {
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      min-width: 120px;
+    }
+    .save-bar {
+      position: sticky;
+      bottom: 0;
+      background: white;
+      border-top: 1px solid var(--border);
+      padding: 14px 0;
+      margin-top: 32px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .save-status {
+      font-size: 13px;
+      color: var(--text-muted);
+      flex: 1;
+    }
+    .save-status.saved { color: #065f46; }
+    .save-status.error { color: #991b1b; }
+    @media (max-width: 480px) {
+      .activity-goal-list { grid-template-columns: 1fr; }
+      .report-item { flex-direction: column; gap: 2px; }
+      .report-item-label { min-width: unset; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="dashboard.html" class="header-back">← Back</a>
+        <span class="header-title">Best of Us</span>
+        <span class="header-version" id="headerVersion"></span>
+      </div>
+      <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div id="loading" class="loading">Loading...</div>
+    <div id="error" class="error" style="display:none;"></div>
+
+    <div id="content" style="display:none;">
+
+      <div class="activity-hero">
+        <div class="activity-hero-title">Completing the 'Best of Us' Tool</div>
+        <div class="activity-hero-subtitle">
+          A guide to understanding your strengths. This tool is designed to help you focus on:
+        </div>
+        <ul class="activity-goal-list">
+          <li>Understanding what helps you thrive</li>
+          <li>Identifying what might hold you back</li>
+          <li>Knowing how others can rely on you</li>
+          <li>Clearly communicating your needs</li>
+        </ul>
+      </div>
+
+      <h3 class="section-title">Step-by-Step Worksheet</h3>
+
+      <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.6;">
+        Use your Bring/Need Report and Personal Insights Report alongside each step below.
+        Your responses are saved automatically to your account.
+      </p>
+
+      <!-- Step 1 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">1</div>
+          <div class="step-title">Understanding What Helps You Thrive</div>
+        </div>
+        <p class="step-instruction">
+          Use the Bring/Need Report to understand how each of your top strengths contributes to enhancing
+          situations. Look at the "I bring" section, which lists the value you add through each strength.
+          This will guide you in identifying the environments and activities that allow you to thrive.
+        </p>
+        <div class="step-reference">
+          <div class="step-reference-label">Use: Bring/Need Report</div>
+          <div class="step-reference-text">Look at the <strong>"I Bring"</strong> section — the value you add through each strength.</div>
+        </div>
+        <textarea
+          class="step-textarea"
+          id="thriveResponse"
+          placeholder="What environments and activities allow you to thrive? What value do you bring through your strengths?"
+        ></textarea>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">2</div>
+          <div class="step-title">Identifying What Might Hold You Back</div>
+        </div>
+        <p class="step-instruction">
+          The "I need" section of the Bring/Need Report shows the specific conditions or needs that must
+          be met for your strengths to flourish. If these needs are unmet, they may become barriers to
+          success. Use this to identify what could potentially hold you back and think about how to
+          address these needs.
+        </p>
+        <div class="step-reference">
+          <div class="step-reference-label">Use: Bring/Need Report</div>
+          <div class="step-reference-text">Look at the <strong>"I Need"</strong> section — specific conditions required for your strengths to flourish.</div>
+        </div>
+        <textarea
+          class="step-textarea"
+          id="holdbackResponse"
+          placeholder="What conditions need to be in place for your strengths to work? What might hold you back if these aren't met?"
+        ></textarea>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">3</div>
+          <div class="step-title">Knowing How Others Can Rely on You</div>
+        </div>
+        <p class="step-instruction">
+          In the Personal Insights Report, focus on the section that describes "I am (being)" and
+          "I will (doing)." These will help you define the unique ways others can count on you and
+          what you consistently bring to the table. Use this to clearly communicate how others can
+          rely on you, based on your strengths.
+        </p>
+        <div class="step-reference">
+          <div class="step-reference-label">Use: Personal Insights Report</div>
+          <div class="step-reference-text">Look at <strong>"I am (Being)"</strong> and <strong>"I will (Doing)"</strong> — the unique ways others can count on you.</div>
+        </div>
+        <textarea
+          class="step-textarea"
+          id="relianceResponse"
+          placeholder="How can others count on you? What do you consistently bring to the table based on your strengths?"
+        ></textarea>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">4</div>
+          <div class="step-title">Clearly Communicating Your Needs</div>
+        </div>
+        <p class="step-instruction">
+          Look at the "I love" (motivators) and "I dislike" (demotivators) sections in the Personal
+          Insights Report. These areas highlight what energises and demotivates you. Use this to clearly
+          communicate your needs to others, ensuring they understand what environment and conditions
+          allow you to work at your best.
+        </p>
+        <div class="step-reference">
+          <div class="step-reference-label">Use: Personal Insights Report</div>
+          <div class="step-reference-text">Look at <strong>"I love (Motivators)"</strong> and <strong>"I dislike (Demotivators)"</strong> — what energises or detracts from your performance.</div>
+        </div>
+        <textarea
+          class="step-textarea"
+          id="needsResponse"
+          placeholder="What energises you? What drains you? What do others need to know to help you work at your best?"
+        ></textarea>
+      </div>
+
+      <div class="save-bar">
+        <span class="save-status" id="saveStatus">Unsaved changes</span>
+        <button class="btn btn-navy" id="saveBtn" onclick="saveResponses()">Save My Responses</button>
+      </div>
+
+      <!-- Key Reports Reference -->
+      <div class="reports-section">
+        <h3 class="section-title">Key Reports Reference</h3>
+
+        <div class="report-card">
+          <div class="report-title">1. Bring/Need Report</div>
+          <div class="report-item">
+            <span class="report-item-label">I Bring:</span>
+            <span>Understand how you add value in multiple ways, based on your strengths.</span>
+          </div>
+          <div class="report-item">
+            <span class="report-item-label">I Need:</span>
+            <span>Identify the specific needs required for each strength to thrive.</span>
+          </div>
+        </div>
+
+        <div class="report-card">
+          <div class="report-title">2. Personal Insights Report</div>
+          <div class="report-item">
+            <span class="report-item-label">I am (Being):</span>
+            <span>Describes who you are and how your strengths shape your behaviour.</span>
+          </div>
+          <div class="report-item">
+            <span class="report-item-label">I will (Doing):</span>
+            <span>Outlines how you put your strengths into action.</span>
+          </div>
+          <div class="report-item">
+            <span class="report-item-label">I love (Motivators):</span>
+            <span>What energises you and fuels your performance.</span>
+          </div>
+          <div class="report-item">
+            <span class="report-item-label">I dislike (Demotivators):</span>
+            <span>What detracts from your motivation and performance.</span>
+          </div>
+        </div>
+
+        <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-top:16px; padding:14px; background:#f8fafc; border-radius:var(--radius-sm);">
+          By using these reports to complete the 'Best of Us' worksheet, you will gain a comprehensive
+          understanding of how your strengths help you thrive, identify potential challenges, clarify
+          how others can count on you, and articulate your needs for success.
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer style="text-align:center; font-size:14px; color:#999; padding:24px 0;">
+    Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au" style="color:#999;">coach4u.com.au</a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+
+    function showError(msg) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error').style.display = 'block';
+      document.getElementById('error').textContent = msg;
+    }
+
+    async function signOut() { await sb.auth.signOut(); window.location.href = 'index.html'; }
+
+    function setSaveStatus(state, msg) {
+      const el = document.getElementById('saveStatus');
+      el.textContent = msg;
+      el.className = 'save-status' + (state ? ' ' + state : '');
+    }
+
+    function markUnsaved() { setSaveStatus('', 'Unsaved changes'); }
+
+    async function loadResponses(userId) {
+      const { data } = await sb
+        .from('best_of_us_responses')
+        .select('*')
+        .eq('user_id', userId)
+        .maybeSingle();
+      if (data) {
+        document.getElementById('thriveResponse').value   = data.thrive_response   || '';
+        document.getElementById('holdbackResponse').value = data.holdback_response || '';
+        document.getElementById('relianceResponse').value = data.reliance_response || '';
+        document.getElementById('needsResponse').value    = data.needs_response    || '';
+        setSaveStatus('saved', 'Responses loaded');
+        setTimeout(() => setSaveStatus('', 'All changes saved'), 2000);
+      } else {
+        setSaveStatus('', 'Start filling in your responses above');
+      }
+    }
+
+    async function saveResponses() {
+      const btn = document.getElementById('saveBtn');
+      btn.textContent = 'Saving…';
+      btn.disabled = true;
+
+      const payload = {
+        user_id:           currentUser.id,
+        thrive_response:   document.getElementById('thriveResponse').value,
+        holdback_response: document.getElementById('holdbackResponse').value,
+        reliance_response: document.getElementById('relianceResponse').value,
+        needs_response:    document.getElementById('needsResponse').value,
+        updated_at:        new Date().toISOString()
+      };
+
+      const { error } = await sb
+        .from('best_of_us_responses')
+        .upsert(payload, { onConflict: 'user_id' });
+
+      btn.textContent = 'Save My Responses';
+      btn.disabled = false;
+
+      if (error) {
+        setSaveStatus('error', 'Could not save — please try again');
+      } else {
+        setSaveStatus('saved', 'All changes saved');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const { data: { user }, error: authErr } = await sb.auth.getUser();
+        if (authErr || !user) { window.location.href = 'index.html'; return; }
+
+        const { data: ud } = await sb.from('users').select('membership_status').eq('id', user.id).single();
+        if (ud?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
+
+        currentUser = user;
+        await loadResponses(user.id);
+
+        ['thriveResponse', 'holdbackResponse', 'relianceResponse', 'needsResponse']
+          .forEach(id => document.getElementById(id).addEventListener('input', markUnsaved));
+
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+      } catch (err) {
+        showError('Error loading activity. Please refresh.');
+      }
+    });
+
+    document.getElementById('headerVersion').textContent =
+      'v2.0 — ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+  </script>
+</body>
+</html>
