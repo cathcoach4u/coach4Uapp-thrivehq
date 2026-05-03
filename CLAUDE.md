@@ -5,6 +5,21 @@
 > Full setup guide: https://github.com/cathcoach4u/coach4u-shared/blob/main/SETUP.md
 > **Design system version: 2.0**
 
+## Pages in this repo
+
+| Page | Auth required | Notes |
+|---|---|---|
+| `index.html` | No | Login page. Redirects active members to `dashboard.html`, inactive to `inactive.html` |
+| `forgot-password.html` | No | Password reset request |
+| `reset-password.html` | No | Password reset form |
+| `inactive.html` | No | Shown to authenticated members with inactive/expired membership |
+| `links.html` | No | Public Linktree-style links page (Teams, WhatsApp, coaching flow) |
+| `dashboard.html` | Yes | Main member dashboard with Brain Pulse results and quick links |
+| `brain-pulse.html` | Yes | 4-pillar Brain Pulse assessment form |
+| `brain-pulse-detail.html` | Yes | Per-pillar coaching focus detail |
+| `resources.html` | Yes | Member resources from Supabase |
+| `account.html` | Yes | Member profile and membership details |
+
 ## Shared Stylesheet
 
 Copy `css/style.css` from `coach4u-shared` into this repo. Each app owns its own local copy.
@@ -39,6 +54,18 @@ All cards use `border: 2px solid var(--accent)` (teal) with teal box-shadow and 
 ### Gradient panels
 `linear-gradient(135deg, #003366 0%, #0D9488 100%)` — used for membership card, about-panel, login page background.
 
+## Footer
+
+Every page (public and authenticated) includes the Coach4U footer:
+
+```html
+<footer style="text-align:center; font-size:14px; color:#999; padding:24px 0;">
+  Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au" style="color:#999;">coach4u.com.au</a>
+</footer>
+```
+
+On auth/login pages the footer is `position:fixed; bottom:0; width:100%` so it sits below the centred card without pushing layout.
+
 ## Supabase Project
 
 | | |
@@ -52,17 +79,37 @@ All cards use `border: 2px solid var(--accent)` (teal) with teal box-shadow and 
 
 **Reset password redirect.** Use `window.location.href` (not `window.location.origin`) when building the `redirectTo` URL.
 
-**Membership gating.** Every page except login/forgot/reset must verify `users.membership_status = 'active'` after confirming a session. Redirect to `inactive.html` if not.
+**Membership gating.** Every authenticated page must verify `users.membership_status = 'active'` after confirming a session. Redirect to `inactive.html` if not active. This includes the login page — after a successful sign-in, check membership and redirect to `inactive.html` if inactive rather than showing an inline error.
 
 **Do NOT set `flex-direction: column` on `body`.** Auth pages use their own centred layout. Adding it globally breaks the login page.
 
 **theme-color meta** on every page: `<meta name="theme-color" content="#003366">`
+
+**Header version** on authenticated pages: `v2.0 — [date]` shown in `.header-version` span (hidden on screens ≤640px).
 
 ## Auth Flow
 
 - Login: email + password only (no magic link)
 - Forgot password → `forgot-password.html`
 - Reset password → `reset-password.html`
+- Inactive membership → `inactive.html` (from login, and from any gated page)
+
+## inactive.html
+
+Shown when a member's `membership_status` is not `'active'`. The page:
+- Uses the same `login-page` / `login-card` layout as auth pages
+- Signs the user out and redirects to `index.html` when they click the button
+- Has no membership check (to avoid redirect loops)
+- Includes the Coach4U footer
+
+## links.html
+
+Public links page (no authentication). Used as a Linktree replacement.
+- Navy-to-teal gradient hero
+- Teal-bordered link cards with hover lift
+- Sections: Connection Tools (Teams, WhatsApp), Weekly Flow & Calendar
+- "Sign In to Members Portal" button linking to `index.html`
+- To update links, edit `links.html` directly — no Supabase involved
 
 ## Login Page Pattern
 
@@ -102,7 +149,7 @@ All auth pages use `<body class="login-page">` with the shared CSS classes:
 
 ## Sign Out — Standard Placement
 
-Sign Out is **always top-right of the header** on every app page (except auth pages).
+Sign Out is **always top-right of the header** on every authenticated page. Never stacks below the title on mobile.
 
 ```html
 <header class="site-header">
@@ -110,6 +157,7 @@ Sign Out is **always top-right of the header** on every app page (except auth pa
     <div class="header-left">
       <a href="dashboard.html" class="header-back">← Back</a> <!-- omit on dashboard -->
       <span class="header-title">[Page Name]</span>
+      <span class="header-version" id="headerVersion"></span>
     </div>
     <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
   </div>
@@ -121,6 +169,10 @@ async function signOut() {
   await supabase.auth.signOut();
   window.location.href = 'index.html';
 }
+
+// Set version in header
+document.getElementById('headerVersion').textContent =
+  'v2.0 — ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
 ```
 
 ## Add a New Member (SQL)
@@ -136,3 +188,5 @@ WHERE LOWER(email) = LOWER('email@here.com');
 ## App-Specific Notes
 
 - ThriveHQ is the primary Coach4U app covering Brain Pulse, resources, and member account management.
+- Brain Pulse: 4 pillars (Capacity, Wellbeing, Strengths, Execution), 5 questions each, scored 1–10. Max 200. Bands: Overwhelmed 20–60 | Unsteady 61–100 | Grounded 101–140 | Steady 141–170 | Anchored 171–200.
+- Pillar accent colours are app-specific (not brand): Capacity `#0D9488`, Wellbeing `#5DADE2`, Strengths `#B19CD9`, Execution `#7851A9`.
