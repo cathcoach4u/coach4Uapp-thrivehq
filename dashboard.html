@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ThriveHQ — Dashboard</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#003366">
+  <meta name="theme-color" content="#1B3664">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -113,10 +113,7 @@
         if (authErr || !user) { window.location.href = 'index.html'; return; }
 
         const { data: userData } = await sb.from('users').select('*').eq('id', user.id).single();
-        if (userData?.membership_status !== 'active') {
-          showError('Your membership has expired. Contact support@coach4u.com.au to renew.');
-          return;
-        }
+        if (userData?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
 
         const { data: assessments } = await sb
           .from('brain_pulse_assessments').select('*')
