@@ -17,6 +17,7 @@
     <div class="login-logo">
       <h1>ThriveHQ</h1>
     </div>
+    <p class="login-title">Welcome back</p>
     <p class="login-subtitle">Sign in to access your coaching resources.</p>
 
     <form id="signInForm">
@@ -37,6 +38,10 @@
 
     <a href="forgot-password.html" class="login-forgot">Forgot password?</a>
   </div>
+
+  <footer style="position:fixed; bottom:0; width:100%; text-align:center; font-size:14px; color:#999; padding:12px 0;">
+    Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au" style="color:#999;">coach4u.com.au</a>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
@@ -82,7 +87,8 @@
           .from('users').select('membership_status').eq('id', data.user.id).single();
 
         if (userData?.membership_status !== 'active') {
-          throw new Error('Your membership has expired. Contact support@coach4u.com.au to renew.');
+          window.location.href = 'inactive.html';
+          return;
         }
 
         window.location.href = 'dashboard.html';
@@ -100,6 +106,7 @@
         if (user) {
           const { data: ud } = await sb.from('users').select('membership_status').eq('id', user.id).single();
           if (ud?.membership_status === 'active') window.location.href = 'dashboard.html';
+          else if (ud) window.location.href = 'inactive.html';
         }
       } catch (_) {}
     });
