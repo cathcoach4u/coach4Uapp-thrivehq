@@ -205,6 +205,97 @@ img { max-width: 100%; display: block; }
 .pulse-score { font-size: 28px; font-weight: 800; color: var(--primary); margin-bottom: 8px; }
 .pulse-description { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
 
+/* ----- Take Pulse CTA ----- */
+.take-pulse-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s;
+  margin-bottom: 16px;
+}
+.take-pulse-btn:hover { background: var(--accent-dark); color: white; text-decoration: none; }
+
+/* ----- Brain Pulse Form ----- */
+.pulse-progress { background: var(--border); border-radius: 4px; height: 6px; margin-bottom: 8px; overflow: hidden; }
+.pulse-progress-bar { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.4s ease; width: 0%; }
+.pulse-step-label { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 24px; }
+.pulse-step { display: none; }
+.pulse-step.active { display: block; }
+.step-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.step-title { font-size: 22px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+.step-description { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+.step-questions { display: flex; flex-direction: column; gap: 16px; }
+.question-block {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+.question-text { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; line-height: 1.4; }
+.rating-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.rating-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font);
+}
+.rating-btn:hover { border-color: var(--accent); color: var(--accent); background: white; }
+.rating-btn.selected { background: var(--accent); border-color: var(--accent); color: white; }
+.rating-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-light); padding: 0 2px; }
+.pulse-nav { display: flex; gap: 12px; margin-top: 28px; }
+.pulse-nav-btn {
+  flex: 1;
+  padding: 14px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  font-family: var(--font);
+}
+.pulse-nav-btn:hover { background: #152C52; color: white; text-decoration: none; }
+.pulse-nav-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.pulse-nav-btn.secondary {
+  background: var(--bg);
+  color: var(--primary);
+  border: 2px solid var(--border);
+}
+.pulse-nav-btn.secondary:hover { border-color: var(--accent); color: var(--accent); background: var(--bg); }
+.results-title { font-size: 26px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+.results-subtitle { font-size: 15px; color: var(--text-muted); margin-bottom: 24px; }
+.results-actions { display: flex; gap: 12px; margin-top: 24px; }
+
 /* ----- Dashboard: Sessions ----- */
 .session-section { margin-bottom: 32px; }
 .session-card { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-lg); padding: 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; align-items: center; margin-bottom: 12px; }
@@ -267,6 +358,13 @@ img { max-width: 100%; display: block; }
   .detail-card { padding: 20px; }
   .pulse-grid { grid-template-columns: 1fr; }
   .login-card { padding: 36px 24px; }
+  .results-actions { flex-direction: column; }
+  .pulse-nav { flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  .rating-row { gap: 4px; }
+  .rating-btn { width: 34px; height: 34px; font-size: 13px; }
 }
 
 @media (max-width: 390px) {

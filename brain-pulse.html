@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThriveHQ — Brain Pulse</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1B3664">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="dashboard.html" class="header-back">← Back</a>
+        <span class="header-title">Brain Pulse</span>
+      </div>
+      <span class="header-version" id="headerVersion"></span>
+      <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div id="loading" class="loading">Loading...</div>
+    <div id="error" class="error" style="display:none;"></div>
+
+    <div id="pulse-form" style="display:none;">
+      <div class="pulse-progress">
+        <div class="pulse-progress-bar" id="progressBar"></div>
+      </div>
+      <div class="pulse-step-label" id="stepLabel"></div>
+      <div id="stepsContainer"></div>
+      <div class="pulse-nav">
+        <button class="pulse-nav-btn secondary" id="prevBtn" onclick="prevStep()" style="display:none;">← Previous</button>
+        <button class="pulse-nav-btn" id="nextBtn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <div id="results" style="display:none;">
+      <h2 class="results-title">Your Brain Pulse Results</h2>
+      <p class="results-subtitle">Here is how your pillars looked today. Tap any card to see your coaching focus.</p>
+      <div class="pulse-grid" id="resultsGrid"></div>
+      <div class="results-actions">
+        <a href="dashboard.html" class="pulse-nav-btn">Back to Dashboard</a>
+        <button class="pulse-nav-btn secondary" onclick="restartPulse()">Retake Pulse</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const PILLARS = [
+      {
+        key: 'capacity',
+        name: 'Capacity',
+        icon: 'C',
+        description: 'How calm you feel, how quickly you recover, and how much energy you have.',
+        questions: [
+          'How calm do you feel right now?',
+          'How quickly do you recover from stress?',
+          'How would you rate your energy levels today?',
+          'How well are you sleeping?',
+          'How regulated do you feel emotionally?'
+        ]
+      },
+      {
+        key: 'wellbeing',
+        name: 'Wellbeing',
+        icon: 'W',
+        description: 'Your sense of purpose, connection, security, health, and belonging.',
+        questions: [
+          'How connected do you feel to a sense of purpose?',
+          'How supported do you feel by the people around you?',
+          'How secure do you feel about your finances?',
+          'How would you rate your physical health right now?',
+          'How much of a sense of belonging do you experience?'
+        ]
+      },
+      {
+        key: 'strengths',
+        name: 'Strengths',
+        icon: 'S',
+        description: 'Your confidence in decisions, self-compassion, and ability to reframe setbacks.',
+        questions: [
+          'How confident do you feel in your decisions?',
+          'How kind are you being to yourself right now?',
+          'How well are you able to see setbacks as learning?',
+          'How clearly can you name what you do well?',
+          'How much do you trust your own instincts?'
+        ]
+      },
+      {
+        key: 'execution',
+        name: 'Execution',
+        icon: 'E',
+        description: 'Starting, finishing, pausing, prioritising, and remembering.',
+        questions: [
+          'How well are you starting tasks you need to do?',
+          'How well are you completing things you start?',
+          'How able are you to pause when you need to?',
+          'How effectively are you prioritising what matters most?',
+          'How well are you remembering important things?'
+        ]
+      }
+    ];
+
+    let currentStep = 0;
+    let answers = {};
+    let currentUser = null;
+
+    PILLARS.forEach(p => { answers[p.key] = [0, 0, 0, 0, 0]; });
+
+    function showError(msg) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('pulse-form').style.display = 'none';
+      document.getElementById('error').style.display = 'block';
+      document.getElementById('error').textContent = msg;
+    }
+
+    async function signOut() { await sb.auth.signOut(); window.location.href = 'index.html'; }
+
+    function renderSteps() {
+      const container = document.getElementById('stepsContainer');
+      container.innerHTML = '';
+      PILLARS.forEach((pillar, idx) => {
+        const step = document.createElement('div');
+        step.id = 'step-' + idx;
+        step.className = 'pulse-step' + (idx === 0 ? ' active' : '');
+        step.innerHTML = `
+          <div class="step-header">
+            <div class="pulse-icon ${pillar.key}">${pillar.icon}</div>
+            <div>
+              <h2 class="step-title">${pillar.name}</h2>
+              <p class="step-description">${pillar.description}</p>
+            </div>
+          </div>
+          <div class="step-questions">
+            ${pillar.questions.map((q, qi) => `
+              <div class="question-block">
+                <p class="question-text">${q}</p>
+                <div class="rating-row" id="rating-${idx}-${qi}">
+                  ${[1,2,3,4,5,6,7,8,9,10].map(n => `
+                    <button class="rating-btn" data-val="${n}" onclick="selectRating(${idx}, ${qi}, ${n})">${n}</button>
+                  `).join('')}
+                </div>
+                <div class="rating-labels">
+                  <span>Not at all</span>
+                  <span>Completely</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>`;
+        container.appendChild(step);
+      });
+    }
+
+    function selectRating(stepIdx, questionIdx, value) {
+      answers[PILLARS[stepIdx].key][questionIdx] = value;
+      const row = document.getElementById(`rating-${stepIdx}-${questionIdx}`);
+      row.querySelectorAll('.rating-btn').forEach(btn => {
+        btn.classList.toggle('selected', parseInt(btn.dataset.val) === value);
+      });
+    }
+
+    function updateUI() {
+      PILLARS.forEach((_, idx) => {
+        const el = document.getElementById('step-' + idx);
+        if (el) el.classList.toggle('active', idx === currentStep);
+      });
+      const progress = ((currentStep + 1) / PILLARS.length) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
+      document.getElementById('stepLabel').textContent =
+        `Step ${currentStep + 1} of ${PILLARS.length} — ${PILLARS[currentStep].name}`;
+      document.getElementById('prevBtn').style.display = currentStep > 0 ? 'block' : 'none';
+      document.getElementById('nextBtn').textContent =
+        currentStep === PILLARS.length - 1 ? 'Submit' : 'Next →';
+    }
+
+    function allAnswered(stepIdx) {
+      return answers[PILLARS[stepIdx].key].every(v => v > 0);
+    }
+
+    function nextStep() {
+      if (!allAnswered(currentStep)) {
+        alert('Please answer all ' + PILLARS[currentStep].questions.length + ' questions before continuing.');
+        return;
+      }
+      if (currentStep < PILLARS.length - 1) {
+        currentStep++;
+        updateUI();
+        window.scrollTo(0, 0);
+      } else {
+        submitPulse();
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 0) {
+        currentStep--;
+        updateUI();
+        window.scrollTo(0, 0);
+      }
+    }
+
+    async function submitPulse() {
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.textContent = 'Saving...';
+      nextBtn.disabled = true;
+
+      const scores = {};
+      PILLARS.forEach(p => {
+        scores[p.key + '_score'] = answers[p.key].reduce((a, b) => a + b, 0);
+      });
+
+      const { error } = await sb.from('brain_pulse_assessments').insert({
+        user_id: currentUser.id,
+        assessment_date: new Date().toISOString().split('T')[0],
+        ...scores
+      });
+
+      if (error) {
+        nextBtn.textContent = 'Submit';
+        nextBtn.disabled = false;
+        showError('Could not save your results. Please try again.');
+        return;
+      }
+
+      showResults(scores);
+    }
+
+    function showResults(scores) {
+      document.getElementById('pulse-form').style.display = 'none';
+      const results = document.getElementById('results');
+      results.style.display = 'block';
+      const grid = document.getElementById('resultsGrid');
+      grid.innerHTML = '';
+      PILLARS.forEach(p => {
+        const score = scores[p.key + '_score'];
+        const card = document.createElement('div');
+        card.className = 'pulse-card';
+        card.onclick = () => window.location.href = 'brain-pulse-detail.html?section=' + p.key;
+        card.innerHTML = `
+          <div class="pulse-header">
+            <div class="pulse-icon ${p.key}">${p.icon}</div>
+            <div class="pulse-title">${p.name}</div>
+          </div>
+          <div class="pulse-score">${score}<span style="font-size:16px;">/50</span></div>
+          <div class="pulse-description">${p.description}</div>`;
+        grid.appendChild(card);
+      });
+      window.scrollTo(0, 0);
+    }
+
+    function restartPulse() {
+      PILLARS.forEach(p => { answers[p.key] = [0, 0, 0, 0, 0]; });
+      currentStep = 0;
+      renderSteps();
+      updateUI();
+      document.getElementById('error').style.display = 'none';
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('pulse-form').style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const { data: { user }, error: authErr } = await sb.auth.getUser();
+        if (authErr || !user) { window.location.href = 'index.html'; return; }
+
+        const { data: ud } = await sb.from('users').select('membership_status').eq('id', user.id).single();
+        if (ud?.membership_status !== 'active') {
+          showError('Your membership has expired. Contact support@coach4u.com.au to renew.');
+          return;
+        }
+
+        currentUser = user;
+        renderSteps();
+        updateUI();
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('pulse-form').style.display = 'block';
+      } catch (err) {
+        showError('Error loading pulse. Please refresh.');
+      }
+    });
+
+    document.getElementById('headerVersion').textContent = 'v1.3 — ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+  </script>
+</body>
+</html>
