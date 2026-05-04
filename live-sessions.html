@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThriveHQ — Live Coaching Session Time</title>
+  <meta name="theme-color" content="#003366">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23003366' width='100' height='100'/><text x='50' y='65' font-size='60' fill='white' text-anchor='middle' font-weight='bold'>T</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/info.css">
+  <style>
+    .collapsible-card {
+      background: #fff;
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(13,148,136,0.1);
+      overflow: hidden;
+    }
+    .collapsible-card summary {
+      padding: 15px 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--primary);
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--accent);
+      user-select: none;
+    }
+    .collapsible-card summary::-webkit-details-marker { display: none; }
+    .collapsible-card summary::after { content: '▲'; font-size: 10px; color: var(--accent); flex-shrink: 0; }
+    .collapsible-card:not([open]) summary { border-bottom: none; }
+    .collapsible-card:not([open]) summary::after { content: '▼'; }
+    .collapsible-content { padding: 20px 22px; }
+    .summary-inner { display: flex; align-items: center; gap: 14px; flex: 1; }
+    .summary-icon { font-size: 28px; }
+    .summary-day { font-size: 17px; font-weight: 800; color: var(--primary); margin: 0 0 2px; text-transform: none; letter-spacing: 0; }
+    .summary-time { font-size: 13px; font-weight: 600; color: var(--accent); text-transform: none; letter-spacing: 0; }
+    .session-desc { font-size: 14px; color: var(--text); line-height: 1.65; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #eee; }
+    .session-points { list-style: none; padding: 0; margin: 0; }
+    .session-points li { font-size: 14px; color: #444; padding: 5px 0 5px 22px; position: relative; line-height: 1.55; }
+    .session-points li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+  </style>
+</head>
+<body class="info-page">
+
+  <header class="info-brand-bar">
+    <div class="info-brand-name">ThriveHQ</div>
+  </header>
+
+  <div class="info-hero">
+    <div class="info-hero-title">Live Coaching Session Time</div>
+    <p class="info-hero-desc">Join Cath live each week for structure, clarity, and momentum.</p>
+  </div>
+
+  <div class="info-content">
+
+    <h3 class="section-title">Coaching Session</h3>
+
+    <details class="collapsible-card" open>
+      <summary>
+        <div class="summary-inner">
+          <span class="summary-icon">📋</span>
+          <div>
+            <div class="summary-day">Planning Tuesdays</div>
+            <div class="summary-time">6:00 PM AEST</div>
+          </div>
+        </div>
+      </summary>
+      <div class="collapsible-content">
+        <p class="session-desc">A structured space to reflect, reset, and plan with purpose.</p>
+        <ul class="session-points">
+          <li>Complete your weekly well-being check-in to assess where you're at</li>
+          <li>Set a clear intention for the week ahead</li>
+          <li>Create a focused game plan based on what matters most</li>
+          <li>Share accountability and encouragement with others</li>
+        </ul>
+      </div>
+    </details>
+
+    <a href="links.html" class="btn btn-navy btn-full" style="margin-top: 14px; padding: 13px 24px;">← Back to Links</a>
+
+    <p class="info-footer">
+      Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a>
+    </p>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThriveHQ — Body Doubling</title>
+  <meta name="theme-color" content="#003366">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23003366' width='100' height='100'/><text x='50' y='65' font-size='60' fill='white' text-anchor='middle' font-weight='bold'>T</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/info.css">
+  <style>
+    .collapsible-card {
+      background: #fff;
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(13,148,136,0.1);
+      overflow: hidden;
+    }
+    .collapsible-card summary {
+      padding: 15px 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--primary);
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--accent);
+      user-select: none;
+    }
+    .collapsible-card summary::-webkit-details-marker { display: none; }
+    .collapsible-card summary::after { content: '▲'; font-size: 10px; color: var(--accent); }
+    .collapsible-card:not([open]) summary { border-bottom: none; }
+    .collapsible-card:not([open]) summary::after { content: '▼'; }
+    .collapsible-content { padding: 20px 22px; }
+    .session-block-header { display: flex; align-items: center; gap: 14px; }
+    .session-icon { font-size: 28px; flex-shrink: 0; }
+    .session-day { font-size: 17px; font-weight: 800; color: var(--primary); margin: 0 0 2px; }
+    .session-time { font-size: 14px; font-weight: 600; color: var(--accent); }
+    .session-host {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 13px; color: var(--text-muted);
+      margin-top: 12px; padding-top: 12px; border-top: 1px solid #eee;
+    }
+    .session-host-label { font-weight: 600; color: var(--primary); }
+    .link-card-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 15px 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(13,148,136,0.1);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--primary);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .link-card-row:hover { box-shadow: 0 6px 16px rgba(13,148,136,0.2); transform: translateY(-2px); color: var(--primary); text-decoration: none; }
+    .link-card-row span { font-size: 10px; color: var(--accent); }
+  </style>
+</head>
+<body class="info-page">
+
+  <header class="info-brand-bar">
+    <div class="info-brand-name">ThriveHQ</div>
+  </header>
+
+  <div class="info-hero">
+    <div class="info-hero-title">Body Doubling</div>
+    <p class="info-hero-desc">A shared space to sit down, show up, and get things done — alongside others who get it.</p>
+  </div>
+
+  <div class="info-content">
+
+    <h3 class="section-title">Body Doubling</h3>
+
+    <p style="font-size: 15px; color: var(--text); line-height: 1.65; margin-bottom: 16px;">Body doubling sessions run throughout the week. Choose a time that works for you, show up, and work alongside others. Click any session below to join.</p>
+
+    <a href="hosting.html" class="link-card-row">
+      Become a Host
+      <span>→</span>
+    </a>
+
+    <details class="collapsible-card" open>
+      <summary>Focus Sessions</summary>
+      <div class="collapsible-content">
+        <div class="session-block-header">
+          <span class="session-icon">⚡</span>
+          <div>
+            <div class="session-day">Body Doubling Session</div>
+            <div class="session-time">12:00 – 1:00 PM AEST</div>
+          </div>
+        </div>
+        <div class="session-host">
+          <span>👤</span>
+          <span>Hosted by <span class="session-host-label">Cath Baker</span></span>
+        </div>
+      </div>
+    </details>
+
+    <a href="links.html" class="btn btn-navy btn-full" style="margin-top: 14px; padding: 13px 24px;">← Back to Links</a>
+
+    <p class="info-footer">
+      Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a>
+    </p>
+
+  </div>
+
+</body>
+</html>
