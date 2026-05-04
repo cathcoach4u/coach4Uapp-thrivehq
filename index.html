@@ -38,12 +38,12 @@
     <a href="forgot-password.html" class="login-forgot">Forgot password?</a>
   </div>
 
-  <footer style="position:fixed; bottom:0; width:100%; text-align:center; font-size:14px; color:#999; padding:12px 0;">
-    Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au" style="color:#999;">coach4u.com.au</a>
+  <footer class="site-footer">
+    Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a>
   </footer>
 
   <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
     const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);

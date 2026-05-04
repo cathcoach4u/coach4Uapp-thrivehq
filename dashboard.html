@@ -32,7 +32,7 @@
 
       <div class="app-section-header">
         <span class="app-section-title">Your Tools</span>
-        <span class="app-section-count">4 available</span>
+        <span class="app-section-count" id="appCount">4 available</span>
       </div>
 
       <div class="app-grid">
@@ -69,9 +69,10 @@
   </main>
 
   <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
     const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
+    const VERSION = '2026-05-04.1';
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     function bandLabel(total) {
@@ -122,8 +123,8 @@
 
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 
-    document.getElementById('headerVersion').textContent =
-      'v2.1 — ' + new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+    document.getElementById('headerVersion').textContent = 'v' + VERSION;
+    document.getElementById('appCount').textContent = document.querySelectorAll('.app-card').length + ' available';
   </script>
 </body>
 </html>
