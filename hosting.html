@@ -9,25 +9,26 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/info.css">
   <style>
-    .intro-text { font-size: 16px; color: var(--text); line-height: 1.75; margin-bottom: 28px; }
-    .hosting-card {
+    .intro-text { font-size: 15px; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; }
+    .benefit-card {
       background: #fff;
       border: 2px solid var(--accent);
       border-radius: var(--radius);
-      padding: 8px 24px;
+      overflow: hidden;
       margin-bottom: 16px;
       box-shadow: 0 2px 8px rgba(13,148,136,0.1);
     }
-    .hosting-list { list-style: none; padding: 0; margin: 0; }
-    .hosting-list li {
-      font-size: 15px; color: #444;
-      padding: 12px 0 12px 26px;
-      position: relative;
-      line-height: 1.65;
-      border-bottom: 1px solid #f0f0f0;
+    .benefit-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 18px;
+      border-bottom: 1px solid #f0f2f5;
     }
-    .hosting-list li:last-child { border-bottom: none; }
-    .hosting-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 700; font-size: 16px; }
+    .benefit-row:last-child { border-bottom: none; }
+    .benefit-icon { font-size: 22px; flex-shrink: 0; width: 30px; text-align: center; margin-top: 1px; }
+    .benefit-title { font-size: 15px; font-weight: 600; color: var(--primary); display: block; margin-bottom: 2px; }
+    .benefit-desc { font-size: 13px; color: #888; line-height: 1.5; display: block; }
   </style>
 </head>
 <body class="info-page">
@@ -39,26 +40,58 @@
 
   <div class="info-content">
 
-    <p class="intro-text">Hosting a Body Doubling session is one of the most rewarding things you can do — for yourself and for the community. It's a volunteer role that costs nothing except an hour of your time, and it gives back far more than that.</p>
+    <p class="intro-text">You don’t need to facilitate or lead. You just need to show up, open the room, and work alongside others. It’s one of the most rewarding things you can do — for yourself and the community.</p>
 
     <h3 class="section-title">What hosting gives you</h3>
 
-    <div class="hosting-card">
-      <ul class="hosting-list">
-        <li>Choose a time that fits your schedule — you're in control of when it runs</li>
-        <li>A built-in reason to sit down and focus — hosting keeps you on task too</li>
-        <li>A genuine way to connect with others in the group and build momentum together</li>
-        <li>The quiet satisfaction of knowing your presence helped someone else get things done</li>
-      </ul>
+    <div class="benefit-card">
+      <div class="benefit-row">
+        <span class="benefit-icon">🗓️</span>
+        <span>
+          <span class="benefit-title">Your schedule, your choice</span>
+          <span class="benefit-desc">Pick a time that fits — you’re in full control of when it runs.</span>
+        </span>
+      </div>
+      <div class="benefit-row">
+        <span class="benefit-icon">🎯</span>
+        <span>
+          <span class="benefit-title">A built-in reason to focus</span>
+          <span class="benefit-desc">Hosting gives you accountability too — you’ll get things done alongside the group.</span>
+        </span>
+      </div>
+      <div class="benefit-row">
+        <span class="benefit-icon">🤝</span>
+        <span>
+          <span class="benefit-title">Real connection</span>
+          <span class="benefit-desc">A genuine way to build momentum with others in the ThriveHQ community.</span>
+        </span>
+      </div>
+      <div class="benefit-row">
+        <span class="benefit-icon">✨</span>
+        <span>
+          <span class="benefit-title">Quiet satisfaction</span>
+          <span class="benefit-desc">Knowing your presence helped someone else get things done is a powerful feeling.</span>
+        </span>
+      </div>
     </div>
 
     <h3 class="section-title" style="margin-top: 24px;">Your role as host</h3>
 
-    <div class="hosting-card">
-      <ul class="hosting-list">
-        <li>Confirm the day before that you're available and ready to host</li>
-        <li>Log in at the scheduled time and commit to an hour of focused work alongside the group</li>
-      </ul>
+    <div class="benefit-card">
+      <div class="benefit-row">
+        <span class="benefit-icon">✅</span>
+        <span>
+          <span class="benefit-title">Confirm the day before</span>
+          <span class="benefit-desc">Let the community know you’ll be there and you’re ready to host.</span>
+        </span>
+      </div>
+      <div class="benefit-row">
+        <span class="benefit-icon">💻</span>
+        <span>
+          <span class="benefit-title">Log in and get to work</span>
+          <span class="benefit-desc">Show up at the scheduled time and commit to an hour of focused work alongside the group.</span>
+        </span>
+      </div>
     </div>
 
     <a href="body-doubling.html" class="btn btn-navy btn-full" style="margin-top: 28px; padding: 13px 24px;">← Back to Body Doubling</a>
