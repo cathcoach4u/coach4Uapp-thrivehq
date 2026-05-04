@@ -65,6 +65,28 @@
     }
     .session-host-label { font-weight: 600; color: var(--primary); }
 
+    /* Link card — same look as collapsible summary but navigates on click */
+    .link-card-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 15px 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(13,148,136,0.1);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--primary);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .link-card-row:hover { box-shadow: 0 6px 16px rgba(13,148,136,0.2); transform: translateY(-2px); color: var(--primary); text-decoration: none; }
+    .link-card-row span { font-size: 10px; color: var(--accent); }
+
     .page-footer { text-align: center; font-size: 13px; color: #999; margin-top: 36px; }
     .page-footer a { color: #999; }
   </style>
@@ -80,6 +102,11 @@
   <div class="page-content">
 
     <p class="section-title">Body Doubling</p>
+
+    <a href="hosting.html" class="link-card-row">
+      Become a Host
+      <span>→</span>
+    </a>
 
     <details class="collapsible-card" open data-host="Cath Baker">
       <summary>Focus Sessions</summary>
@@ -98,8 +125,7 @@
       </div>
     </details>
 
-    <a href="hosting.html" class="btn btn-navy btn-full" style="margin-top: 28px; padding: 13px 24px;">Become a Host →</a>
-    <a href="links.html" class="btn btn-navy btn-full" style="margin-top: 10px; padding: 13px 24px; background: transparent; color: var(--primary); border: 2px solid var(--primary);">← Back to Links</a>
+    <a href="links.html" class="btn btn-navy btn-full" style="margin-top: 14px; padding: 13px 24px; background: transparent; color: var(--primary); border: 2px solid var(--primary);">← Back to Links</a>
 
     <p class="page-footer">
       Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a>
