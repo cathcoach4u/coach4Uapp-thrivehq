@@ -10,36 +10,24 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/info.css">
   <style>
-    /* Hero decorative circle */
-    .info-hero { position: relative; overflow: hidden; }
-    .info-hero::after {
-      content: '';
-      position: absolute;
-      top: -40px; right: -40px;
-      width: 160px; height: 160px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.06);
-    }
     .hero-sub {
-      font-size: 13px; font-weight: 600; opacity: 0.75;
+      font-size: 13px; font-weight: 600;
       text-transform: uppercase; letter-spacing: 0.8px;
-      margin-bottom: 16px; color: white;
+      margin-bottom: 16px; color: var(--accent);
     }
 
-    /* Link section labels */
     .link-section-label {
-      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      font-size: 13px; font-weight: 700; text-transform: uppercase;
       letter-spacing: 0.9px; color: var(--primary);
       margin: 0 0 10px; padding-bottom: 6px;
       border-bottom: 2px solid var(--accent);
     }
     .link-section-gap { margin-top: 28px; }
 
-    /* Link cards */
     .link-card {
       display: flex; align-items: center; gap: 14px;
       background: #fff; border-radius: 10px;
-      padding: 15px 18px; margin-bottom: 10px;
+      padding: 16px 18px; margin-bottom: 10px;
       text-decoration: none; color: var(--primary);
       border: 2px solid var(--accent);
       box-shadow: 0 2px 8px rgba(13,148,136,0.12);
@@ -50,11 +38,13 @@
       transform: translateY(-2px);
       text-decoration: none; color: var(--primary);
     }
-    .link-card-icon { font-size: 22px; flex-shrink: 0; width: 32px; text-align: center; }
+    .link-card-icon { font-size: 24px; flex-shrink: 0; width: 34px; text-align: center; }
     .link-card-text { flex: 1; }
-    .link-card-title { font-size: 15px; font-weight: 600; color: var(--primary); display: block; }
-    .link-card-sub { font-size: 12px; color: #888; margin-top: 2px; display: block; }
+    .link-card-title { font-size: 16px; font-weight: 600; color: var(--primary); display: block; }
+    .link-card-sub { font-size: 13px; color: #888; margin-top: 3px; display: block; }
     .link-card-arrow { font-size: 16px; color: var(--accent); flex-shrink: 0; }
+
+    .bd-loading { font-size: 13px; color: #aaa; padding: 12px 0; display: block; }
   </style>
 </head>
 <body class="info-page">
@@ -101,15 +91,7 @@
 
     <div class="link-section-gap"></div>
     <p class="link-section-label">Body Doubling</p>
-
-    <a href="body-doubling.html" class="link-card">
-      <span class="link-card-icon">⚡</span>
-      <span class="link-card-text">
-        <span class="link-card-title">Body Doubling</span>
-        <span class="link-card-sub">12:00 PM AEST · Bonus Session</span>
-      </span>
-      <span class="link-card-arrow">→</span>
-    </a>
+    <div id="bdSessions"><span class="bd-loading">Loading sessions…</span></div>
 
     <div class="link-section-gap"></div>
     <p class="link-section-label">Weekly Flow &amp; Calendar</p>
@@ -127,6 +109,39 @@
     </p>
 
   </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
+
+    const sb = createClient(
+      'https://eekefsuaefgpqmjdyniy.supabase.co',
+      'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y'
+    );
+
+    const { data, error } = await sb
+      .from('body_doubling_sessions')
+      .select('host_name, day_of_week, start_time, end_time, meeting_url')
+      .eq('active', true)
+      .order('day_order')
+      .order('start_time');
+
+    const container = document.getElementById('bdSessions');
+
+    if (error || !data || data.length === 0) {
+      container.innerHTML = '<span class="bd-loading">No sessions currently scheduled.</span>';
+    } else {
+      container.innerHTML = data.map(s => `
+        <a href="${s.meeting_url}" target="_blank" rel="noopener" class="link-card">
+          <span class="link-card-icon">⚡</span>
+          <span class="link-card-text">
+            <span class="link-card-title">${s.host_name}</span>
+            <span class="link-card-sub">${s.day_of_week} · ${s.start_time}–${s.end_time} AEST</span>
+          </span>
+          <span class="link-card-arrow">→</span>
+        </a>
+      `).join('');
+    }
+  </script>
 
 </body>
 </html>
