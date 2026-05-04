@@ -9,25 +9,52 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/info.css">
   <style>
-    .link-card {
-      display: flex; align-items: center; gap: 14px;
-      background: #fff; border-radius: 10px;
-      padding: 16px 18px; margin-bottom: 10px;
-      text-decoration: none; color: var(--primary);
-      border: 2px solid var(--accent);
-      box-shadow: 0 2px 8px rgba(13,148,136,0.12);
+    .host-cta {
+      display: block;
+      background: linear-gradient(135deg, var(--primary) 0%, #0a5a96 100%);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0,51,102,0.25);
       transition: box-shadow 0.2s, transform 0.2s;
     }
-    .link-card:hover {
-      box-shadow: 0 6px 16px rgba(13,148,136,0.22);
+    .host-cta:hover {
+      box-shadow: 0 8px 20px rgba(0,51,102,0.35);
       transform: translateY(-2px);
-      text-decoration: none; color: var(--primary);
+      text-decoration: none;
     }
-    .link-card-icon { font-size: 24px; flex-shrink: 0; width: 34px; text-align: center; }
-    .link-card-text { flex: 1; }
-    .link-card-title { font-size: 16px; font-weight: 600; color: var(--primary); display: block; }
-    .link-card-sub { font-size: 13px; color: #888; margin-top: 3px; display: block; }
-    .link-card-arrow { font-size: 16px; color: var(--accent); flex-shrink: 0; }
+    .host-cta-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .host-cta-icon { font-size: 28px; flex-shrink: 0; }
+    .host-cta-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      font-family: var(--font-heading);
+      letter-spacing: -0.2px;
+    }
+    .host-cta-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+    .host-cta-btn {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1.5px solid rgba(255,255,255,0.5);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 7px 16px;
+      border-radius: var(--radius-sm);
+      letter-spacing: 0.2px;
+    }
 
     .bd-schedule-card {
       background: #fff;
@@ -68,13 +95,13 @@
 
   <div class="info-content">
 
-    <a href="hosting.html" class="link-card">
-      <span class="link-card-icon">🤝</span>
-      <span class="link-card-text">
-        <span class="link-card-title">Become a Host</span>
-        <span class="link-card-sub">Volunteer to run a focus session</span>
-      </span>
-      <span class="link-card-arrow">→</span>
+    <a href="hosting.html" class="host-cta">
+      <div class="host-cta-top">
+        <span class="host-cta-icon">🤝</span>
+        <span class="host-cta-title">Become a Host</span>
+      </div>
+      <p class="host-cta-desc">You don’t need to facilitate or lead — just show up and work alongside the group. It costs nothing except an hour of your time.</p>
+      <span class="host-cta-btn">Find out more →</span>
     </a>
 
     <div class="bd-schedule-card">
