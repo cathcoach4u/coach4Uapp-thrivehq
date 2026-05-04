@@ -59,6 +59,20 @@
       border-top: 1px solid #eee;
     }
     .session-host-label { font-weight: 600; color: var(--primary); }
+
+    .hosting-card {
+      background: #fff;
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-top: 16px;
+      box-shadow: 0 2px 8px rgba(13,148,136,0.1);
+    }
+    .hosting-intro { font-size: 14px; color: var(--text); line-height: 1.65; margin-bottom: 16px; }
+    .hosting-subtitle { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--primary); margin: 16px 0 8px; }
+    .hosting-list { list-style: none; padding: 0; margin: 0; }
+    .hosting-list li { font-size: 14px; color: #444; padding: 5px 0 5px 22px; position: relative; line-height: 1.55; }
+    .hosting-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
   </style>
 </head>
 <body>
@@ -98,6 +112,25 @@
         <span>👤</span>
         <span>Hosted by <span class="session-host-label">Cath Baker</span></span>
       </div>
+    </div>
+
+    <div class="hosting-card">
+      <p class="section-heading" style="margin-bottom: 10px;">Interested in Hosting?</p>
+      <p class="hosting-intro">Hosting a Body Doubling session is one of the most rewarding things you can do — for yourself and for the community. You don't need to facilitate or lead; you just need to show up, open the room, and work alongside others.</p>
+
+      <p class="hosting-subtitle">What hosting gives you</p>
+      <ul class="hosting-list">
+        <li>Choose a time that fits your schedule — you're in control of when it runs</li>
+        <li>A built-in reason to sit down and focus — hosting keeps you on task too</li>
+        <li>A genuine way to connect with others in the group and build momentum together</li>
+        <li>The quiet satisfaction of knowing your presence helped someone else get things done</li>
+      </ul>
+
+      <p class="hosting-subtitle">Your role as host</p>
+      <ul class="hosting-list">
+        <li>Confirm the day before that you're available and ready to host</li>
+        <li>Log in at the scheduled time and commit to an hour of focused work alongside the group</li>
+      </ul>
     </div>
 
     <a href="links.html" class="btn btn-navy btn-full" style="margin-top: 28px; padding: 13px 24px;">← Back to Links</a>
