@@ -16,9 +16,9 @@
 | `links.html` | No | Public Linktree-style links page. Info design. |
 | `weekly-coaching-flow.html` | No | Public weekly coaching flow (Planning Tuesday, Focus Thursday). Info design. |
 | `session-rhythm.html` | No | Public 2026 session rhythm calendar (session blocks and breaks). Info design. |
-| `live-sessions.html` | No | Public live coaching session time (Planning Tuesdays 6 PM AEST). Dashboard design. |
-| `body-doubling.html` | No | Public Body Doubling / Focus Thursdays (12–1 PM AEST). Dashboard design. |
-| `hosting.html` | No | Public “Become a Body Doubling Host” page. Dashboard design. |
+| `live-sessions.html` | No | Public live coaching session time (Planning Tuesdays 6 PM AEST). Info design. |
+| `body-doubling.html` | No | Public Body Doubling sessions page. Info design. Supabase (`body_doubling_sessions`). |
+| `hosting.html` | No | Public "Become a Body Doubling Host" page. Info design. |
 | `dashboard.html` | Yes | Main member dashboard with Brain Pulse results and quick links |
 | `brain-pulse.html` | Yes | 4-pillar Brain Pulse assessment form |
 | `brain-pulse-detail.html` | Yes | Per-pillar coaching focus detail |
@@ -45,7 +45,7 @@ This repo uses three separate design systems. Use the right one — do not mix t
 
 **What is an activity?** A page where the user produces a personal output through interaction — selections, reflections, multi-step flows. Static or informational pages are NOT activities.
 
-**What is an info page?** A public page that explains or displays programme information with no user inputs and no Supabase calls.
+**What is an info page?** A public page that explains or displays programme information with no user inputs and no Supabase calls (except read-only public data like body doubling sessions).
 
 ---
 
@@ -116,7 +116,7 @@ For authenticated activity pages, also keep `site-header` from `style.css` for t
 **Never use teal (`#0D9488`) on activity pages.** Teal belongs to the dashboard only.
 
 ### Activity CSS class reference
-See `coach4u-shared/templates/CLAUDE.md` → “Activity / Tool Pattern” for the full `act-*` class reference.
+See `coach4u-shared/templates/CLAUDE.md` → "Activity / Tool Pattern" for the full `act-*` class reference.
 
 ### Activity pages in this repo
 
@@ -139,25 +139,39 @@ Link in every info page `<head>`, alongside `style.css`:
 
 Add `class="info-page"` to `<body>`. `info.css` handles the page chrome; `style.css` provides shared components (`.card`, `.btn`, `.section-title`).
 
-### Info CSS class reference
+### Info CSS class reference (v2.1)
 
 ```
-.info-hero           — full-width navy-to-teal gradient banner
-.info-hero-logo      — app name, bold 28px
-.info-hero-title     — page title, 20px
-.info-hero-desc      — subtitle (max 480px, 0.88 opacity)
+.info-brand-bar      — navy header bar matching .site-header tone; teal gradient top strip
+.info-brand-name     — brand/app name, bold 20px white
+.info-brand-sub      — page subtitle or section name, 12px uppercase muted white
 .info-content        — 560px centred content well
 .info-note           — teal left-strip callout block
 .info-footer         — centred muted footer, sticky to bottom
+```
+
+HTML skeleton:
+```html
+<header class="info-brand-bar">
+  <div class="info-brand-name">ThriveHQ</div>
+  <div class="info-brand-sub">Page Title</div>
+</header>
+<div class="info-content">
+  ...
+  <p class="info-footer">Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a></p>
+</div>
 ```
 
 ### Info pages in this repo
 
 | Page | Notes |
 |---|---|
-| `links.html` | Link card styles in inline `<style>`. No Supabase. |
+| `links.html` | Link card styles in inline `<style>`. Body Doubling card links to `body-doubling.html`. |
 | `weekly-coaching-flow.html` | Session card details in inline `<style>`. Static, no Supabase. |
 | `session-rhythm.html` | Rhythm row details in inline `<style>`. JS hides past date rows via `data-end` attributes. |
+| `live-sessions.html` | Collapsible session card. Static, no Supabase. |
+| `body-doubling.html` | Prominent navy CTA card for hosting + Mon–Sat schedule from Supabase `body_doubling_sessions`. Uses direct `fetch()` REST API (not Supabase JS client). |
+| `hosting.html` | Standout question + intro box + emoji benefit cards. Static, no Supabase. |
 
 ---
 
@@ -181,9 +195,23 @@ Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coac
 | URL | `https://eekefsuaefgpqmjdyniy.supabase.co` |
 | Anon Key | `sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y` |
 
+### body_doubling_sessions table
+
+Public read-only table powering `body-doubling.html`. Fetched via direct `fetch()` (not Supabase JS client):
+
+```javascript
+fetch(SUPABASE_URL + '/rest/v1/body_doubling_sessions?active=eq.true&select=host_name,day_of_week,day_order,start_time,end_time,meeting_url',
+  { headers: { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + ANON_KEY } })
+```
+
+Columns: `id`, `host_name`, `day_of_week`, `day_order` (1–7), `start_time`, `end_time`, `meeting_url`, `active`, `created_at`.
+RLS: public SELECT policy for `anon` role + `GRANT SELECT ON body_doubling_sessions TO anon`.
+
 ## Critical Rules
 
 **Supabase init — always ESM, always inline.** Use `<script type="module">` with `import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm'` inline in each page. Never use the UMD CDN bundle (`supabase.min.js`). Never load Supabase from an external config file.
+
+**Public Supabase reads — use direct fetch().** For unauthenticated public pages, use `fetch()` directly to the Supabase REST API with `apikey` and `Authorization: Bearer` headers. The Supabase JS client with `sb_publishable_` keys is unreliable for unauthenticated requests.
 
 **Inline onclick handlers with module scripts.** Module scripts are scoped — functions defined inside them are not available to inline `onclick` attributes. Any function called from an inline `onclick` must be exposed on the global scope: `window.funcName = function() {...}`.
 
@@ -206,31 +234,11 @@ Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coac
 
 ## inactive.html
 
-Shown when a member’s `membership_status` is not `'active'`. The page:
+Shown when a member's `membership_status` is not `'active'`. The page:
 - Uses the same `login-page` / `login-card` layout as auth pages
 - Signs the user out and redirects to `index.html` when they click the button
 - Has no membership check (to avoid redirect loops)
 - Includes the Coach4U footer
-
-## links.html
-
-Public links page (no authentication). Used as a Linktree replacement. Uses the **info design system**.
-- `body.info-page`, `.info-hero`, `.info-content`, `.info-footer` from `info.css`
-- Teal-bordered link cards with hover lift (page-specific styles in inline `<style>`)
-- Sections: Connection Tools (WhatsApp), Live Coaching Times (live-sessions.html · Teams), Body Doubling (body-doubling.html), Weekly Flow & Calendar (session-rhythm.html)
-- To update links, edit `links.html` directly — no Supabase involved
-
-## weekly-coaching-flow.html and session-rhythm.html
-
-Public info pages (no authentication). Use the **info design system** (`css/style.css` + `css/info.css`).
-- `body class="info-page"` — grey background from `info.css`
-- `div.info-hero` — navy-to-teal gradient banner with logo, title, description
-- `div.info-content` — 560px centred content well
-- Cards use `.card` from `style.css`; section labels use `.section-title`
-- Back link uses `.btn.btn-navy` from `style.css`
-- Page-specific styles (rhythm rows, session card layout) in inline `<style>` block
-- No Supabase — static content only
-- `session-rhythm.html` uses `data-end` attributes + JS to auto-hide past session blocks
 
 ## Login Page Pattern
 
