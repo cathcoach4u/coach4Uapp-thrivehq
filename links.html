@@ -15,7 +15,6 @@
       text-transform: uppercase; letter-spacing: 0.8px;
       margin-bottom: 16px; color: var(--accent);
     }
-
     .link-section-label {
       font-size: 13px; font-weight: 700; text-transform: uppercase;
       letter-spacing: 0.9px; color: var(--primary);
@@ -23,7 +22,6 @@
       border-bottom: 2px solid var(--accent);
     }
     .link-section-gap { margin-top: 28px; }
-
     .link-card {
       display: flex; align-items: center; gap: 14px;
       background: #fff; border-radius: 10px;
@@ -43,7 +41,6 @@
     .link-card-title { font-size: 16px; font-weight: 600; color: var(--primary); display: block; }
     .link-card-sub { font-size: 13px; color: #888; margin-top: 3px; display: block; }
     .link-card-arrow { font-size: 16px; color: var(--accent); flex-shrink: 0; }
-
     .bd-loading { font-size: 13px; color: #aaa; padding: 12px 0; display: block; }
   </style>
 </head>
@@ -110,37 +107,44 @@
 
   </div>
 
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
+  <script>
+    (async function() {
+      const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
+      const ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
+      const container = document.getElementById('bdSessions');
 
-    const sb = createClient(
-      'https://eekefsuaefgpqmjdyniy.supabase.co',
-      'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y'
-    );
+      try {
+        const res = await fetch(
+          SUPABASE_URL + '/rest/v1/body_doubling_sessions?active=eq.true&select=host_name,day_of_week,start_time,end_time,meeting_url&order=day_order.asc,start_time.asc',
+          {
+            headers: {
+              'apikey': ANON_KEY,
+              'Authorization': 'Bearer ' + ANON_KEY
+            }
+          }
+        );
+        const data = await res.json();
+        console.log('BD sessions:', res.status, data);
 
-    const { data, error } = await sb
-      .from('body_doubling_sessions')
-      .select('host_name, day_of_week, start_time, end_time, meeting_url')
-      .eq('active', true)
-      .order('day_order')
-      .order('start_time');
-
-    const container = document.getElementById('bdSessions');
-
-    if (error || !data || data.length === 0) {
-      container.innerHTML = '<span class="bd-loading">No sessions currently scheduled.</span>';
-    } else {
-      container.innerHTML = data.map(s => `
-        <a href="${s.meeting_url}" target="_blank" rel="noopener" class="link-card">
-          <span class="link-card-icon">⚡</span>
-          <span class="link-card-text">
-            <span class="link-card-title">${s.host_name}</span>
-            <span class="link-card-sub">${s.day_of_week} · ${s.start_time}–${s.end_time} AEST</span>
-          </span>
-          <span class="link-card-arrow">→</span>
-        </a>
-      `).join('');
-    }
+        if (!res.ok || !Array.isArray(data) || data.length === 0) {
+          container.innerHTML = '<span class="bd-loading">No sessions currently scheduled.</span>';
+        } else {
+          container.innerHTML = data.map(function(s) {
+            return '<a href="' + s.meeting_url + '" target="_blank" rel="noopener" class="link-card">' +
+              '<span class="link-card-icon">⚡</span>' +
+              '<span class="link-card-text">' +
+                '<span class="link-card-title">' + s.host_name + '</span>' +
+                '<span class="link-card-sub">' + s.day_of_week + ' · ' + s.start_time + '–' + s.end_time + ' AEST</span>' +
+              '</span>' +
+              '<span class="link-card-arrow">→</span>' +
+            '</a>';
+          }).join('');
+        }
+      } catch (e) {
+        console.error('BD fetch error:', e);
+        container.innerHTML = '<span class="bd-loading">No sessions currently scheduled.</span>';
+      }
+    })();
   </script>
 
 </body>
