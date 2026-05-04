@@ -99,7 +99,7 @@
         const { data: userData } = await sb.from('users').select('*').eq('id', user.id).single();
         if (userData?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
 
-        document.getElementById('memberName').textContent = userData.name || '—';
+        document.getElementById('memberName').textContent = userData.full_name || '—';
         document.getElementById('memberEmail').textContent = userData.email || '—';
 
         const { data: assessments } = await sb
