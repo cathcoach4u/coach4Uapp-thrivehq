@@ -22,18 +22,42 @@
 
     .page-content { max-width: 560px; margin: 0 auto; padding: 28px 20px 60px; }
 
-    .session-block {
+    .collapsible-card {
       background: #fff;
       border: 2px solid var(--accent);
       border-radius: var(--radius);
-      padding: 28px 24px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       box-shadow: 0 2px 8px rgba(13,148,136,0.1);
+      overflow: hidden;
     }
-    .session-block-header { display: flex; align-items: center; gap: 16px; }
-    .session-icon { font-size: 36px; flex-shrink: 0; }
-    .session-day { font-size: 20px; font-weight: 800; color: var(--primary); margin: 0 0 3px; }
-    .session-time { font-size: 15px; font-weight: 600; color: var(--accent); }
+    .collapsible-card summary {
+      padding: 15px 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--primary);
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--accent);
+      user-select: none;
+    }
+    .collapsible-card summary::-webkit-details-marker { display: none; }
+    .collapsible-card summary::after { content: '▲'; font-size: 10px; color: var(--accent); }
+    .collapsible-card:not([open]) summary { border-bottom: none; }
+    .collapsible-card:not([open]) summary::after { content: '▼'; }
+
+    .collapsible-content { padding: 20px 22px; }
+
+    .session-time { font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 12px; }
+    .session-desc { font-size: 14px; color: var(--text); line-height: 1.65; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #eee; }
+
+    .session-points { list-style: none; padding: 0; margin: 0; }
+    .session-points li { font-size: 14px; color: #444; padding: 5px 0 5px 22px; position: relative; line-height: 1.55; }
+    .session-points li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
 
     .page-footer { text-align: center; font-size: 13px; color: #999; margin-top: 36px; }
     .page-footer a { color: #999; }
@@ -51,17 +75,21 @@
 
     <p class="section-title">Coaching Session</p>
 
-    <div class="session-block">
-      <div class="session-block-header">
-        <span class="session-icon">📋</span>
-        <div>
-          <div class="session-day">Planning Tuesdays</div>
-          <div class="session-time">6:00 PM AEST</div>
-        </div>
+    <details class="collapsible-card" open>
+      <summary>Planning Tuesdays</summary>
+      <div class="collapsible-content">
+        <div class="session-time">6:00 PM AEST</div>
+        <p class="session-desc">A structured space to reflect, reset, and plan with purpose.</p>
+        <ul class="session-points">
+          <li>Complete your weekly well-being check-in to assess where you're at</li>
+          <li>Set a clear intention for the week ahead</li>
+          <li>Create a focused game plan based on what matters most</li>
+          <li>Share accountability and encouragement with others</li>
+        </ul>
       </div>
-    </div>
+    </details>
 
-    <a href="links.html" class="btn btn-navy btn-full" style="margin-top: 28px; padding: 13px 24px;">← Back to Links</a>
+    <a href="links.html" class="btn btn-navy btn-full" style="margin-top: 14px; padding: 13px 24px;">← Back to Links</a>
 
     <p class="page-footer">
       Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a>
