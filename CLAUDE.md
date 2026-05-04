@@ -16,7 +16,9 @@
 | `links.html` | No | Public Linktree-style links page (Teams, WhatsApp, coaching flow) |
 | `weekly-coaching-flow.html` | No | Public weekly coaching flow page (Planning Tuesday, Focus Thursday). Dashboard design. |
 | `session-rhythm.html` | No | Public 2026 session rhythm calendar (session blocks and breaks). Dashboard design. |
-| `live-sessions.html` | No | Public live session times. Two sections: Coaching Session (Planning Tuesdays 6 PM AEST) and Body Doubling (Focus Thursdays 12 PM AEST). Dashboard design. |
+| `live-sessions.html` | No | Public live coaching session time (Planning Tuesdays 6 PM AEST). Dashboard design. |
+| `body-doubling.html` | No | Public Body Doubling / Focus Thursdays (12–1 PM AEST). Hosting info and link to hosting.html. Dashboard design. |
+| `hosting.html` | No | Public "Become a Body Doubling Host" page. Expandable volunteer hosting role info. Dashboard design. |
 | `dashboard.html` | Yes | Main member dashboard with Brain Pulse results and quick links |
 | `brain-pulse.html` | Yes | 4-pillar Brain Pulse assessment form |
 | `brain-pulse-detail.html` | Yes | Per-pillar coaching focus detail |
