@@ -64,7 +64,7 @@
     .bd-day-row.no-session { color: #ccc; cursor: default; }
     .bd-day-name { font-size: 14px; font-weight: 700; width: 96px; }
     .bd-day-info { flex: 1; font-size: 13px; }
-    .bd-day-arrow { font-size: 14px; color: var(--accent); }
+    .bd-day-join { font-size: 12px; font-weight: 600; color: var(--accent); white-space: nowrap; }
   </style>
 </head>
 <body class="info-page">
@@ -174,7 +174,7 @@
             return '<a href="' + s.meeting_url + '" target="_blank" rel="noopener" class="bd-day-row has-session">' +
               '<span class="bd-day-name">' + day.name + '</span>' +
               '<span class="bd-day-info">' + s.host_name + ' · ' + s.start_time + '–' + s.end_time + ' AEST</span>' +
-              '<span class="bd-day-arrow">→</span>' +
+              '<span class="bd-day-join">Click here to join →</span>' +
             '</a>';
           }).join('');
         } else {
