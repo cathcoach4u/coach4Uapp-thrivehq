@@ -36,35 +36,6 @@
     .link-card-title { font-size: 16px; font-weight: 600; color: var(--primary); display: block; }
     .link-card-sub { font-size: 13px; color: #888; margin-top: 3px; display: block; }
     .link-card-arrow { font-size: 16px; color: var(--accent); flex-shrink: 0; }
-
-    .bd-schedule-card {
-      background: #fff;
-      border: 2px solid var(--accent);
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(13,148,136,0.12);
-      margin-bottom: 10px;
-    }
-    .bd-schedule-title {
-      padding: 14px 18px;
-      font-size: 16px; font-weight: 600;
-      color: var(--primary);
-      border-bottom: 2px solid var(--accent);
-    }
-    .bd-day-row {
-      display: flex; align-items: center;
-      padding: 11px 18px;
-      border-bottom: 1px solid #f0f0f0;
-      text-decoration: none;
-      transition: background 0.15s;
-    }
-    .bd-day-row:last-child { border-bottom: none; }
-    .bd-day-row.has-session { color: var(--primary); }
-    .bd-day-row.has-session:hover { background: #f8fffe; }
-    .bd-day-row.no-session { color: #ccc; cursor: default; }
-    .bd-day-name { font-size: 14px; font-weight: 700; width: 96px; }
-    .bd-day-info { flex: 1; font-size: 13px; }
-    .bd-day-join { font-size: 12px; font-weight: 600; color: var(--accent); white-space: nowrap; }
   </style>
 </head>
 <body class="info-page">
@@ -111,19 +82,14 @@
     <div class="link-section-gap"></div>
     <p class="link-section-label">Body Doubling</p>
 
-    <a href="hosting.html" class="link-card">
-      <span class="link-card-icon">🤝</span>
+    <a href="body-doubling.html" class="link-card">
+      <span class="link-card-icon">⚡</span>
       <span class="link-card-text">
-        <span class="link-card-title">Become a Host</span>
-        <span class="link-card-sub">Volunteer to run a focus session</span>
+        <span class="link-card-title">Body Doubling Sessions</span>
+        <span class="link-card-sub">Join a session or become a host</span>
       </span>
       <span class="link-card-arrow">→</span>
     </a>
-
-    <div class="bd-schedule-card">
-      <div class="bd-schedule-title">Sessions</div>
-      <div id="bdSchedule"></div>
-    </div>
 
     <div class="link-section-gap"></div>
     <p class="link-section-label">Weekly Flow &amp; Calendar</p>
@@ -141,51 +107,6 @@
     </p>
 
   </div>
-
-  <script>
-    (async function() {
-      var DAYS = [
-        { name: 'Monday',    order: 1 },
-        { name: 'Tuesday',   order: 2 },
-        { name: 'Wednesday', order: 3 },
-        { name: 'Thursday',  order: 4 },
-        { name: 'Friday',    order: 5 },
-        { name: 'Saturday',  order: 6 }
-      ];
-
-      var container = document.getElementById('bdSchedule');
-      var SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
-      var ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-
-      var sessions = [];
-      try {
-        var res = await fetch(
-          SUPABASE_URL + '/rest/v1/body_doubling_sessions?active=eq.true&select=host_name,day_of_week,day_order,start_time,end_time,meeting_url',
-          { headers: { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + ANON_KEY } }
-        );
-        var data = await res.json();
-        if (res.ok && Array.isArray(data)) sessions = data;
-      } catch(e) {}
-
-      container.innerHTML = DAYS.map(function(day) {
-        var matches = sessions.filter(function(s) { return s.day_of_week === day.name; });
-        if (matches.length > 0) {
-          return matches.map(function(s) {
-            return '<a href="' + s.meeting_url + '" target="_blank" rel="noopener" class="bd-day-row has-session">' +
-              '<span class="bd-day-name">' + day.name + '</span>' +
-              '<span class="bd-day-info">' + s.host_name + ' · ' + s.start_time + '–' + s.end_time + ' AEST</span>' +
-              '<span class="bd-day-join">Click here to join →</span>' +
-            '</a>';
-          }).join('');
-        } else {
-          return '<div class="bd-day-row no-session">' +
-            '<span class="bd-day-name">' + day.name + '</span>' +
-            '<span class="bd-day-info">No session</span>' +
-          '</div>';
-        }
-      }).join('');
-    })();
-  </script>
 
 </body>
 </html>
