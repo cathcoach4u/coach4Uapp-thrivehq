@@ -1,6 +1,6 @@
 /* ============================================
    Coach4U Info Page Design System — css/info.css
-   Version: 2.0
+   Version: 2.1
    Source of truth: coach4u-shared/templates/css/info.css
    Use on: public, read-only informational pages.
    NOT for: authenticated dashboard pages, or activity/worksheet pages.
@@ -9,7 +9,7 @@
 
 body.info-page { background: #f0f2f5; }
 
-/* --- Brand header bar (matches .site-header tone) --- */
+/* Brand header bar (matches .site-header tone) */
 .info-brand-bar {
   background: var(--primary);
   background-image: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
@@ -27,34 +27,12 @@ body.info-page { background: #f0f2f5; }
   letter-spacing: -0.3px;
 }
 .info-brand-sub {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: rgba(255,255,255,0.7);
-  margin-top: 4px;
-}
-
-/* --- Page hero (white content area below brand bar) --- */
-.info-hero {
-  background: #ffffff;
-  border-bottom: 3px solid var(--accent);
-  padding: 28px 24px 32px;
-  text-align: center;
-}
-.info-hero-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 10px;
-  font-family: var(--font-heading);
-  color: var(--primary);
-}
-.info-hero-desc {
-  font-size: 15px;
-  max-width: 480px;
-  margin: 0 auto;
-  line-height: 1.65;
-  color: var(--text-muted);
+  letter-spacing: 0.9px;
+  color: rgba(255,255,255,0.72);
+  margin-top: 5px;
 }
 
 .info-content { max-width: 560px; margin: 0 auto; padding: 28px 20px 60px; }
@@ -72,7 +50,5 @@ body.info-page { background: #f0f2f5; }
 @media (max-width: 600px) {
   .info-brand-bar { padding: 14px 20px 12px; }
   .info-brand-name { font-size: 18px; }
-  .info-hero { padding: 22px 20px 26px; }
-  .info-hero-title { font-size: 18px; }
   .info-content { padding: 20px 16px 48px; }
 }
