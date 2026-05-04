@@ -1,6 +1,6 @@
 /* ============================================
    Coach4U Info Page Design System — css/info.css
-   Version: 1.1
+   Version: 1.2
    Source of truth: coach4u-shared/templates/css/info.css
    Use on: public, read-only informational pages.
    NOT for: authenticated dashboard pages, or activity/worksheet pages.
@@ -8,6 +8,14 @@
    ============================================ */
 
 body.info-page { background: #f0f2f5; }
+
+/* Teal accent bar at top of every info page */
+body.info-page::before {
+  content: '';
+  display: block;
+  height: 5px;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+}
 
 .info-hero {
   background: #ffffff;
