@@ -7,6 +7,19 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#003366">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .pulse-quad {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    @media print {
+      .site-header, .no-print { display: none !important; }
+      .print-only { display: block !important; }
+    }
+    .print-only { display: none; }
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -30,108 +43,266 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
     const SUPABASE_URL      = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-    const VERSION           = '2026-05-05.1';
+    const VERSION           = '2026-05-05.2';
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const STAGE_COLORS = {
-      'Overwhelmed':   { bg: '#fce8e8', text: '#c62828', border: '#f5c6c6' },
-      'Consolidating': { bg: '#fef3c7', text: '#92400e', border: '#fde68a' },
-      'Building':      { bg: '#dbeafe', text: '#1e40af', border: '#bfdbfe' },
-      'Grounded':      { bg: '#d1fae5', text: '#065f46', border: '#6ee7b7' },
-      'Anchored':      { bg: '#ede9fe', text: '#5b21b6', border: '#ddd6fe' }
+    const STAGES = [
+      {name:'Overwhelmed',   min:20,  max:60,  color:'#003366'},
+      {name:'Consolidating', min:61,  max:100, color:'#1a4d80'},
+      {name:'Building',      min:101, max:140, color:'#336699'},
+      {name:'Grounded',      min:141, max:170, color:'#4d80b3'},
+      {name:'Anchored',      min:171, max:200, color:'#80aacc'}
+    ];
+
+    const STAGE_DESC = {
+      'Overwhelmed':   'Your nervous system is flooded. The rooms need tending, and right now even starting feels hard. This is not failure. This is a signal that capacity is the first room to attend to.',
+      'Consolidating': 'Things are starting to come together. You are pulling in the pieces — building awareness, reducing the biggest drains, and finding small footholds. Progress here is quieter but real.',
+      'Building':      'You are moving. Energy is building, focus is more accessible, and the rooms are starting to work with you rather than against you. This is where consistent effort starts to compound.',
+      'Grounded':      'Your feet are on the floor. Structure is holding, reserves are building, and most demands feel manageable. You are close to fully anchored.',
+      'Anchored':      'All four anchors are holding. You feel regulated, resourced, clear, and aimed. You are moving toward what matters, with structure that supports you. This is earned ground.'
     };
 
-    const PILLARS = [
-      { key: 'capacity_total',  label: 'Capacity',   color: 'var(--capacity)'  },
-      { key: 'wellbeing_total', label: 'Wellbeing',  color: 'var(--wellbeing)' },
-      { key: 'strengths_total', label: 'Strengths',  color: 'var(--strengths)' },
-      { key: 'ef_total',        label: 'Execution',  color: 'var(--execution)' }
-    ];
+    const ROOM_META = {
+      capacity:  {letter:'C', label:'Capacity',  color:'#5c8a7a', borderColor:'#bfd3c9', headerBg:'#d7e2dc', shortDesc:'The steadiness and resilience of your nervous system',    fullDesc:'The steadiness and resilience of your nervous system—how calm you feel, how quickly you recover, and how much energy you have.'},
+      wellbeing: {letter:'W', label:'Wellbeing', color:'#0891b2', borderColor:'#a5d8de', headerBg:'#c5e6eb', shortDesc:'What gives your life meaning and sustains you',            fullDesc:'What gives your life meaning and sustains you—your sense of purpose, connection, security, health, and belonging.'},
+      strengths: {letter:'S', label:'Strengths', color:'#b87a90', borderColor:'#e1c7d1', headerBg:'#ecd5dd', shortDesc:'How you talk to yourself and trust yourself',             fullDesc:'How you talk to yourself and trust yourself—your confidence in decisions, self-compassion, and ability to reframe setbacks.'},
+      ef:        {letter:'E', label:'Execution', color:'#8c6e9f', borderColor:'#cfc1db', headerBg:'#ddd2e5', shortDesc:'How you manage everyday brain tasks',                      fullDesc:'How you manage everyday brain tasks—starting, finishing, pausing, prioritizing, and remembering.'}
+    };
+
+    const QUESTIONS = {
+      capacity:  [
+        {id:'capacity_1',  text:'I felt calm in my body most of the time.'},
+        {id:'capacity_2',  text:'I noticed stress building and took action to keep myself calm.'},
+        {id:'capacity_3',  text:'I bounced back quickly when upset rather than staying reactive.'},
+        {id:'capacity_4',  text:'I had enough energy to respond well to my day.'},
+        {id:'capacity_5',  text:'I used a regulation tool (like breathing, movement, or connection) when I needed to calm down.'}
+      ],
+      wellbeing: [
+        {id:'wellbeing_purpose',   text:'What I did felt meaningful and connected to what matters to me.'},
+        {id:'wellbeing_social',    text:'I felt supported and connected to the people in my life.'},
+        {id:'wellbeing_financial', text:'I felt secure and in control of my finances.'},
+        {id:'wellbeing_physical',  text:'I cared for my body and felt well in it.'},
+        {id:'wellbeing_community', text:'I felt I belonged to and contributed to a community that matters to me.'}
+      ],
+      strengths: [
+        {id:'strengths_1', text:'I was confident in my decisions without second-guessing myself.'},
+        {id:'strengths_2', text:'I focused on what I was doing right rather than what I was doing wrong.'},
+        {id:'strengths_3', text:'I accepted who I am and how I am built rather than fighting it.'},
+        {id:'strengths_4', text:'I spoke to myself with kindness rather than criticism.'},
+        {id:'strengths_5', text:'I reminded myself I was doing okay rather than assuming the worst.'}
+      ],
+      ef: [
+        {id:'ef_initiation', text:'I started tasks that needed to be done, not just the ones that interested me.'},
+        {id:'ef_sustained',  text:'I stayed with tasks long enough to finish them.'},
+        {id:'ef_inhibition', text:'I noticed when I was getting pulled off-track and brought myself back.'},
+        {id:'ef_planning',   text:'I did the important things before the loud ones.'},
+        {id:'ef_memory',     text:'I remembered to do the things I meant to do.'}
+      ]
+    };
+
+    const COACHING_FOCUS = {
+      capacity:  [
+        'Notice when your tank is running low and refill before you crash.',
+        'Use your regulation tools (breathing, movement, connection) early, not only in crisis.',
+        'Honour the recovery you need — rest is part of the rhythm, not a reward.'
+      ],
+      wellbeing: [
+        'Protect one thing each week that gives your life meaning.',
+        'Strengthen one relationship that supports you most.',
+        'Attend to one pillar at a time (purpose, social, financial, physical, community).'
+      ],
+      strengths: [
+        'Catch the critical inner voice earlier and soften it.',
+        'Name one thing you did well this week, even if it feels small.',
+        'Accept how you are built rather than fighting it.'
+      ],
+      ef: [
+        'Start the one task you keep avoiding before the day’s energy drops.',
+        'Use a visible cue to bring you back when you drift off-track.',
+        'Pair a hard task with a small anchor to make starting easier.'
+      ]
+    };
+
+    const ROOM_KEYS = ['capacity', 'wellbeing', 'strengths', 'ef'];
+
+    function scoreColor(v) {
+      if (!v) return '#cbd5e1';
+      if (v <= 4) return '#dc2626';
+      if (v <= 6) return '#d97706';
+      return '#16a34a';
+    }
+
+    function calcLowest(r) {
+      const sc = {capacity: r.capacity_total, wellbeing: r.wellbeing_total, strengths: r.strengths_total, ef: r.ef_total};
+      return Object.entries(sc).sort((a, b) => a[1] - b[1])[0][0];
+    }
+
+    function getStage(r) {
+      return STAGES.find(s => r.grand_total >= s.min && r.grand_total <= s.max)
+          || STAGES.find(s => s.name === r.stage)
+          || {};
+    }
+
+    function fmtLong(d)  { return new Date(d).toLocaleDateString('en-AU', {weekday:'long',  day:'numeric', month:'long',  year:'numeric'}); }
+    function fmtShort(d) { return new Date(d).toLocaleDateString('en-AU', {day:'numeric', month:'short', year:'numeric'}); }
+
+    let allResults = [];
+    let viewingId  = null;
+
+    function render() {
+      document.getElementById('content').innerHTML = viewingId
+        ? buildReport(allResults.find(x => x.id === viewingId))
+        : buildList();
+    }
+
+    window.viewResult = function(id) { viewingId = id; window.scrollTo(0, 0); render(); };
+    window.backToList = function()   { viewingId = null; window.scrollTo(0, 0); render(); };
+    window.signOut    = async function() { await sb.auth.signOut(); window.location.href = 'index.html'; };
+
+    function buildList() {
+      if (!allResults.length) {
+        return `<div class="membership-card" style="text-align:center;padding:32px 24px">
+          <div style="font-size:40px;margin-bottom:12px">🧠</div>
+          <div class="member-name">No results yet</div>
+          <div class="member-email" style="margin-top:8px;line-height:1.5">Your Brain Pulse results will appear here<br>once your coach syncs them to your profile.</div>
+        </div>`;
+      }
+
+      return allResults.map((r, i) => {
+        const stage = getStage(r);
+        const sc    = stage.color || '#333';
+        return `<div onclick="viewResult('${r.id}')" style="background:#fff;border:1px solid ${i === 0 ? '#003366' : '#e2e8f0'};border-left:4px solid ${sc};border-radius:12px;padding:16px 20px;margin-bottom:10px;cursor:pointer;">
+          ${i === 0 ? '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#003366;font-weight:700;margin-bottom:8px;">Latest Check-In</div>' : ''}
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <span style="font-size:13px;color:#64748b;">${fmtShort(r.submitted_at)}</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-weight:700;color:${sc};font-size:14px;">${r.stage}</span>
+              <span style="font-size:22px;font-weight:800;color:${sc};">${r.grand_total}<span style="font-size:13px;color:#94a3b8;font-weight:400;">/200</span></span>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;">
+            ${ROOM_KEYS.map(k => {
+              const m   = ROOM_META[k];
+              const val = k === 'ef' ? r.ef_total : r[k + '_total'];
+              return `<div style="text-align:center;background:#f8f8f8;border-radius:8px;padding:8px;">
+                <div style="font-size:12px;font-weight:700;color:${m.color};">${m.letter}</div>
+                <div style="font-size:16px;font-weight:700;color:#1e3a5f;">${val}<span style="font-size:9px;color:#94a3b8;">/50</span></div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>`;
+      }).join('') + '<div style="height:40px;"></div>';
+    }
+
+    function buildReport(r) {
+      if (!r) return buildList();
+      const stage   = getStage(r);
+      const sc      = stage.color || '#333';
+      const lowest  = r.lowest_room || calcLowest(r);
+      const scores  = {capacity: r.capacity_total, wellbeing: r.wellbeing_total, strengths: r.strengths_total, ef: r.ef_total};
+      const hasQs   = r.capacity_1 != null;
+
+      let html = `
+        <div class="no-print" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:10px;flex-wrap:wrap;">
+          <div onclick="backToList()" style="font-size:13px;color:#003366;font-weight:600;cursor:pointer;">← Back to all check-ins</div>
+          <button onclick="window.print()" style="background:#003366;color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;">🖨 Print</button>
+        </div>
+        <div class="print-only" style="text-align:center;padding-bottom:10px;border-bottom:2px solid #003366;margin-bottom:14px;">
+          <div style="font-size:14px;font-weight:700;color:#003366;letter-spacing:1px;">Coach4U · Brain Pulse</div>
+          <div style="font-size:10px;color:#64748b;letter-spacing:2px;text-transform:uppercase;margin-top:2px;">Capacity Check-In Report</div>
+        </div>
+        <div style="text-align:center;font-size:12px;color:#64748b;margin-bottom:12px;">${fmtLong(r.submitted_at)}</div>`;
+
+      // Stage card
+      html += `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-left:6px solid ${sc};border-radius:12px;padding:16px 20px;margin-bottom:14px;">
+        <div style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#8a8a8a;font-weight:700;margin-bottom:8px;">Overall Result</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
+          <div style="font-size:22px;font-weight:800;color:${sc};">${stage.name || r.stage}</div>
+          <div style="font-size:36px;font-weight:800;color:${sc};line-height:1;">${r.grand_total}<span style="font-size:14px;color:#94a3b8;font-weight:500;">/200</span></div>
+        </div>
+        <div style="font-size:12px;line-height:1.55;color:#4a4a4a;">${STAGE_DESC[stage.name || r.stage] || ''}</div>
+      </div>`;
+
+      // Capacity Journey
+      html += `<div style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#8a8a8a;font-weight:700;margin-bottom:8px;text-align:center;">Capacity Journey</div>
+        <div style="display:flex;gap:3px;margin-bottom:16px;">`;
+      STAGES.forEach(st => {
+        const active = st.name === (stage.name || r.stage);
+        html += `<div style="flex:1;text-align:center;border-radius:6px;padding:7px 2px;font-size:9px;font-weight:700;line-height:1.3;border:1px solid ${active ? 'transparent' : '#cbd5e1'};${active ? 'background:' + st.color + ';color:#fff;' : 'background:#ededed;color:#8a8a8a;'}">${st.name}<br><span style="font-weight:400;">${st.min}–${st.max}</span></div>`;
+      });
+      html += `</div>`;
+
+      // Pillar cards
+      html += `<div style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#8a8a8a;font-weight:700;margin-bottom:10px;text-align:center;">Your Brain Results &amp; Focus</div>
+        <div class="pulse-quad">`;
+      ROOM_KEYS.forEach(key => {
+        const meta  = ROOM_META[key];
+        const score = scores[key];
+        const isLow = lowest === key;
+        html += `<div style="border-radius:12px;border:1px solid ${meta.borderColor};background:#fff;overflow:hidden;display:flex;flex-direction:column;">
+          <div style="background:${meta.headerBg};padding:10px 12px;display:flex;align-items:center;gap:10px;">
+            <div style="width:34px;height:34px;border-radius:8px;background:${meta.color};color:#fff;font-weight:800;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${meta.letter}</div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:13px;font-weight:700;color:#0b3a6e;">${meta.label}${isLow ? ' <span style="display:inline-block;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:#fff;color:#555;border:1px solid #d1d5db;border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle;">Focus</span>' : ''}</div>
+              <div style="font-size:10px;color:#7c7c7c;font-style:italic;margin-top:1px;line-height:1.3;">${meta.shortDesc}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div style="font-size:24px;font-weight:800;color:${meta.color};line-height:1;">${score}</div>
+              <div style="font-size:10px;color:#94a3b8;">/50</div>
+            </div>
+          </div>
+          <div style="padding:10px 12px 6px;font-size:11.5px;line-height:1.55;color:#4d4d4d;">${meta.fullDesc}</div>
+          <div style="padding:8px 12px 12px;border-top:1px dashed #eee;margin-top:auto;">
+            <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#8a8a8a;font-weight:700;margin-bottom:6px;">Coaching Focus</div>
+            <ul style="margin:0;padding-left:16px;">
+              ${(COACHING_FOCUS[key] || []).map(f => '<li style="font-size:11px;line-height:1.5;color:#4d4d4d;margin-bottom:3px;">' + f + '</li>').join('')}
+            </ul>
+          </div>
+        </div>`;
+      });
+      html += `</div>`;
+
+      // Question scores
+      if (hasQs) {
+        html += `<div style="margin-top:24px;">
+          <div style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#8a8a8a;font-weight:700;margin-bottom:10px;text-align:center;">Question Scores</div>
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;justify-content:center;gap:18px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#475569;"><span style="display:inline-flex;width:18px;height:18px;border-radius:4px;background:#dc2626;color:#fff;font-weight:800;font-size:11px;align-items:center;justify-content:center;">1</span><span><strong>1–4</strong> Reserves running low</span></div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#475569;"><span style="display:inline-flex;width:18px;height:18px;border-radius:4px;background:#d97706;color:#fff;font-weight:800;font-size:11px;align-items:center;justify-content:center;">5</span><span><strong>5–6</strong> Building capacity</span></div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#475569;"><span style="display:inline-flex;width:18px;height:18px;border-radius:4px;background:#16a34a;color:#fff;font-weight:800;font-size:11px;align-items:center;justify-content:center;">7</span><span><strong>7–10</strong> Strong reserves</span></div>
+          </div>
+          <div class="pulse-quad">`;
+        ROOM_KEYS.forEach(key => {
+          const meta = ROOM_META[key];
+          html += `<div style="border-radius:12px;border:1px solid #bfdbfe;background:#fff;overflow:hidden;">
+            <div style="background:#dbeafe;padding:8px 12px;display:flex;align-items:center;gap:8px;">
+              <div style="width:24px;height:24px;border-radius:6px;background:#003366;color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${meta.letter}</div>
+              <div style="font-size:12px;font-weight:700;color:#0b3a6e;">${meta.label}</div>
+              <div style="margin-left:auto;font-size:11px;font-weight:700;color:#003366;">${scores[key]}/50</div>
+            </div>
+            <div style="padding:6px 12px 10px;">`;
+          (QUESTIONS[key] || []).forEach(q => {
+            const v      = r[q.id];
+            const col    = scoreColor(v);
+            const rowBg  = (v && v <= 4) ? 'background:#fef2f2;border-radius:6px;margin:1px -4px;padding:4px;' : 'padding:4px 0;';
+            html += `<div style="display:flex;gap:8px;align-items:flex-start;${rowBg}border-bottom:1px dashed #f1f5f9;">
+              <div style="flex-shrink:0;min-width:24px;height:22px;border-radius:5px;background:${col};color:#fff;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;">${v || '—'}</div>
+              <div style="font-size:10.5px;line-height:1.4;color:#475569;">${q.text}</div>
+            </div>`;
+          });
+          html += `</div></div>`;
+        });
+        html += `</div></div>`;
+      }
+
+      html += '<div style="height:40px;"></div>';
+      return html;
+    }
 
     function showError(msg) {
       document.getElementById('loading').style.display = 'none';
-      document.getElementById('error').style.display = 'block';
-      document.getElementById('error').textContent = msg;
-    }
-
-    window.signOut = async function() { await sb.auth.signOut(); window.location.href = 'index.html'; };
-
-    function formatDate(dateStr) {
-      return new Date(dateStr).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
-    }
-
-    function renderResults(results) {
-      const content = document.getElementById('content');
-
-      if (!results.length) {
-        content.innerHTML = `
-          <div class="membership-card" style="text-align:center;padding:32px 24px">
-            <div style="font-size:40px;margin-bottom:12px">🧠</div>
-            <div class="member-name">No results yet</div>
-            <div class="member-email" style="margin-top:8px;line-height:1.5">
-              Your Brain Pulse results will appear here<br>once your coach syncs them to your profile.
-            </div>
-          </div>`;
-        return;
-      }
-
-      const latest = results[0];
-      const sc = STAGE_COLORS[latest.stage] || { bg: '#f0f0f0', text: '#444', border: '#ddd' };
-
-      const latestCard = `
-        <div class="membership-card" style="margin-bottom:24px">
-          <div class="member-name" style="margin-bottom:4px">Latest Check-In</div>
-          <div class="member-email">${formatDate(latest.submitted_at)}</div>
-          <div style="margin-top:14px;display:flex;align-items:baseline;gap:10px">
-            <span style="font-size:36px;font-weight:800">${latest.grand_total}</span>
-            <span style="font-size:15px;opacity:0.7">/200</span>
-            <span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;background:${sc.bg};color:${sc.text};border:1px solid ${sc.border}">${latest.stage}</span>
-          </div>
-        </div>`;
-
-      const pillarGrid = `
-        <div class="app-section-header" style="margin-bottom:14px">
-          <span class="app-section-title">Pillars</span>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px">
-          ${PILLARS.map(p => `
-            <div class="card" style="text-align:center;padding:18px 12px">
-              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:8px">${p.label}</div>
-              <div style="font-size:34px;font-weight:800;color:${p.color};line-height:1">${latest[p.key]}</div>
-              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">/50</div>
-            </div>`).join('')}
-        </div>`;
-
-      let historySection = '';
-      if (results.length > 1) {
-        const historyCards = results.slice(1).map(r => {
-          const sc = STAGE_COLORS[r.stage] || { bg: '#f0f0f0', text: '#444', border: '#ddd' };
-          return `
-            <div class="card-neutral" style="margin-bottom:10px;padding:14px 16px">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-                <span style="font-size:13px;color:var(--text-muted)">${formatDate(r.submitted_at)}</span>
-                <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:${sc.bg};color:${sc.text};border:1px solid ${sc.border}">${r.stage}</span>
-              </div>
-              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px">
-                ${PILLARS.map(p => `
-                  <div style="text-align:center">
-                    <div style="font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px">${p.label.substring(0,3)}</div>
-                    <div style="font-size:16px;font-weight:700;color:${p.color}">${r[p.key]}</div>
-                  </div>`).join('')}
-              </div>
-              <div style="text-align:right;font-size:12px;color:var(--text-muted)">Total: <strong style="color:var(--primary)">${r.grand_total}/200</strong></div>
-            </div>`;
-        }).join('');
-
-        historySection = `
-          <div class="app-section-header" style="margin-bottom:14px">
-            <span class="app-section-title">History</span>
-            <span class="app-section-count">${results.length} check-in${results.length !== 1 ? 's' : ''}</span>
-          </div>
-          ${historyCards}`;
-      }
-
-      content.innerHTML = latestCard + pillarGrid + historySection;
+      document.getElementById('error').style.display   = 'block';
+      document.getElementById('error').textContent     = msg;
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
@@ -150,9 +321,10 @@
 
         if (fetchErr) { showError('Error loading results. Please refresh.'); return; }
 
+        allResults = results || [];
         document.getElementById('loading').style.display = 'none';
         document.getElementById('content').style.display = 'block';
-        renderResults(results || []);
+        render();
       } catch (err) {
         showError('Error loading Brain Pulse. Please refresh.');
       }
