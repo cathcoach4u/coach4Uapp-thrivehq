@@ -75,14 +75,6 @@
     const VERSION = '2026-05-04.1';
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    function bandLabel(total) {
-      if (total <= 60)  return 'Overwhelmed';
-      if (total <= 100) return 'Unsteady';
-      if (total <= 140) return 'Grounded';
-      if (total <= 170) return 'Steady';
-      return 'Anchored';
-    }
-
     function showError(msg) {
       document.getElementById('loading').style.display = 'none';
       document.getElementById('error').style.display = 'block';
@@ -101,18 +93,6 @@
 
         document.getElementById('memberName').textContent = userData.full_name || '—';
         document.getElementById('memberEmail').textContent = userData.email || '—';
-
-        const { data: assessments } = await sb
-          .from('brain_pulse_assessments').select('*')
-          .eq('user_id', user.id).order('assessment_date', { ascending: false }).limit(1);
-
-        if (assessments?.[0]) {
-          const a = assessments[0];
-          const total = (a.capacity_score || 0) + (a.wellbeing_score || 0) +
-                        (a.strengths_score || 0) + (a.execution_score || 0);
-          document.getElementById('pulseDesc').textContent =
-            'Last score: ' + total + '/200 · ' + bandLabel(total);
-        }
 
         document.getElementById('loading').style.display = 'none';
         document.getElementById('content').style.display = 'block';
