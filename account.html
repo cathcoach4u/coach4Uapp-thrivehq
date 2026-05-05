@@ -71,7 +71,9 @@
         if (userData?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
 
         document.getElementById('userEmail').textContent = user.email || '—';
-        document.getElementById('userName').textContent = userData?.full_name || '—';
+        const displayName = userData?.full_name || userData?.first_name ||
+          user.user_metadata?.first_name || user.user_metadata?.full_name || user.user_metadata?.name || '—';
+        document.getElementById('userName').textContent = displayName;
         document.getElementById('membershipStatus').textContent = userData?.membership_status || '—';
         document.getElementById('startDate').textContent = userData?.membership_start_date ? formatDate(userData.membership_start_date) : '—';
         document.getElementById('endDate').textContent = userData?.membership_end_date ? formatDate(userData.membership_end_date) : '—';
