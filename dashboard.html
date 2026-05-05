@@ -91,7 +91,7 @@
         const { data: userData } = await sb.from('users').select('*').eq('id', user.id).single();
         if (userData?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
 
-        const displayName = userData?.full_name || userData?.first_name ||
+        const displayName = userData?.name || userData?.full_name || userData?.first_name ||
           user.user_metadata?.first_name || user.user_metadata?.full_name || user.user_metadata?.name || '—';
         document.getElementById('memberName').textContent = displayName;
         document.getElementById('memberEmail').textContent = userData.email || '—';
