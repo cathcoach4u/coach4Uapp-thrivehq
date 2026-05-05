@@ -94,6 +94,20 @@
         document.getElementById('memberName').textContent = userData.full_name || '—';
         document.getElementById('memberEmail').textContent = userData.email || '—';
 
+        const { data: latestPulse } = await sb
+          .from('brain_pulse_results')
+          .select('grand_total, stage, submitted_at')
+          .eq('user_id', user.id)
+          .order('submitted_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (latestPulse) {
+          const dateStr = new Date(latestPulse.submitted_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+          document.getElementById('pulseDesc').textContent =
+            latestPulse.stage + ' · ' + latestPulse.grand_total + '/200 · ' + dateStr;
+        }
+
         document.getElementById('loading').style.display = 'none';
         document.getElementById('content').style.display = 'block';
       } catch (err) {

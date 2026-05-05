@@ -21,19 +21,32 @@
   </header>
 
   <main class="main-content">
-    <div id="loading" class="loading">Loading...</div>
+    <div id="loading" class="loading">Loading your Brain Pulse results…</div>
     <div id="error" class="error" style="display:none;"></div>
-    <div id="content" style="display:none;">
-      <!-- Brain Pulse content will be built here -->
-    </div>
+    <div id="content" style="display:none;"></div>
   </main>
 
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
-    const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
+    const SUPABASE_URL      = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-    const VERSION = '2026-05-05.1';
+    const VERSION           = '2026-05-05.1';
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const STAGE_COLORS = {
+      'Overwhelmed':   { bg: '#fce8e8', text: '#c62828', border: '#f5c6c6' },
+      'Consolidating': { bg: '#fef3c7', text: '#92400e', border: '#fde68a' },
+      'Building':      { bg: '#dbeafe', text: '#1e40af', border: '#bfdbfe' },
+      'Grounded':      { bg: '#d1fae5', text: '#065f46', border: '#6ee7b7' },
+      'Anchored':      { bg: '#ede9fe', text: '#5b21b6', border: '#ddd6fe' }
+    };
+
+    const PILLARS = [
+      { key: 'capacity_total',  label: 'Capacity',   color: 'var(--capacity)'  },
+      { key: 'wellbeing_total', label: 'Wellbeing',  color: 'var(--wellbeing)' },
+      { key: 'strengths_total', label: 'Strengths',  color: 'var(--strengths)' },
+      { key: 'ef_total',        label: 'Execution',  color: 'var(--execution)' }
+    ];
 
     function showError(msg) {
       document.getElementById('loading').style.display = 'none';
@@ -43,6 +56,84 @@
 
     window.signOut = async function() { await sb.auth.signOut(); window.location.href = 'index.html'; };
 
+    function formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    function renderResults(results) {
+      const content = document.getElementById('content');
+
+      if (!results.length) {
+        content.innerHTML = `
+          <div class="membership-card" style="text-align:center;padding:32px 24px">
+            <div style="font-size:40px;margin-bottom:12px">🧠</div>
+            <div class="member-name">No results yet</div>
+            <div class="member-email" style="margin-top:8px;line-height:1.5">
+              Your Brain Pulse results will appear here<br>once your coach syncs them to your profile.
+            </div>
+          </div>`;
+        return;
+      }
+
+      const latest = results[0];
+      const sc = STAGE_COLORS[latest.stage] || { bg: '#f0f0f0', text: '#444', border: '#ddd' };
+
+      const latestCard = `
+        <div class="membership-card" style="margin-bottom:24px">
+          <div class="member-name" style="margin-bottom:4px">Latest Check-In</div>
+          <div class="member-email">${formatDate(latest.submitted_at)}</div>
+          <div style="margin-top:14px;display:flex;align-items:baseline;gap:10px">
+            <span style="font-size:36px;font-weight:800">${latest.grand_total}</span>
+            <span style="font-size:15px;opacity:0.7">/200</span>
+            <span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;background:${sc.bg};color:${sc.text};border:1px solid ${sc.border}">${latest.stage}</span>
+          </div>
+        </div>`;
+
+      const pillarGrid = `
+        <div class="app-section-header" style="margin-bottom:14px">
+          <span class="app-section-title">Pillars</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px">
+          ${PILLARS.map(p => `
+            <div class="card" style="text-align:center;padding:18px 12px">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:8px">${p.label}</div>
+              <div style="font-size:34px;font-weight:800;color:${p.color};line-height:1">${latest[p.key]}</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">/50</div>
+            </div>`).join('')}
+        </div>`;
+
+      let historySection = '';
+      if (results.length > 1) {
+        const historyCards = results.slice(1).map(r => {
+          const sc = STAGE_COLORS[r.stage] || { bg: '#f0f0f0', text: '#444', border: '#ddd' };
+          return `
+            <div class="card-neutral" style="margin-bottom:10px;padding:14px 16px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <span style="font-size:13px;color:var(--text-muted)">${formatDate(r.submitted_at)}</span>
+                <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:${sc.bg};color:${sc.text};border:1px solid ${sc.border}">${r.stage}</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px">
+                ${PILLARS.map(p => `
+                  <div style="text-align:center">
+                    <div style="font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px">${p.label.substring(0,3)}</div>
+                    <div style="font-size:16px;font-weight:700;color:${p.color}">${r[p.key]}</div>
+                  </div>`).join('')}
+              </div>
+              <div style="text-align:right;font-size:12px;color:var(--text-muted)">Total: <strong style="color:var(--primary)">${r.grand_total}/200</strong></div>
+            </div>`;
+        }).join('');
+
+        historySection = `
+          <div class="app-section-header" style="margin-bottom:14px">
+            <span class="app-section-title">History</span>
+            <span class="app-section-count">${results.length} check-in${results.length !== 1 ? 's' : ''}</span>
+          </div>
+          ${historyCards}`;
+      }
+
+      content.innerHTML = latestCard + pillarGrid + historySection;
+    }
+
     window.addEventListener('DOMContentLoaded', async () => {
       try {
         const { data: { user }, error: authErr } = await sb.auth.getUser();
@@ -51,8 +142,17 @@
         const { data: ud } = await sb.from('users').select('membership_status').eq('id', user.id).single();
         if (ud?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
 
+        const { data: results, error: fetchErr } = await sb
+          .from('brain_pulse_results')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('submitted_at', { ascending: false });
+
+        if (fetchErr) { showError('Error loading results. Please refresh.'); return; }
+
         document.getElementById('loading').style.display = 'none';
         document.getElementById('content').style.display = 'block';
+        renderResults(results || []);
       } catch (err) {
         showError('Error loading Brain Pulse. Please refresh.');
       }
