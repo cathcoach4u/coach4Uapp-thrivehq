@@ -196,12 +196,6 @@ async function submit() {
   var c = calc();
   var row = {
     contact_id:        contact.id,
-    stage:             c.st,
-    grand_total:       c.tot,
-    capacity_total:    c.sc.capacity,
-    wellbeing_total:   c.sc.wellbeing,
-    strengths_total:   c.sc.strengths,
-    ef_total:          c.sc.ex,
     capacity_1:        answers.capacity_1   || 0,
     capacity_2:        answers.capacity_2   || 0,
     capacity_3:        answers.capacity_3   || 0,
