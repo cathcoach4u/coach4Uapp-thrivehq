@@ -9,7 +9,7 @@ const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/dashboard.html',
-  '/brain-pulse-detail.html',
+  '/brain-pulse.html',
   '/resources.html',
   '/account.html',
   '/forgot-password.html',

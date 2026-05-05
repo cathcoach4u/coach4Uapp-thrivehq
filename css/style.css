@@ -319,85 +319,6 @@ img { max-width: 100%; display: block; }
   flex: 1;
 }
 
-/* ----- Brain Pulse Form ----- */
-.pulse-progress { background: var(--border); border-radius: 4px; height: 6px; margin-bottom: 8px; overflow: hidden; }
-.pulse-progress-bar { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.4s ease; width: 0%; }
-.pulse-step-label { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 24px; }
-.pulse-step { display: none; }
-.pulse-step.active { display: block; }
-.step-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 24px;
-  padding: 20px;
-  background: var(--surface);
-  border: 2px solid var(--accent);
-  border-radius: var(--radius);
-}
-.step-title { font-size: 22px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
-.step-description { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
-.step-questions { display: flex; flex-direction: column; gap: 16px; }
-.question-block {
-  background: var(--surface);
-  border: 2px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-}
-.question-text { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; line-height: 1.4; }
-.rating-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
-.rating-btn {
-  width: 40px; height: 40px;
-  border-radius: var(--radius-sm);
-  border: 2px solid var(--border);
-  background: var(--bg);
-  font-size: 14px; font-weight: 600;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.15s;
-  font-family: var(--font-body);
-}
-.rating-btn:hover { border-color: var(--accent); color: var(--accent); background: white; }
-.rating-btn.selected { background: var(--accent); border-color: var(--accent); color: white; }
-.rating-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-light); padding: 0 2px; }
-.pulse-nav { display: flex; gap: 12px; margin-top: 28px; }
-.pulse-nav-btn {
-  flex: 1; padding: 14px;
-  background: var(--primary); color: white;
-  border: none; border-radius: var(--radius-sm);
-  font-size: 15px; font-weight: 600;
-  cursor: pointer; transition: background 0.2s;
-  text-align: center; text-decoration: none; display: block;
-  font-family: var(--font-body);
-}
-.pulse-nav-btn:hover { background: var(--primary-dark); color: white; text-decoration: none; }
-.pulse-nav-btn:disabled { opacity: 0.55; cursor: not-allowed; }
-.pulse-nav-btn.secondary { background: var(--bg); color: var(--primary); border: 2px solid var(--border); }
-.pulse-nav-btn.secondary:hover { border-color: var(--accent); color: var(--accent); background: var(--bg); }
-.results-title { font-size: 26px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
-.results-subtitle { font-size: 15px; color: var(--text-muted); margin-bottom: 24px; }
-.results-actions { display: flex; gap: 12px; margin-top: 24px; }
-
-/* Pulse pillar icons (used on brain-pulse and detail pages) */
-.pulse-icon { width: 44px; height: 44px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: white; }
-.pulse-icon.capacity  { background: var(--capacity); }
-.pulse-icon.wellbeing { background: var(--wellbeing); }
-.pulse-icon.strengths { background: var(--strengths); }
-.pulse-icon.execution { background: var(--execution); }
-
-/* Pulse results grid (brain-pulse results screen) */
-.pulse-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px; }
-.pulse-card {
-  background: var(--surface); border: 2px solid var(--accent); border-radius: var(--radius);
-  padding: 20px; cursor: pointer;
-  transition: box-shadow 0.3s, transform 0.3s; box-shadow: var(--shadow);
-}
-.pulse-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
-.pulse-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-.pulse-title { font-size: 16px; font-weight: 600; color: var(--primary); }
-.pulse-score { font-size: 28px; font-weight: 800; color: var(--primary); margin-bottom: 8px; }
-.pulse-description { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
-
 /* ----- Resources ----- */
 .resources-list { display: grid; gap: 16px; }
 .resource-item {
@@ -423,28 +344,10 @@ img { max-width: 100%; display: block; }
 .help-text { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
 .help-text a { color: var(--accent); font-weight: 600; }
 
-/* ----- Brain Pulse Detail ----- */
-.detail-card { background: var(--surface); border-radius: var(--radius); padding: 20px; border-left: 4px solid var(--accent); box-shadow: var(--shadow-neutral); margin-bottom: 16px; }
-.detail-icon { width: 60px; height: 60px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; color: white; margin-bottom: 16px; }
-.detail-icon.capacity  { background: var(--capacity); }
-.detail-icon.wellbeing { background: var(--wellbeing); }
-.detail-icon.strengths { background: var(--strengths); }
-.detail-icon.execution { background: var(--execution); }
-.detail-title { font-size: 24px; font-weight: 600; color: var(--primary); margin-bottom: 8px; }
-.detail-description { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
-.coaching-focus { background: var(--bg); border-left: 4px solid var(--accent); padding: 16px; border-radius: var(--radius-sm); margin-top: 24px; }
-.coaching-focus-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--primary); font-weight: 700; margin-bottom: 12px; }
-.coaching-focus ul { list-style: none; padding: 0; }
-.coaching-focus li { font-size: 13px; color: var(--text); margin-bottom: 8px; padding-left: 20px; position: relative; }
-.coaching-focus li:before { content: "\2022"; position: absolute; left: 0; color: var(--accent); font-weight: bold; }
-
 /* ----- Responsive ----- */
 @media (max-width: 768px) {
   /* header-inner stays flex-row — Sign Out always top-right */
   .main-content { padding: 16px; }
-  .results-actions { flex-direction: column; }
-  .pulse-nav { flex-direction: column; }
-  .pulse-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 640px) {
