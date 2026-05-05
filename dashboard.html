@@ -41,7 +41,10 @@
           <div class="app-card-icon">🧠</div>
           <div class="app-card-title">Brain Pulse</div>
           <div class="app-card-desc" id="pulseDesc">Check in with your four wellbeing pillars</div>
-          <a href="brain-pulse.html" class="btn btn-primary">Open</a>
+          <div style="display:flex;gap:8px;margin-top:auto;">
+            <a id="pulseFormLink" href="brain-pulse-form.html" class="btn btn-primary" style="flex:1;text-align:center;">Check In</a>
+            <a href="brain-pulse.html" class="btn" style="flex:1;text-align:center;border:2px solid var(--accent);color:var(--accent);background:#fff;">Results</a>
+          </div>
         </div>
 
         <div class="app-card">
@@ -73,7 +76,7 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
     const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-    const VERSION = '2026-05-04.1';
+    const VERSION = '2026-05-05.1';
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     function showError(msg) {
@@ -91,6 +94,10 @@
 
         const { data: userData } = await sb.from('users').select('*').eq('id', user.id).single();
         if (userData?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
+
+        if (userData?.hub_profile_id) {
+          document.getElementById('pulseFormLink').href = 'brain-pulse-form.html?c=' + userData.hub_profile_id;
+        }
 
         const displayName = userData?.name || userData?.full_name || userData?.first_name ||
           user.user_metadata?.first_name || user.user_metadata?.full_name || user.user_metadata?.name || '—';

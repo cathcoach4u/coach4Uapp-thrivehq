@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#003366">
+<title>Brain Pulse Check-In — ThriveHQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Montserrat','Inter',system-ui,sans-serif;background:#fff;color:#2D2D2D;min-height:100vh;line-height:1.1}
+.header{background:#003366;color:#fff;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #0D9488}
+.header-left{display:flex;align-items:center;gap:12px}
+.header-back{color:rgba(255,255,255,.75);font-size:13px;font-weight:600;text-decoration:none;font-family:'Inter',sans-serif}
+.header-back:hover{color:#fff}
+.header-title{font-family:'Inter',sans-serif;font-size:16px;font-weight:700;color:#fff}
+.container{max-width:640px;margin:0 auto;padding:24px 16px 120px}
+.progress-bar{background:#DDDDDD;height:4px;border-radius:2px;margin-bottom:20px;overflow:hidden}
+.progress-fill{background:#003366;height:100%;transition:width .3s}
+.room-number{font-family:'Inter',sans-serif;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#666;margin-bottom:8px}
+.room-title{font-family:'Inter',sans-serif;font-size:20px;font-weight:700;color:#003366;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.room-subtitle{font-size:13px;color:#666;margin-bottom:16px;font-style:italic}
+.room-intro{background:#f8f8f8;border-left:4px solid #0D9488;padding:12px 16px;border-radius:4px;margin-bottom:16px;font-size:13px;line-height:1.5;color:#2D2D2D}
+.legend{background:#f8f8f8;border:1px solid #DDDDDD;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:#666;line-height:1.5}
+.question-card{background:#fff;border:1px solid #DDDDDD;border-radius:10px;padding:16px;margin-bottom:12px}
+.question-text{font-size:15px;color:#2D2D2D;margin-bottom:12px;line-height:1.5}
+.rating-group{display:flex;gap:4px;justify-content:space-between;margin-bottom:8px}
+.rating-btn{flex:1;height:40px;border:1px solid #DDDDDD;border-radius:8px;background:#fff;font-size:13px;font-weight:700;color:#2D2D2D;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;font-family:'Inter',sans-serif}
+.rating-btn:hover{border-color:#003366;background:#f8f8f8}
+.rating-btn.selected{background:#003366;color:#fff;border-color:#003366}
+.scale-anchor{font-size:11px;color:#999;text-align:center;margin-top:6px}
+.nav-buttons{display:flex;gap:8px;justify-content:space-between;padding:16px;border-top:1px solid #DDDDDD;margin-top:20px;position:sticky;bottom:0;background:#fff;z-index:10}
+.btn-secondary{background:#f8f8f8;color:#003366;border:1px solid #DDDDDD;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background .2s}
+.btn-secondary:hover{background:#eee}
+.btn-secondary:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:#003366;color:#fff;border:none;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background .2s}
+.btn-primary:hover{background:#002244}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.summary-card{background:#fff;border:1px solid #DDDDDD;border-radius:10px;padding:16px;margin-bottom:12px}
+.summary-question{font-size:13px;color:#666;margin-bottom:6px}
+.summary-rating{display:inline-block;background:#003366;color:#fff;padding:4px 12px;border-radius:6px;font-weight:700;font-size:13px;margin-right:8px}
+.summary-edit{color:#0D9488;cursor:pointer;font-size:12px;font-weight:600;margin-left:8px}
+.welcome{background:#fff;border-radius:12px;padding:24px;margin-bottom:24px;border-left:4px solid #003366}
+.welcome h2{font-family:'Inter',sans-serif;font-size:20px;font-weight:700;color:#003366;margin-bottom:8px}
+.welcome p{font-size:15px;color:#2D2D2D;line-height:1.6;margin-bottom:12px}
+.intro-card{background:#fff;border-radius:12px;padding:22px 24px;margin-bottom:20px;border:1px solid #DDDDDD;border-left:4px solid #0D9488}
+.intro-lead{font-size:14px;line-height:1.65;color:#003366;font-weight:600;margin-bottom:16px}
+.intro-body{font-size:13px;line-height:1.7;color:#475569;margin-bottom:16px}
+.intro-how{background:#fafbfc;border:1px solid #eef2f6;border-radius:8px;padding:14px 18px;margin-bottom:16px}
+.intro-how ul{margin:0;padding-left:20px}
+.intro-how li{font-size:12.5px;line-height:1.7;color:#475569;margin-bottom:4px}
+.intro-how li:last-child{margin-bottom:0}
+.start-btn{background:#003366;color:#fff;border:none;padding:14px 48px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s;width:100%;max-width:320px;margin:0 auto;display:block;text-align:center;font-family:'Inter',sans-serif}
+.start-btn:hover{background:#002244}
+.success-card{background:#f0fdf4;border:1px solid #6ee7b7;border-radius:12px;padding:28px 24px;text-align:center;margin-bottom:20px}
+.success-icon{font-size:48px;margin-bottom:12px}
+.success-title{font-family:'Inter',sans-serif;font-size:20px;font-weight:700;color:#065f46;margin-bottom:8px}
+.success-desc{font-size:14px;color:#047857;line-height:1.6;margin-bottom:20px}
+.loading{text-align:center;padding:40px;color:#999;font-size:14px}
+.error-card{background:#fef2f2;border:1px solid #fca5a5;border-radius:12px;padding:20px;text-align:center;color:#dc2626;font-size:14px}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-left">
+    <a href="brain-pulse.html" class="header-back">← Results</a>
+    <span class="header-title">Brain Pulse Check-In</span>
+  </div>
+</header>
+<div class="container" id="app"><div class="loading">Loading...</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+window.onerror = function(m) { document.getElementById('app').innerHTML = '<div class="error-card">Error: ' + m + '</div>'; };
+
+var HUB_URL  = 'https://uoixetfvboevjxlkfyqy.supabase.co';
+var HUB_KEY  = 'sb_publishable_m3qgSGvWF0n2TePf6vhqMw_9obUvJEJ';
+var HUB_TABLE = 'brain_pulse_submissions';
+
+var STAGES = [
+  {name:'Overwhelmed', min:20,  max:60 },
+  {name:'Unsettled',   min:61,  max:100},
+  {name:'Grounded',    min:101, max:140},
+  {name:'Resourced',   min:141, max:170},
+  {name:'Empowered',   min:171, max:200}
+];
+
+var ROOMS = [
+  {id:'capacity', emoji:'🪟', label:'Capacity',
+   items:['Over the past week, I felt calm in my body most of the time.','Over the past week, I noticed stress building and took action to keep myself calm.','Over the past week, I bounced back quickly when upset rather than staying reactive.','Over the past week, I had enough energy to respond well to my day.','Over the past week, I used a regulation tool (like breathing, movement, or connection) when I needed to calm down.']},
+  {id:'wellbeing', emoji:'🌱', label:'Wellbeing',
+   items:['Over the past week, what I did felt meaningful and connected to what matters to me.','Over the past week, I felt supported and connected to the people in my life.','Over the past week, I felt secure and in control of my finances.','Over the past week, I cared for my body and felt well in it.','Over the past week, I felt I belonged to and contributed to a community that matters to me.']},
+  {id:'strengths', emoji:'🌟', label:'Strengths', subtitle:'(and how you relate to yourself)',
+   intro:'This room measures the inner conversation you had with yourself this week — how you trusted your decisions, reframed the moments, accepted who you are, and spoke to yourself throughout the day.',
+   items:['Over the past week, I was confident in my decisions without second-guessing myself.','Over the past week, I focused on what I was doing right rather than what I was doing wrong.','Over the past week, I accepted who I am and how I am built rather than fighting it.','Over the past week, I spoke to myself with kindness rather than criticism.','Over the past week, I reminded myself I was doing okay rather than assuming the worst.']},
+  {id:'ex', emoji:'🏗', label:'Execution',
+   intro:'This room measures how you managed the everyday brain struggles of ADHD this week — starting, finishing, pausing, prioritising, and remembering.',
+   items:['Over the past week, I started tasks that needed to be done, not just the ones that interested me.','Over the past week, I stayed with tasks long enough to finish them.','Over the past week, I noticed when I was getting pulled off-track and brought myself back.','Over the past week, I did the important things before the loud ones.','Over the past week, I remembered to do the things I meant to do.']}
+];
+
+var SUPA, contact = null, answers = {}, screen = 'landing', room = 0;
+
+function key() { return 'bpf_' + (contact ? contact.id : 'pub'); }
+function save() { localStorage.setItem(key(), JSON.stringify(answers)); }
+function load() { var s = localStorage.getItem(key()); if (s) try { answers = JSON.parse(s); } catch(e) {} }
+function clear() { localStorage.removeItem(key()); }
+
+function render() {
+  if (screen === 'landing') return renderLand();
+  if (screen === 'room')    return renderRoom();
+  if (screen === 'summary') return renderSummary();
+  if (screen === 'success') return renderSuccess();
+}
+
+function renderLand() {
+  var name = contact && contact.first_name ? contact.first_name : '';
+  var h = name
+    ? '<div class="welcome"><h2>Hi ' + name + '</h2><p>Your Brain Pulse check-in — a quick read on your capacity, wellbeing, self-talk, and executive function.</p></div>'
+    : '<div class="welcome"><h2>Brain Pulse</h2><p>A check-in for your nervous system capacity, wellbeing, self-talk, and executive function.</p></div>';
+  h += '<div class="intro-card"><p class="intro-lead">The Brain Pulse is a four-room check-in for how your brain and body are tracking right now — your <strong>nervous system capacity</strong>, <strong>wellbeing</strong>, <strong>self-talk</strong>, and <strong>executive function</strong> (starting, finishing, pausing, prioritising, remembering).</p>';
+  h += '<p class="intro-body">Think of your capacity like a battery. Life makes constant demands — stress, poor sleep, emotional load, decision fatigue, health concerns, and everyday responsibilities. When your battery runs low, managing tasks becomes harder. This check-in helps you see where your battery is sitting right now.</p>';
+  h += '<div class="intro-how"><ul><li>Rate how true each statement feels for you <strong>over the past week</strong>.</li><li>Use the <strong>1–10 scale</strong> for each statement.</li><li>Try not to overthink your answers. Your first response is usually the most accurate.</li><li><strong>Lower scores</strong> suggest the room needs tending. <strong>Higher scores</strong> suggest it is holding well.</li></ul></div></div>';
+  h += '<div style="text-align:center;margin-bottom:20px;"><button type="button" class="start-btn" onclick="screen=\'room\';room=0;render()">Start Check-In</button></div>';
+  document.getElementById('app').innerHTML = h;
+}
+
+function renderRoom() {
+  var r = ROOMS[room];
+  var p = ((room + 1) / ROOMS.length) * 100;
+  var h = '<div class="progress-bar"><div class="progress-fill" style="width:' + p + '%"></div></div>';
+  h += '<div class="room-number">Room ' + (room + 1) + ' of ' + ROOMS.length + '</div>';
+  h += '<div class="room-title">' + r.emoji + ' ' + r.label + (r.subtitle ? '<span style="font-size:13px;font-weight:400;color:#666;margin-left:auto;">' + r.subtitle + '</span>' : '') + '</div>';
+  if (r.intro) h += '<div class="room-intro">' + r.intro + '</div>';
+  if (room === 0) {
+    h += '<div class="legend"><div style="font-weight:600;color:#003366;margin-bottom:8px;">How to rate each item</div>';
+    h += '<div style="font-size:12px;color:#555;line-height:1.8;">1–2 Not at all &nbsp;·&nbsp; 3–4 A little &nbsp;·&nbsp; 5–6 Somewhat &nbsp;·&nbsp; 7–8 Mostly &nbsp;·&nbsp; 9–10 All the time</div></div>';
+  }
+  r.items.forEach(function(t, i) {
+    var q = r.id + '_' + (i + 1), v = answers[q] || 0;
+    h += '<div class="question-card"><div class="question-text">' + t + '</div><div class="rating-group">';
+    for (var j = 1; j <= 10; j++)
+      h += '<button type="button" class="rating-btn ' + (v === j ? 'selected' : '') + '" onclick="answers[\'' + q + '\']=' + j + ';save();render()">' + j + '</button>';
+    h += '</div><div class="scale-anchor">1 = Not at all &nbsp;|&nbsp; 10 = All the time</div></div>';
+  });
+  var allAnswered = Object.keys(answers).filter(function(k){ return k.startsWith(r.id); }).length === r.items.length;
+  h += '<div class="nav-buttons">';
+  h += '<button class="btn-secondary" onclick="room--;save();window.scrollTo(0,0);render()" ' + (room === 0 ? 'disabled' : '') + '>Back</button>';
+  h += '<button class="btn-primary" onclick="room++;save();window.scrollTo(0,0);if(room>=' + ROOMS.length + '){screen=\'summary\';render();}else render();" ' + (!allAnswered ? 'disabled' : '') + '>Next</button>';
+  h += '</div>';
+  document.getElementById('app').innerHTML = h;
+}
+
+function renderSummary() {
+  window.scrollTo(0, 0);
+  var h = '<h2 style="font-family:Inter,sans-serif;font-size:18px;font-weight:700;color:#003366;margin-bottom:16px;">Review your answers</h2>';
+  ROOMS.forEach(function(r) {
+    h += '<div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #DDDDDD;">';
+    h += '<div style="font-weight:600;color:#003366;margin-bottom:8px;">' + r.emoji + ' ' + r.label + '</div>';
+    r.items.forEach(function(t, i) {
+      var q = r.id + '_' + (i + 1), v = answers[q] || 0;
+      h += '<div class="summary-card"><div class="summary-question">' + t + '</div><div><span class="summary-rating">' + v + '</span><span class="summary-edit" onclick="screen=\'room\';room=' + ROOMS.indexOf(r) + ';render()">Edit</span></div></div>';
+    });
+    h += '</div>';
+  });
+  h += '<div class="nav-buttons">';
+  h += '<button class="btn-secondary" onclick="screen=\'room\';room=0;render()">Back</button>';
+  h += '<button class="btn-primary" id="submitBtn" onclick="submit()">Submit</button>';
+  h += '</div>';
+  document.getElementById('app').innerHTML = h;
+}
+
+function renderSuccess() {
+  window.scrollTo(0, 0);
+  var h = '<div class="success-card"><div class="success-icon">✅</div>';
+  h += '<div class="success-title">Check-in submitted</div>';
+  h += '<div class="success-desc">Your Brain Pulse has been saved. Come back next week for another check-in.</div>';
+  h += '<a href="brain-pulse.html" style="display:inline-block;background:#003366;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;">View My Results</a></div>';
+  document.getElementById('app').innerHTML = h;
+}
+
+function calc() {
+  var sc = {capacity:0, wellbeing:0, strengths:0, ex:0};
+  ROOMS.forEach(function(r) {
+    var s = 0;
+    r.items.forEach(function(_, i) { s += answers[r.id + '_' + (i + 1)] || 0; });
+    sc[r.id] = s;
+  });
+  var tot = sc.capacity + sc.wellbeing + sc.strengths + sc.ex;
+  var st = STAGES.find(function(s){ return tot >= s.min && tot <= s.max; }) || STAGES[0];
+  return {sc: sc, tot: tot, st: st.name};
+}
+
+async function submit() {
+  var btn = document.getElementById('submitBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Submitting...'; }
+  var c = calc();
+  var row = {
+    contact_id:        contact.id,
+    stage:             c.st,
+    grand_total:       c.tot,
+    capacity_total:    c.sc.capacity,
+    wellbeing_total:   c.sc.wellbeing,
+    strengths_total:   c.sc.strengths,
+    ef_total:          c.sc.ex,
+    capacity_1:        answers.capacity_1   || 0,
+    capacity_2:        answers.capacity_2   || 0,
+    capacity_3:        answers.capacity_3   || 0,
+    capacity_4:        answers.capacity_4   || 0,
+    capacity_5:        answers.capacity_5   || 0,
+    wellbeing_purpose: answers.wellbeing_1  || 0,
+    wellbeing_social:  answers.wellbeing_2  || 0,
+    wellbeing_financial:answers.wellbeing_3 || 0,
+    wellbeing_physical:answers.wellbeing_4  || 0,
+    wellbeing_community:answers.wellbeing_5 || 0,
+    strengths_1:       answers.strengths_1  || 0,
+    strengths_2:       answers.strengths_2  || 0,
+    strengths_3:       answers.strengths_3  || 0,
+    strengths_4:       answers.strengths_4  || 0,
+    strengths_5:       answers.strengths_5  || 0,
+    ef_initiation:     answers.ex_1         || 0,
+    ef_sustained:      answers.ex_2         || 0,
+    ef_inhibition:     answers.ex_3         || 0,
+    ef_planning:       answers.ex_4         || 0,
+    ef_memory:         answers.ex_5         || 0
+  };
+  try {
+    var res = await SUPA.from(HUB_TABLE).insert(row).select();
+    if (res.error) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Error — try again'; }
+      alert('Submission error: ' + res.error.message);
+      return;
+    }
+    clear();
+    answers = {};
+    screen = 'success';
+    render();
+  } catch(err) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Error — try again'; }
+    alert('Submission failed: ' + (err.message || err));
+  }
+}
+
+async function init() {
+  var p = new URLSearchParams(window.location.search);
+  var c = p.get('c');
+  if (!c) {
+    document.getElementById('app').innerHTML = '<div class="error-card">No contact ID found. Please use your personal Brain Pulse link.</div>';
+    return;
+  }
+  try {
+    document.getElementById('app').innerHTML = '<div class="loading">Loading...</div>';
+    SUPA = window.supabase.createClient(HUB_URL, HUB_KEY);
+    var res = await SUPA.from('contacts').select('id,first_name,last_name').eq('id', c).single();
+    if (res.error || !res.data) {
+      document.getElementById('app').innerHTML = '<div class="error-card">Contact not found. Please check your link.</div>';
+      return;
+    }
+    contact = res.data;
+    load();
+    render();
+  } catch(e) {
+    document.getElementById('app').innerHTML = '<div class="error-card">Error: ' + (e.message || e) + '</div>';
+  }
+}
+
+init();
+</script>
+</body>
+</html>
