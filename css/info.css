@@ -1,6 +1,6 @@
 /* ============================================
    Coach4U Info Page Design System — css/info.css
-   Version: 2.1
+   Version: 2.2
    Source of truth: coach4u-shared/templates/css/info.css
    Use on: public, read-only informational pages.
    NOT for: authenticated dashboard pages, or activity/worksheet pages.
@@ -19,6 +19,19 @@ body.info-page { background: #f0f2f5; }
   padding: 18px 24px 16px;
   text-align: center;
 }
+
+/* Back navigation — sits above brand name inside the header bar */
+.info-back-link {
+  display: inline-block;
+  color: rgba(255,255,255,0.75);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-decoration: none;
+  letter-spacing: 0.1px;
+}
+.info-back-link:hover { color: white; text-decoration: none; }
+
 .info-brand-name {
   font-size: 20px;
   font-weight: 800;
