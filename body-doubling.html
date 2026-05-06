@@ -11,14 +11,12 @@
   <style>
     .focushq-intro { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; }
 
-    .session-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 8px; }
+    .session-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
     .session-card {
       border-radius: var(--radius); overflow: hidden;
       box-shadow: 0 4px 12px rgba(13,148,136,0.15);
-      text-decoration: none; display: flex; flex-direction: column;
-      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; flex-direction: column;
     }
-    .session-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(13,148,136,0.25); text-decoration: none; }
     .session-card-header {
       background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
       padding: 18px 20px 16px; color: white;
@@ -26,27 +24,36 @@
     .session-day-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; opacity: 0.7; margin-bottom: 3px; }
     .session-day-name { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
     .session-card-body {
-      background: white; padding: 14px 20px 16px;
+      background: white; padding: 14px 20px 18px;
       border: 2px solid var(--accent); border-top: none;
       border-radius: 0 0 var(--radius) var(--radius);
-      flex: 1; display: flex; flex-direction: column;
+      flex: 1;
     }
     .session-host { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
-    .session-time { font-size: 14px; color: var(--text-muted); margin-bottom: 14px; flex: 1; }
-    .session-join-btn {
-      display: block; text-align: center;
-      padding: 9px 14px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 700;
-      color: white;
+    .session-time { font-size: 14px; color: var(--text-muted); }
+
+    .whatsapp-callout {
+      background: #f0faf4;
+      border: 2px solid #25D366;
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 8px;
     }
-    .session-join-btn.whatsapp { background: #25D366; }
-    .session-join-btn.whatsapp:hover { background: #1ebe5d; color: white; text-decoration: none; }
-    .session-join-btn.default { background: var(--accent); }
-    .session-join-btn.default:hover { background: var(--accent-dark); color: white; text-decoration: none; }
+    .whatsapp-callout p {
+      font-size: 15px; color: #333; line-height: 1.65; margin: 0 0 14px;
+    }
+    .whatsapp-btn {
+      display: inline-block; background: #25D366; color: white;
+      font-size: 14px; font-weight: 700; padding: 10px 20px;
+      border-radius: var(--radius-sm); text-decoration: none;
+    }
+    .whatsapp-btn:hover { background: #1ebe5d; color: white; text-decoration: none; }
 
     .no-sessions-note {
       font-size: 15px; color: var(--text-muted); padding: 20px;
       text-align: center; background: white;
       border: 2px solid var(--accent); border-radius: var(--radius);
+      margin-bottom: 20px;
     }
 
     .host-cta {
@@ -85,6 +92,11 @@
     <h3 class="section-title">This Week's Sessions</h3>
     <div id="sessionGrid" class="session-grid"></div>
 
+    <div class="whatsapp-callout">
+      <p>💬 On the day, go to the ThriveHQ WhatsApp — the host will set up a video link.</p>
+      <a href="https://chat.whatsapp.com/LemI9eH1yjmI3iIYOZvADV" target="_blank" rel="noopener" class="whatsapp-btn">Open ThriveHQ WhatsApp</a>
+    </div>
+
     <a href="hosting.html" class="host-cta">
       <div class="host-cta-top">
         <span class="host-cta-icon">🤝</span>
@@ -105,7 +117,7 @@
       var sessions = [];
       try {
         var res = await fetch(
-          SUPABASE_URL + '/rest/v1/body_doubling_sessions?active=eq.true&select=host_name,day_of_week,day_order,start_time,end_time,meeting_url&order=day_order.asc',
+          SUPABASE_URL + '/rest/v1/body_doubling_sessions?active=eq.true&select=host_name,day_of_week,day_order,start_time,end_time&order=day_order.asc',
           { headers: { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + ANON_KEY } }
         );
         var data = await res.json();
@@ -117,11 +129,7 @@
         return;
       }
       grid.innerHTML = sessions.map(function(s) {
-        var url = s.meeting_url || '#';
-        var isWhatsApp = url.indexOf('whatsapp.com') !== -1;
-        var btnClass = isWhatsApp ? 'whatsapp' : 'default';
-        var btnLabel = isWhatsApp ? '💬 Join on WhatsApp' : 'Join session →';
-        return '<a href="' + url + '" target="_blank" rel="noopener" class="session-card">' +
+        return '<div class="session-card">' +
           '<div class="session-card-header">' +
             '<div class="session-day-label">Weekly</div>' +
             '<div class="session-day-name">' + s.day_of_week + '</div>' +
@@ -129,9 +137,8 @@
           '<div class="session-card-body">' +
             '<div class="session-host">' + s.host_name + '</div>' +
             '<div class="session-time">' + s.start_time + ' – ' + s.end_time + ' AEST</div>' +
-            '<span class="session-join-btn ' + btnClass + '">' + btnLabel + '</span>' +
           '</div>' +
-        '</a>';
+        '</div>';
       }).join('');
     })();
   </script>
