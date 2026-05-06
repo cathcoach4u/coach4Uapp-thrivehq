@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FocusHQ — Today's Focus</title>
+  <meta name="theme-color" content="#003366">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/activity.css">
+</head>
+<body class="activity-page">
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="dashboard.html" class="header-back">← Dashboard</a>
+        <span class="header-title">Today's Focus</span>
+        <span class="header-version" id="headerVersion"></span>
+      </div>
+      <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
+    </div>
+  </header>
+
+  <div class="act-container">
+    <div id="loadingMsg" style="text-align:center;padding:40px 0;color:#888;">Loading…</div>
+    <div id="content" style="display:none;">
+
+      <div class="act-header">
+        <h1>Today's Focus</h1>
+        <p id="todayDate" style="color:var(--act-light-blue);font-weight:600;"></p>
+      </div>
+
+      <div class="act-card">
+        <div class="act-step-label">Your Most Important Task</div>
+        <div class="act-step-title">What is the one thing you need to get done today?</div>
+        <p class="act-step-prompt">Your MIT (Most Important Task) is the task that, if completed, makes today a win — even if nothing else gets done. Choose one. Not a list.</p>
+        <p class="act-step-hint">Think: what would I regret leaving undone?</p>
+        <textarea class="act-textarea" id="mitInput" rows="4" placeholder="Today I need to…"></textarea>
+      </div>
+
+      <div class="act-card" style="margin-top:0;">
+        <div class="act-section-title">Why it works</div>
+        <p style="font-size:0.93rem;color:var(--act-dark-grey);line-height:1.7;margin:0;">
+          Most productivity problems aren't about doing too little — they're about not deciding what matters most.
+          Naming your MIT at the start of the day cuts through the noise and gives you a clear target.
+          When the day gets messy, you always know what to return to.
+        </p>
+      </div>
+
+      <div class="act-save-bar">
+        <span class="act-save-status" id="saveStatus"></span>
+        <button class="act-btn act-btn-primary" onclick="saveMIT()">Save</button>
+      </div>
+
+      <p class="act-footer">Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a></p>
+
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
+    const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
+    const VERSION = '2026-05-06.1';
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    window.signOut = async function() { await sb.auth.signOut(); window.location.href = 'index.html'; };
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const { data: { user }, error: authErr } = await sb.auth.getUser();
+        if (authErr || !user) { window.location.href = 'index.html'; return; }
+        const { data: userData } = await sb.from('users').select('membership_status').eq('id', user.id).single();
+        if (userData?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
+
+        // Set today's date display
+        const today = new Date();
+        document.getElementById('todayDate').textContent = today.toLocaleDateString('en-AU', {
+          weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+        });
+
+        // Load today's MIT from localStorage (keyed by user + date so it auto-clears daily)
+        const todayKey = today.toISOString().slice(0, 10);
+        const mitKey = 'thrivehq_mit_' + user.id + '_' + todayKey;
+        document.getElementById('mitInput').value = localStorage.getItem(mitKey) || '';
+
+        window.saveMIT = function() {
+          const val = document.getElementById('mitInput').value.trim();
+          localStorage.setItem(mitKey, val);
+          const status = document.getElementById('saveStatus');
+          status.textContent = val ? 'Saved.' : 'Cleared.';
+          status.className = 'act-save-status saved';
+          setTimeout(() => { status.textContent = ''; status.className = 'act-save-status'; }, 2500);
+        };
+
+        document.getElementById('loadingMsg').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+      } catch (err) {
+        document.getElementById('loadingMsg').textContent = 'Error loading page. Please refresh.';
+      }
+    });
+
+    document.getElementById('headerVersion').textContent = 'v' + VERSION;
+  </script>
+</body>
+</html>

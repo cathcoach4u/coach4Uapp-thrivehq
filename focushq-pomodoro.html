@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FocusHQ — Pomodoro Timer</title>
+  <meta name="theme-color" content="#003366">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/activity.css">
+  <style>
+    .pomo-phase-badge {
+      display: inline-block;
+      padding: 6px 20px;
+      border-radius: 20px;
+      font-family: var(--act-font-heading);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      background: var(--act-dark-blue);
+      color: white;
+      transition: background 0.3s;
+    }
+    .pomo-phase-badge.break { background: var(--act-light-blue); }
+
+    .pomo-display {
+      font-family: var(--act-font-heading);
+      font-size: 5rem;
+      font-weight: 700;
+      color: var(--act-dark-blue);
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .pomo-rounds {
+      font-size: 0.88rem;
+      color: var(--act-light-blue);
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-family: var(--act-font-heading);
+    }
+
+    .pomo-status {
+      font-size: 0.88rem;
+      color: var(--act-dark-grey);
+      min-height: 1.4em;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .pomo-controls {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .act-steps-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      counter-reset: pomo-step;
+    }
+    .act-steps-list li {
+      counter-increment: pomo-step;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--act-light-grey);
+      font-size: 0.95rem;
+      color: var(--act-dark-grey);
+      font-family: var(--act-font-body);
+    }
+    .act-steps-list li:last-child { border-bottom: none; }
+    .act-steps-list li::before {
+      content: counter(pomo-step);
+      background: var(--act-dark-blue);
+      color: white;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      font-family: var(--act-font-heading);
+    }
+
+    .pomo-tip-box {
+      background: var(--act-soft);
+      border-left: 3px solid var(--act-light-blue);
+      border-radius: 0 var(--act-radius-sm) var(--act-radius-sm) 0;
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      color: var(--act-dark-grey);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body class="activity-page">
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="dashboard.html" class="header-back">← Dashboard</a>
+        <span class="header-title">Pomodoro Timer</span>
+        <span class="header-version" id="headerVersion"></span>
+      </div>
+      <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
+    </div>
+  </header>
+
+  <div class="act-container">
+    <div id="loadingMsg" style="text-align:center;padding:40px 0;color:#888;">Loading…</div>
+    <div id="content" style="display:none;">
+
+      <div class="act-header">
+        <h1>Pomodoro Timer</h1>
+        <p>Work in focused sprints. Rest on purpose. Get more done.</p>
+      </div>
+
+      <!-- Timer card -->
+      <div class="act-card" style="text-align:center;padding:40px 28px;">
+        <div id="pomoPhase" class="pomo-phase-badge">Work</div>
+        <div class="pomo-display" id="pomoDisplay">25:00</div>
+        <div class="pomo-rounds" id="pomoRounds">Round 1 of 4</div>
+        <div class="pomo-status" id="pomoStatus"></div>
+        <div class="pomo-controls">
+          <button class="act-btn act-btn-primary" id="pomoStartBtn" onclick="pomodoroStart()">Start</button>
+          <button class="act-btn act-btn-secondary" id="pomoPauseBtn" style="display:none;" onclick="pomodoroPause()">Pause</button>
+          <button class="act-btn act-btn-secondary" onclick="pomodoroReset()">Reset</button>
+        </div>
+      </div>
+
+      <!-- How it works -->
+      <div class="act-card" style="margin-top:0;">
+        <div class="act-section-title">How it works</div>
+        <ol class="act-steps-list">
+          <li>Choose one task to focus on before you start.</li>
+          <li>Start the 25-minute timer and work only on that task.</li>
+          <li>When the timer ends, take a 5-minute break — step away from the screen.</li>
+          <li>After 4 rounds, take a longer break of 15–30 minutes.</li>
+        </ol>
+      </div>
+
+      <!-- Tips -->
+      <div class="act-card" style="margin-top:0;">
+        <div class="act-section-title">Tips</div>
+        <ul style="padding-left:18px;margin:0;line-height:1.9;font-size:0.93rem;color:var(--act-dark-grey);">
+          <li>Put your phone out of reach for the 25 minutes.</li>
+          <li>If a distraction pops into your head, jot it down and come back to it later.</li>
+          <li>The break is part of the technique — don't skip it.</li>
+          <li>Short tasks? Stack a few into one pomodoro.</li>
+        </ul>
+        <div class="pomo-tip-box" style="margin-top:16px;">
+          Named after a tomato-shaped kitchen timer (pomodoro = Italian for tomato). Developed by Francesco Cirillo in the late 1980s.
+        </div>
+      </div>
+
+      <p class="act-footer">Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a></p>
+
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
+    const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
+    const VERSION = '2026-05-06.1';
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    window.signOut = async function() { await sb.auth.signOut(); window.location.href = 'index.html'; };
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const { data: { user }, error: authErr } = await sb.auth.getUser();
+        if (authErr || !user) { window.location.href = 'index.html'; return; }
+        const { data: userData } = await sb.from('users').select('membership_status').eq('id', user.id).single();
+        if (userData?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
+        document.getElementById('loadingMsg').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+      } catch (err) {
+        document.getElementById('loadingMsg').textContent = 'Error loading page. Please refresh.';
+      }
+    });
+
+    document.getElementById('headerVersion').textContent = 'v' + VERSION;
+
+    // --- Pomodoro Timer ---
+    const WORK_SECS = 25 * 60;
+    const BREAK_SECS = 5 * 60;
+    let remaining = WORK_SECS;
+    let isWork = true;
+    let round = 1;
+    let running = false;
+    let interval = null;
+
+    function formatTime(secs) {
+      return String(Math.floor(secs / 60)).padStart(2, '0') + ':' + String(secs % 60).padStart(2, '0');
+    }
+
+    function updateDisplay() {
+      const t = formatTime(remaining);
+      document.getElementById('pomoDisplay').textContent = t;
+      document.title = running ? (t + (isWork ? ' — Focus' : ' — Break') + ' | FocusHQ') : 'FocusHQ — Pomodoro Timer';
+      const phaseEl = document.getElementById('pomoPhase');
+      phaseEl.textContent = isWork ? 'Work' : 'Break';
+      phaseEl.className = 'pomo-phase-badge' + (isWork ? '' : ' break');
+      document.getElementById('pomoRounds').textContent = 'Round ' + round + ' of 4';
+    }
+
+    function onPhaseEnd() {
+      clearInterval(interval);
+      interval = null;
+      running = false;
+      document.getElementById('pomoStartBtn').style.display = 'inline-flex';
+      document.getElementById('pomoPauseBtn').style.display = 'none';
+
+      if (isWork) {
+        isWork = false;
+        remaining = BREAK_SECS;
+        document.getElementById('pomoStatus').textContent = 'Nice work! Take a 5-minute break.';
+      } else {
+        if (round >= 4) {
+          round = 1;
+          document.getElementById('pomoStatus').textContent = 'Four rounds done — take a longer break (15–30 min).';
+        } else {
+          round++;
+          document.getElementById('pomoStatus').textContent = 'Break over. Ready for round ' + round + '?';
+        }
+        isWork = true;
+        remaining = WORK_SECS;
+      }
+      updateDisplay();
+    }
+
+    function tick() {
+      if (remaining <= 0) { onPhaseEnd(); return; }
+      remaining--;
+      updateDisplay();
+    }
+
+    window.pomodoroStart = function() {
+      if (running) return;
+      running = true;
+      document.getElementById('pomoStatus').textContent = '';
+      interval = setInterval(tick, 1000);
+      document.getElementById('pomoStartBtn').style.display = 'none';
+      document.getElementById('pomoPauseBtn').style.display = 'inline-flex';
+      updateDisplay();
+    };
+
+    window.pomodoroPause = function() {
+      if (!running) return;
+      clearInterval(interval);
+      interval = null;
+      running = false;
+      document.getElementById('pomoStartBtn').style.display = 'inline-flex';
+      document.getElementById('pomoPauseBtn').style.display = 'none';
+      document.title = 'FocusHQ — Pomodoro Timer';
+    };
+
+    window.pomodoroReset = function() {
+      clearInterval(interval);
+      interval = null;
+      running = false;
+      isWork = true;
+      round = 1;
+      remaining = WORK_SECS;
+      document.getElementById('pomoStatus').textContent = '';
+      document.getElementById('pomoStartBtn').style.display = 'inline-flex';
+      document.getElementById('pomoPauseBtn').style.display = 'none';
+      document.title = 'FocusHQ — Pomodoro Timer';
+      updateDisplay();
+    };
+
+    updateDisplay();
+  </script>
+</body>
+</html>
