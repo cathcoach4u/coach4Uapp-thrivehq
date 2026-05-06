@@ -3,18 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ThriveHQ — Body Doubling</title>
+  <title>FocusHQ — Body Doubling Sessions</title>
   <meta name="theme-color" content="#003366">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23003366' width='100' height='100'/><text x='50' y='65' font-size='60' fill='white' text-anchor='middle' font-weight='bold'>T</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23003366' width='100' height='100'/><text x='50' y='65' font-size='60' fill='white' text-anchor='middle' font-weight='bold'>F</text></svg>">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/info.css">
   <style>
+    .focushq-intro {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .session-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+    .session-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(13,148,136,0.15);
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .session-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(13,148,136,0.25);
+      text-decoration: none;
+    }
+    .session-card-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      padding: 18px 20px 16px;
+      color: white;
+    }
+    .session-day-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      opacity: 0.7;
+      margin-bottom: 3px;
+    }
+    .session-day-name {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+    .session-card-body {
+      background: white;
+      padding: 14px 20px 16px;
+      border: 2px solid var(--accent);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .session-host {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 3px;
+    }
+    .session-time {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      flex: 1;
+    }
+    .session-join-btn {
+      display: block;
+      text-align: center;
+      background: var(--accent);
+      color: white;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .session-join-btn:hover { background: var(--accent-dark); color: white; text-decoration: none; }
+
+    .no-sessions-note {
+      font-size: 14px;
+      color: var(--text-muted);
+      padding: 20px;
+      text-align: center;
+      background: white;
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+    }
+
     .host-cta {
       display: block;
       background: linear-gradient(135deg, var(--primary) 0%, #0a5a96 100%);
       border-radius: var(--radius);
       padding: 22px 20px;
-      margin-bottom: 16px;
+      margin-top: 24px;
+      margin-bottom: 8px;
       text-decoration: none;
       box-shadow: 0 4px 12px rgba(0,51,102,0.25);
       transition: box-shadow 0.2s, transform 0.2s;
@@ -24,92 +115,48 @@
       transform: translateY(-2px);
       text-decoration: none;
     }
-    .host-cta-top {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-    .host-cta-icon { font-size: 28px; flex-shrink: 0; }
-    .host-cta-title {
-      font-size: 18px;
-      font-weight: 800;
-      color: #ffffff;
-      font-family: var(--font-heading);
-      letter-spacing: -0.2px;
-    }
-    .host-cta-desc {
-      font-size: 13px;
-      color: rgba(255,255,255,0.8);
-      line-height: 1.55;
-      margin-bottom: 14px;
-    }
+    .host-cta-top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .host-cta-icon { font-size: 26px; flex-shrink: 0; }
+    .host-cta-title { font-size: 17px; font-weight: 800; color: #ffffff; font-family: var(--font-heading); letter-spacing: -0.2px; }
+    .host-cta-desc { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.55; margin-bottom: 14px; }
     .host-cta-btn {
       display: inline-block;
       background: rgba(255,255,255,0.15);
       border: 1.5px solid rgba(255,255,255,0.5);
       color: #ffffff;
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 13px; font-weight: 700;
       padding: 7px 16px;
       border-radius: var(--radius-sm);
-      letter-spacing: 0.2px;
     }
 
-    .bd-schedule-card {
-      background: #fff;
-      border: 2px solid var(--accent);
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(13,148,136,0.12);
-      margin-bottom: 10px;
+    @media (max-width: 440px) {
+      .session-grid { grid-template-columns: 1fr; }
     }
-    .bd-schedule-title {
-      padding: 14px 18px;
-      font-size: 16px; font-weight: 600;
-      color: var(--primary);
-      border-bottom: 2px solid var(--accent);
-    }
-    .bd-day-row {
-      display: flex; align-items: center;
-      padding: 11px 18px;
-      border-bottom: 1px solid #f0f0f0;
-      text-decoration: none;
-      transition: background 0.15s;
-    }
-    .bd-day-row:last-child { border-bottom: none; }
-    .bd-day-row.has-session { color: var(--primary); }
-    .bd-day-row.has-session:hover { background: #f8fffe; }
-    .bd-day-row.no-session { color: #ccc; cursor: default; }
-    .bd-day-name { font-size: 14px; font-weight: 700; width: 96px; }
-    .bd-day-info { flex: 1; font-size: 13px; }
-    .bd-day-join { font-size: 12px; font-weight: 600; color: var(--accent); white-space: nowrap; }
   </style>
 </head>
 <body class="info-page">
 
   <header class="info-brand-bar">
-    <div class="info-brand-name">ThriveHQ</div>
-    <div class="info-brand-sub">Body Doubling</div>
+    <a href="links.html" class="info-back-link">← Links</a>
+    <div class="info-brand-name">FocusHQ</div>
+    <div class="info-brand-sub">Get things done, together.</div>
   </header>
 
   <div class="info-content">
+
+    <p class="focushq-intro">Show up, set an intention, and work alongside others. No facilitation — just focused time with people who get it.</p>
+
+    <h3 class="section-title">This Week’s Sessions</h3>
+    <div id="sessionGrid" class="session-grid"></div>
 
     <a href="hosting.html" class="host-cta">
       <div class="host-cta-top">
         <span class="host-cta-icon">🤝</span>
         <span class="host-cta-title">Become a Host</span>
       </div>
-      <p class="host-cta-desc">You don’t need to facilitate or lead — just show up and work alongside the group. It costs nothing except an hour of your time.</p>
+      <p class="host-cta-desc">Pick a time that works for you, show up, and work alongside the group. That’s all it takes.</p>
       <span class="host-cta-btn">Find out more →</span>
     </a>
-
-    <div class="bd-schedule-card">
-      <div class="bd-schedule-title">Sessions</div>
-      <div id="bdSchedule"></div>
-    </div>
-
-    <a href="links.html" class="btn btn-navy btn-full" style="margin-top: 24px; padding: 13px 24px;">← Back to Links</a>
 
     <p class="info-footer">
       Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a>
@@ -119,45 +166,38 @@
 
   <script>
     (async function() {
-      var DAYS = [
-        { name: 'Monday',    order: 1 },
-        { name: 'Tuesday',   order: 2 },
-        { name: 'Wednesday', order: 3 },
-        { name: 'Thursday',  order: 4 },
-        { name: 'Friday',    order: 5 },
-        { name: 'Saturday',  order: 6 }
-      ];
-
-      var container = document.getElementById('bdSchedule');
       var SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
       var ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
+      var grid = document.getElementById('sessionGrid');
 
       var sessions = [];
       try {
         var res = await fetch(
-          SUPABASE_URL + '/rest/v1/body_doubling_sessions?active=eq.true&select=host_name,day_of_week,day_order,start_time,end_time,meeting_url',
+          SUPABASE_URL + '/rest/v1/body_doubling_sessions?active=eq.true&select=host_name,day_of_week,day_order,start_time,end_time,meeting_url&order=day_order.asc',
           { headers: { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + ANON_KEY } }
         );
         var data = await res.json();
         if (res.ok && Array.isArray(data)) sessions = data;
       } catch(e) {}
 
-      container.innerHTML = DAYS.map(function(day) {
-        var matches = sessions.filter(function(s) { return s.day_of_week === day.name; });
-        if (matches.length > 0) {
-          return matches.map(function(s) {
-            return '<a href="' + s.meeting_url + '" target="_blank" rel="noopener" class="bd-day-row has-session">' +
-              '<span class="bd-day-name">' + day.name + '</span>' +
-              '<span class="bd-day-info">' + s.host_name + ' · ' + s.start_time + '–' + s.end_time + ' AEST</span>' +
-              '<span class="bd-day-join">Click here to join →</span>' +
-            '</a>';
-          }).join('');
-        } else {
-          return '<div class="bd-day-row no-session">' +
-            '<span class="bd-day-name">' + day.name + '</span>' +
-            '<span class="bd-day-info">No session</span>' +
-          '</div>';
-        }
+      if (sessions.length === 0) {
+        grid.outerHTML = '<div class="no-sessions-note">No sessions scheduled yet — why not become the first host?</div>';
+        return;
+      }
+
+      grid.innerHTML = sessions.map(function(s) {
+        var url = s.meeting_url || '#';
+        return '<a href="' + url + '" target="_blank" rel="noopener" class="session-card">' +
+          '<div class="session-card-header">' +
+            '<div class="session-day-label">Weekly</div>' +
+            '<div class="session-day-name">' + s.day_of_week + '</div>' +
+          '</div>' +
+          '<div class="session-card-body">' +
+            '<div class="session-host">' + s.host_name + '</div>' +
+            '<div class="session-time">' + s.start_time + ' – ' + s.end_time + ' AEST</div>' +
+            '<span class="session-join-btn">Join session →</span>' +
+          '</div>' +
+        '</a>';
       }).join('');
     })();
   </script>
