@@ -3,7 +3,7 @@
 > Template: https://github.com/cathcoach4u/coach4u-shared/blob/main/templates/CLAUDE.md
 > Shared design system: https://github.com/cathcoach4u/coach4u-shared
 > Full setup guide: https://github.com/cathcoach4u/coach4u-shared/blob/main/SETUP.md
-> **Design system version: 2.1**
+> **Design system version: 2.3**
 
 ---
 
@@ -30,7 +30,7 @@ ThriveHQ serves two completely separate programmes. Keep pages, terminology, dat
 - **Branding:** Called **FocusHQ** (tagline: "Get things done, together.") — not "Body Doubling Sessions".
 - **Pages:**
   - `body-doubling.html` — public weekly schedule pulled live from Supabase; prominent CTA to become a host
-  - `hosting.html` — FocusHQ-branded page: live schedule + become-a-host benefits and role steps
+  - `hosting.html` — FocusHQ-branded page: become-a-host benefits and role steps. Back link → `body-doubling.html`
 - **Data:** `body_doubling_sessions` table in Supabase (public read, fetched via `fetch()`).
 - **Current hosts:** Cath (Thursday 12–1pm AEST), Malcolm Joosse (Monday 11am–12pm AEST).
 
@@ -48,12 +48,12 @@ ThriveHQ serves two completely separate programmes. Keep pages, terminology, dat
 | `forgot-password.html` | — | No | Password reset request |
 | `reset-password.html` | — | No | Password reset form |
 | `inactive.html` | — | No | Shown to authenticated members with inactive/expired membership |
-| `links.html` | — | No | Public Linktree-style links page. Info design. |
-| `weekly-coaching-flow.html` | Coaching | No | Public weekly coaching flow (Planning Tuesday, Focus Thursday). Info design. |
-| `session-rhythm.html` | **Coaching only** | No | Public 2026 term calendar (session blocks and school holiday breaks). Info design. NOT for FocusHQ. |
-| `live-sessions.html` | Coaching | No | Public live coaching session time (Planning Tuesdays 6 PM AEST). Info design. |
-| `body-doubling.html` | **FocusHQ** | No | Public FocusHQ schedule from Supabase `body_doubling_sessions`. Info design. |
-| `hosting.html` | **FocusHQ** | No | FocusHQ branded page — live schedule + become-a-host. Info design. Supabase (`body_doubling_sessions`). |
+| `links.html` | — | No | Public Linktree-style links page. Info design. No back link (it's the root page). |
+| `weekly-coaching-flow.html` | Coaching | No | Public weekly coaching flow (Planning Tuesday, Focus Thursday). Info design. Back link → `links.html`. |
+| `session-rhythm.html` | **Coaching only** | No | Public 2026 term calendar (session blocks and school holiday breaks). Info design. Back link → `links.html`. NOT for FocusHQ. |
+| `live-sessions.html` | Coaching | No | Public live coaching session time (Planning Tuesdays 6 PM AEST). Info design. Back link → `links.html`. |
+| `body-doubling.html` | **FocusHQ** | No | Public FocusHQ schedule from Supabase `body_doubling_sessions`. Info design. Back link → `links.html`. |
+| `hosting.html` | **FocusHQ** | No | FocusHQ branded — become-a-host benefits + role steps. Info design. Back link → `body-doubling.html`. |
 | `dashboard.html` | — | Yes | Main member dashboard with Brain Pulse results and quick links |
 | `brain-pulse.html` | — | Yes | 4-pillar Brain Pulse assessment form |
 | `brain-pulse-detail.html` | — | Yes | Per-pillar coaching focus detail |
@@ -174,20 +174,41 @@ Link in every info page `<head>`, alongside `style.css`:
 
 Add `class="info-page"` to `<body>`. `info.css` handles the page chrome; `style.css` provides shared components (`.card`, `.btn`, `.section-title`).
 
-### Info CSS class reference (v2.1)
+### Info CSS class reference (v2.3)
 
 ```
 .info-brand-bar      — navy header bar matching .site-header tone; teal gradient top strip
-.info-brand-name     — brand/app name, bold 20px white
-.info-brand-sub      — page subtitle or section name, 12px uppercase muted white
+.info-back-link      — back navigation link inside the header (e.g. ← FocusHQ Sessions); always top of screen
+.info-brand-name     — brand/app name, bold 22px white
+.info-brand-sub      — page subtitle or section name, 13px uppercase muted white
 .info-content        — 560px centred content well
-.info-note           — teal left-strip callout block
-.info-footer         — centred muted footer, sticky to bottom
+.info-note           — teal left-strip callout block (15px)
+.info-footer         — centred muted footer, sticky to bottom (14px)
 ```
 
-HTML skeleton:
+### Font scale (v2.3)
+
+| Element | Size |
+|---|---|
+| Brand name | 22px |
+| Body / descriptions | 16px |
+| Secondary body / notes | 15px |
+| Labels / metadata / footer / back link | 14px |
+| Uppercase labels (brand-sub) | 13px |
+
+### Back link rule
+
+Every info page except `links.html` must have an `.info-back-link` inside `.info-brand-bar`. The link must point to the **actual previous page** — not always `links.html`:
+
+- Pages reached from `links.html` → `href="links.html"`
+- `hosting.html` (reached from `body-doubling.html`) → `href="body-doubling.html"`
+
+Never place a back button at the bottom of the page.
+
+### HTML skeleton:
 ```html
 <header class="info-brand-bar">
+  <a href="links.html" class="info-back-link">← Links</a>
   <div class="info-brand-name">ThriveHQ</div>
   <div class="info-brand-sub">Page Title</div>
 </header>
@@ -201,12 +222,12 @@ HTML skeleton:
 
 | Page | Programme | Notes |
 |---|---|---|
-| `links.html` | — | Link card styles in inline `<style>`. Body Doubling card links to `body-doubling.html`. |
-| `weekly-coaching-flow.html` | Coaching | Session card details in inline `<style>`. Static, no Supabase. |
-| `session-rhythm.html` | **Coaching only** | Rhythm row details in inline `<style>`. JS hides past date rows via `data-end` attributes. Do NOT link from FocusHQ pages. |
-| `live-sessions.html` | Coaching | Collapsible session card. Static, no Supabase. |
-| `body-doubling.html` | **FocusHQ** | Prominent navy CTA card for hosting + Mon–Sat schedule from Supabase `body_doubling_sessions`. Uses direct `fetch()` REST API (not Supabase JS client). |
-| `hosting.html` | **FocusHQ** | Branded as FocusHQ. Hero intro + live schedule from Supabase + become-a-host benefits + role steps. Uses direct `fetch()` REST API. |
+| `links.html` | — | Link card styles in inline `<style>`. No back link (root page). `link-section-label` 14px. |
+| `weekly-coaching-flow.html` | Coaching | Session card details in inline `<style>`. Static, no Supabase. Back link → `links.html`. |
+| `session-rhythm.html` | **Coaching only** | Rhythm row details in inline `<style>`. JS hides past date rows via `data-end` attributes. Back link → `links.html`. Do NOT link from FocusHQ pages. |
+| `live-sessions.html` | Coaching | Collapsible session card. Static, no Supabase. Back link → `links.html`. |
+| `body-doubling.html` | **FocusHQ** | Prominent navy CTA card for hosting + Mon–Sat schedule from Supabase `body_doubling_sessions`. Back link → `links.html`. Uses direct `fetch()` REST API. |
+| `hosting.html` | **FocusHQ** | FocusHQ branded. Hero intro + become-a-host benefits + role steps. Back link → `body-doubling.html` (NOT links.html). Uses direct `fetch()` REST API. |
 
 ---
 
