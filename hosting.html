@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FocusHQ — Body Doubling Sessions</title>
+  <title>FocusHQ — Become a Host</title>
   <meta name="theme-color" content="#003366">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23003366' width='100' height='100'/><text x='50' y='65' font-size='60' fill='white' text-anchor='middle' font-weight='bold'>F</text></svg>">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/info.css">
   <style>
-    /* ---- Hero ---- */
     .focushq-hero {
       background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
       border-radius: var(--radius);
@@ -20,44 +19,6 @@
     .focushq-hero-heading { font-size: 15px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.2px; }
     .focushq-hero-text { font-size: 14px; line-height: 1.7; opacity: 0.9; }
 
-    /* ---- Schedule ---- */
-    .schedule-card {
-      background: #fff;
-      border: 2px solid var(--accent);
-      border-radius: var(--radius);
-      overflow: hidden;
-      margin-bottom: 8px;
-      box-shadow: 0 2px 8px rgba(13,148,136,0.10);
-    }
-    .schedule-row {
-      display: flex;
-      align-items: center;
-      padding: 13px 18px;
-      border-bottom: 1px solid #f0f2f5;
-      gap: 12px;
-      text-decoration: none;
-    }
-    .schedule-row:last-child { border-bottom: none; }
-    .schedule-row.session-active { background: rgba(13,148,136,0.04); }
-    .schedule-row.session-active:hover { background: rgba(13,148,136,0.08); }
-    .schedule-day {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-muted);
-      width: 96px;
-      flex-shrink: 0;
-    }
-    .schedule-row.session-active .schedule-day { color: var(--primary); font-weight: 800; }
-    .schedule-info { flex: 1; font-size: 14px; color: var(--text-muted); }
-    .schedule-row.session-active .schedule-info { color: var(--text); font-weight: 500; }
-    .host-name { color: var(--primary); font-weight: 700; }
-    .session-time { color: var(--text-muted); font-size: 13px; }
-    .schedule-join {
-      font-size: 13px; font-weight: 700; color: var(--accent);
-      white-space: nowrap; flex-shrink: 0;
-    }
-
-    /* ---- Benefits grid ---- */
     .benefit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
     .benefit-tile {
       background: #fff; border: 2px solid var(--accent);
@@ -68,7 +29,6 @@
     .benefit-tile-title { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 4px; line-height: 1.3; }
     .benefit-tile-desc { font-size: 12px; color: #888; line-height: 1.5; }
 
-    /* ---- Role steps ---- */
     .role-card {
       background: #fff; border: 2px solid var(--accent);
       border-radius: var(--radius); overflow: hidden;
@@ -87,7 +47,6 @@
 
     @media (max-width: 480px) {
       .benefit-grid { grid-template-columns: 1fr; }
-      .schedule-day { width: 80px; }
     }
   </style>
 </head>
@@ -105,10 +64,7 @@
       <div class="focushq-hero-text">A live, weekly body doubling space where members show up, set an intention, and work alongside each other. No facilitation required — just your presence and your work.</div>
     </div>
 
-    <h3 class="section-title">Weekly Sessions</h3>
-    <div class="schedule-card" id="scheduleCard"><div style="padding:16px 18px;font-size:14px;color:var(--text-muted);">Loading sessions…</div></div>
-
-    <h3 class="section-title" style="margin-top:28px;">Become a Host</h3>
+    <h3 class="section-title">Become a Host</h3>
     <p style="font-size:14px;color:var(--text-muted);line-height:1.7;margin-bottom:18px;">Would you like a built-in reason to stay focused — while helping others do the same? You don’t need to facilitate or lead. Just show up, open the room, and work alongside others.</p>
 
     <div class="benefit-grid">
@@ -166,40 +122,6 @@
     </p>
 
   </div>
-
-  <script>
-    (async function() {
-      var DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-      var SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
-      var ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-      var card = document.getElementById('scheduleCard');
-      var sessions = [];
-      try {
-        var res = await fetch(
-          SUPABASE_URL + '/rest/v1/body_doubling_sessions?active=eq.true&select=host_name,day_of_week,start_time,end_time,meeting_url',
-          { headers: { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + ANON_KEY } }
-        );
-        var data = await res.json();
-        if (res.ok && Array.isArray(data)) sessions = data;
-      } catch(e) {}
-
-      card.innerHTML = DAYS.map(function(day) {
-        var matches = sessions.filter(function(s) { return s.day_of_week === day; });
-        if (matches.length > 0) {
-          return matches.map(function(s) {
-            var url = s.meeting_url || '#';
-            return '<a href="' + url + '" target="_blank" rel="noopener" class="schedule-row session-active">' +
-              '<span class="schedule-day">' + day + '</span>' +
-              '<span class="schedule-info"><span class="host-name">' + s.host_name + '</span>' +
-              ' &nbsp;&middot;&nbsp; <span class="session-time">' + s.start_time + '–' + s.end_time + ' AEST</span></span>' +
-              '<span class="schedule-join">Join &nbsp;→</span>' +
-            '</a>';
-          }).join('');
-        }
-        return '<div class="schedule-row"><span class="schedule-day">' + day + '</span><span class="schedule-info">No session</span></div>';
-      }).join('');
-    })();
-  </script>
 
 </body>
 </html>
