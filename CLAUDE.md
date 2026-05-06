@@ -5,26 +5,61 @@
 > Full setup guide: https://github.com/cathcoach4u/coach4u-shared/blob/main/SETUP.md
 > **Design system version: 2.1**
 
+---
+
+## Two Core Programmes
+
+ThriveHQ serves two completely separate programmes. Keep pages, terminology, data, and links clearly separated between them.
+
+### 1. Weekly Coaching Programme (Cath-led)
+
+- **What:** Structured weekly group coaching sessions run by Cath.
+- **Current session:** Planning Tuesdays, 6:00 PM AEST.
+- **Schedule:** Tied to the school term calendar — sessions follow blocks and breaks across the year.
+- **Join link:** Single shared Teams meeting link (in `links.html`).
+- **Pages:**
+  - `live-sessions.html` — shows the coaching session day and time
+  - `session-rhythm.html` — 2026 term calendar showing session blocks and school holiday breaks
+  - `weekly-coaching-flow.html` — format and flow of the weekly sessions
+- **Data:** All static — no Supabase.
+
+### 2. FocusHQ (Community Body Doubling)
+
+- **What:** Peer-hosted body doubling sessions where community members show up and work alongside each other. No facilitation required.
+- **Schedule:** Set by volunteer hosts. NOT tied to the school term calendar — sessions exist whenever a host signs up.
+- **Branding:** Called **FocusHQ** (tagline: "Get things done, together.") — not "Body Doubling Sessions".
+- **Pages:**
+  - `body-doubling.html` — public weekly schedule pulled live from Supabase; prominent CTA to become a host
+  - `hosting.html` — FocusHQ-branded page: live schedule + become-a-host benefits and role steps
+- **Data:** `body_doubling_sessions` table in Supabase (public read, fetched via `fetch()`).
+- **Current hosts:** Cath (Thursday 12–1pm AEST), Malcolm Joosse (Monday 11am–12pm AEST).
+
+> **Critical distinction:** `session-rhythm.html` belongs to the Weekly Coaching Programme ONLY.
+> Do NOT link it from `hosting.html`, `body-doubling.html`, or any FocusHQ page.
+> FocusHQ sessions have no term calendar — they run whenever hosts are active.
+
+---
+
 ## Pages in this repo
 
-| Page | Auth required | Notes |
-|---|---|---|
-| `index.html` | No | Login page. Redirects active members to `dashboard.html`, inactive to `inactive.html` |
-| `forgot-password.html` | No | Password reset request |
-| `reset-password.html` | No | Password reset form |
-| `inactive.html` | No | Shown to authenticated members with inactive/expired membership |
-| `links.html` | No | Public Linktree-style links page. Info design. |
-| `weekly-coaching-flow.html` | No | Public weekly coaching flow (Planning Tuesday, Focus Thursday). Info design. |
-| `session-rhythm.html` | No | Public 2026 session rhythm calendar (session blocks and breaks). Info design. |
-| `live-sessions.html` | No | Public live coaching session time (Planning Tuesdays 6 PM AEST). Info design. |
-| `body-doubling.html` | No | Public Body Doubling sessions page. Info design. Supabase (`body_doubling_sessions`). |
-| `hosting.html` | No | Public "Become a Body Doubling Host" page. Info design. |
-| `dashboard.html` | Yes | Main member dashboard with Brain Pulse results and quick links |
-| `brain-pulse.html` | Yes | 4-pillar Brain Pulse assessment form |
-| `brain-pulse-detail.html` | Yes | Per-pillar coaching focus detail |
-| `resources.html` | Yes | Member resources from Supabase |
-| `account.html` | Yes | Member profile and membership details |
-| `best-of-us.html` | Yes | Activity — Best of Us values worksheet. Uses `css/activity.css` (`act-*` classes, Inter/Montserrat, `#1B3664`) |
+| Page | Programme | Auth required | Notes |
+|---|---|---|---|
+| `index.html` | — | No | Login page. Redirects active members to `dashboard.html`, inactive to `inactive.html` |
+| `forgot-password.html` | — | No | Password reset request |
+| `reset-password.html` | — | No | Password reset form |
+| `inactive.html` | — | No | Shown to authenticated members with inactive/expired membership |
+| `links.html` | — | No | Public Linktree-style links page. Info design. |
+| `weekly-coaching-flow.html` | Coaching | No | Public weekly coaching flow (Planning Tuesday, Focus Thursday). Info design. |
+| `session-rhythm.html` | **Coaching only** | No | Public 2026 term calendar (session blocks and school holiday breaks). Info design. NOT for FocusHQ. |
+| `live-sessions.html` | Coaching | No | Public live coaching session time (Planning Tuesdays 6 PM AEST). Info design. |
+| `body-doubling.html` | **FocusHQ** | No | Public FocusHQ schedule from Supabase `body_doubling_sessions`. Info design. |
+| `hosting.html` | **FocusHQ** | No | FocusHQ branded page — live schedule + become-a-host. Info design. Supabase (`body_doubling_sessions`). |
+| `dashboard.html` | — | Yes | Main member dashboard with Brain Pulse results and quick links |
+| `brain-pulse.html` | — | Yes | 4-pillar Brain Pulse assessment form |
+| `brain-pulse-detail.html` | — | Yes | Per-pillar coaching focus detail |
+| `resources.html` | — | Yes | Member resources from Supabase |
+| `account.html` | — | Yes | Member profile and membership details |
+| `best-of-us.html` | — | Yes | Activity — Best of Us values worksheet. Uses `css/activity.css` (`act-*` classes, Inter/Montserrat, `#1B3664`) |
 
 ---
 
@@ -164,14 +199,14 @@ HTML skeleton:
 
 ### Info pages in this repo
 
-| Page | Notes |
-|---|---|
-| `links.html` | Link card styles in inline `<style>`. Body Doubling card links to `body-doubling.html`. |
-| `weekly-coaching-flow.html` | Session card details in inline `<style>`. Static, no Supabase. |
-| `session-rhythm.html` | Rhythm row details in inline `<style>`. JS hides past date rows via `data-end` attributes. |
-| `live-sessions.html` | Collapsible session card. Static, no Supabase. |
-| `body-doubling.html` | Prominent navy CTA card for hosting + Mon–Sat schedule from Supabase `body_doubling_sessions`. Uses direct `fetch()` REST API (not Supabase JS client). |
-| `hosting.html` | Standout question + intro box + emoji benefit cards. Static, no Supabase. |
+| Page | Programme | Notes |
+|---|---|---|
+| `links.html` | — | Link card styles in inline `<style>`. Body Doubling card links to `body-doubling.html`. |
+| `weekly-coaching-flow.html` | Coaching | Session card details in inline `<style>`. Static, no Supabase. |
+| `session-rhythm.html` | **Coaching only** | Rhythm row details in inline `<style>`. JS hides past date rows via `data-end` attributes. Do NOT link from FocusHQ pages. |
+| `live-sessions.html` | Coaching | Collapsible session card. Static, no Supabase. |
+| `body-doubling.html` | **FocusHQ** | Prominent navy CTA card for hosting + Mon–Sat schedule from Supabase `body_doubling_sessions`. Uses direct `fetch()` REST API (not Supabase JS client). |
+| `hosting.html` | **FocusHQ** | Branded as FocusHQ. Hero intro + live schedule from Supabase + become-a-host benefits + role steps. Uses direct `fetch()` REST API. |
 
 ---
 
@@ -197,7 +232,7 @@ Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coac
 
 ### body_doubling_sessions table
 
-Public read-only table powering `body-doubling.html`. Fetched via direct `fetch()` (not Supabase JS client):
+Public read-only table powering `body-doubling.html` and `hosting.html` (both FocusHQ pages). Fetched via direct `fetch()` (not Supabase JS client):
 
 ```javascript
 fetch(SUPABASE_URL + '/rest/v1/body_doubling_sessions?active=eq.true&select=host_name,day_of_week,day_order,start_time,end_time,meeting_url',
