@@ -31,8 +31,8 @@ ThriveHQ serves two completely separate programmes. Keep pages, terminology, dat
 - **How to join:** Members go to the ThriveHQ WhatsApp community on the day (`https://chat.whatsapp.com/LemI9eH1yjmI3iIYOZvADV`) — the host posts a video link there. There are NO individual per-session join links on the page.
 - **Pages:**
   - `body-doubling.html` — shows session schedule (host + time) from Supabase; WhatsApp callout for joining; CTA to become a host
-  - `hosting.html` — FocusHQ-branded page: become-a-host benefits and role steps. Back link → `body-doubling.html`
-- **Data:** `body_doubling_sessions` table in Supabase (public read, fetched via `fetch()`). The `meeting_url` column exists in the table but is **not used** by the page — joining happens via WhatsApp.
+  - `hosting.html` — FocusHQ-branded page: become-a-host benefits and role steps. Static — no Supabase. Back link → `body-doubling.html`
+- **Data:** `body_doubling_sessions` table in Supabase. Only `body-doubling.html` fetches from it. `hosting.html` is fully static.
 - **Current hosts:** Cath Baker (Thursday 12–1pm AEST), Malcolm Joosse (Monday 11am–12pm AEST).
 
 > **Critical distinction:** `session-rhythm.html` belongs to the Weekly Coaching Programme ONLY.
@@ -53,8 +53,8 @@ ThriveHQ serves two completely separate programmes. Keep pages, terminology, dat
 | `weekly-coaching-flow.html` | Coaching | No | Public weekly coaching flow (Planning Tuesday, Focus Thursday). Info design. Back link → `links.html`. |
 | `session-rhythm.html` | **Coaching only** | No | Public 2026 term calendar (session blocks and school holiday breaks). Info design. Back link → `links.html`. NOT for FocusHQ. |
 | `live-sessions.html` | Coaching | No | Public live coaching session time (Planning Tuesdays 6 PM AEST). Info design. Back link → `links.html`. |
-| `body-doubling.html` | **FocusHQ** | No | FocusHQ schedule from Supabase. No per-session links — joining is via WhatsApp community. Back link → `links.html`. |
-| `hosting.html` | **FocusHQ** | No | FocusHQ branded — become-a-host benefits + role steps. Back link → `body-doubling.html` (NOT links.html). |
+| `body-doubling.html` | **FocusHQ** | No | FocusHQ schedule from Supabase (host + time only). No per-session links — joining via WhatsApp community. Back link → `links.html`. |
+| `hosting.html` | **FocusHQ** | No | FocusHQ branded — become-a-host benefits + role steps. Fully static, no Supabase. Back link → `body-doubling.html` (NOT links.html). |
 | `dashboard.html` | — | Yes | Main member dashboard with Brain Pulse results and quick links |
 | `brain-pulse.html` | — | Yes | 4-pillar Brain Pulse assessment form |
 | `brain-pulse-detail.html` | — | Yes | Per-pillar coaching focus detail |
@@ -228,7 +228,7 @@ Never place a back button at the bottom of the page.
 | `session-rhythm.html` | **Coaching only** | Rhythm row details in inline `<style>`. JS hides past date rows via `data-end` attributes. Back link → `links.html`. Do NOT link from FocusHQ pages. |
 | `live-sessions.html` | Coaching | Collapsible session card. Static, no Supabase. Back link → `links.html`. |
 | `body-doubling.html` | **FocusHQ** | Session cards (host + time only) from Supabase. No per-session join links. WhatsApp community callout for joining. Back link → `links.html`. |
-| `hosting.html` | **FocusHQ** | FocusHQ branded. Become-a-host benefits + role steps. Back link → `body-doubling.html` (NOT links.html). |
+| `hosting.html` | **FocusHQ** | Become-a-host benefits + role steps. Fully static, no Supabase. Back link → `body-doubling.html` (NOT links.html). |
 
 ---
 
@@ -254,7 +254,7 @@ Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coac
 
 ### body_doubling_sessions table
 
-Public read-only table powering `body-doubling.html` and `hosting.html` (both FocusHQ pages). Fetched via direct `fetch()` (not Supabase JS client):
+Public read-only table used only by `body-doubling.html`. Fetched via direct `fetch()` (not Supabase JS client):
 
 ```javascript
 fetch(SUPABASE_URL + '/rest/v1/body_doubling_sessions?active=eq.true&select=host_name,day_of_week,day_order,start_time,end_time&order=day_order.asc',
@@ -263,7 +263,7 @@ fetch(SUPABASE_URL + '/rest/v1/body_doubling_sessions?active=eq.true&select=host
 
 Columns: `id`, `host_name`, `day_of_week`, `day_order` (1–7), `start_time`, `end_time`, `meeting_url`, `active`, `created_at`.
 
-> **Note:** `meeting_url` exists in the table but is **not fetched or displayed** by `body-doubling.html`. Joining FocusHQ sessions happens via the ThriveHQ WhatsApp community (`https://chat.whatsapp.com/LemI9eH1yjmI3iIYOZvADV`) — the host posts the video link there on the day.
+> **Note:** `meeting_url` exists in the table but is **not fetched or displayed**. Joining FocusHQ sessions happens via the ThriveHQ WhatsApp community (`https://chat.whatsapp.com/LemI9eH1yjmI3iIYOZvADV`) — the host posts the video link there on the day.
 
 RLS: public SELECT policy for `anon` role + `GRANT SELECT ON body_doubling_sessions TO anon`.
 
