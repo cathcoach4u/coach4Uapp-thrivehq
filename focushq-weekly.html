@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FocusHQ — Weekly Intention</title>
+  <meta name="theme-color" content="#003366">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/activity.css">
+</head>
+<body class="activity-page">
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="dashboard.html" class="header-back">← Dashboard</a>
+        <span class="header-title">Weekly Intention</span>
+        <span class="header-version" id="headerVersion"></span>
+      </div>
+      <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
+    </div>
+  </header>
+
+  <div class="act-container">
+    <div id="loadingMsg" style="text-align:center;padding:40px 0;color:#888;">Loading…</div>
+    <div id="content" style="display:none;">
+
+      <div class="act-header">
+        <h1>Weekly Intention</h1>
+        <p id="weekLabel" style="color:var(--act-light-blue);font-weight:600;"></p>
+      </div>
+
+      <div class="act-card">
+        <div class="act-step-label">This Week's Intention</div>
+        <div class="act-step-title">What do you want this week to be about?</div>
+        <p class="act-step-prompt">Your weekly intention isn't a to-do list — it's a direction. A short statement that helps you make decisions, prioritise, and feel a sense of purpose across the week.</p>
+        <p class="act-step-hint">Think: what would make this week feel worthwhile?</p>
+        <textarea class="act-textarea" id="weeklyInput" rows="4" placeholder="This week I want to…"></textarea>
+      </div>
+
+      <div class="act-card" style="margin-top:0;">
+        <div class="act-section-title">How to use it</div>
+        <ul style="padding-left:18px;margin:0;line-height:1.9;font-size:0.93rem;color:var(--act-dark-grey);">
+          <li>Set it at the start of the week — Sunday evening or Monday morning works well.</li>
+          <li>When you're unsure what to do next, ask: does this fit my intention?</li>
+          <li>At the end of the week, reflect on whether you lived it out.</li>
+          <li>Your intention resets automatically each week.</li>
+        </ul>
+      </div>
+
+      <div class="act-save-bar">
+        <span class="act-save-status" id="saveStatus"></span>
+        <button class="act-btn act-btn-primary" onclick="saveWeekly()">Save</button>
+      </div>
+
+      <p class="act-footer">Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a></p>
+
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
+    const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
+    const VERSION = '2026-05-06.1';
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    window.signOut = async function() { await sb.auth.signOut(); window.location.href = 'index.html'; };
+
+    function getISOWeek(date) {
+      const d = new Date(date);
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+      const yearStart = new Date(d.getFullYear(), 0, 1);
+      return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    }
+
+    function getWeekLabel(date) {
+      const d = new Date(date);
+      const day = d.getDay();
+      const monday = new Date(d);
+      monday.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+      const fmt = (dt) => dt.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+      return 'Week of ' + fmt(monday) + ' – ' + fmt(sunday) + ' ' + sunday.getFullYear();
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const { data: { user }, error: authErr } = await sb.auth.getUser();
+        if (authErr || !user) { window.location.href = 'index.html'; return; }
+        const { data: userData } = await sb.from('users').select('membership_status').eq('id', user.id).single();
+        if (userData?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
+
+        const now = new Date();
+        document.getElementById('weekLabel').textContent = getWeekLabel(now);
+
+        // Keyed by user + ISO year + week number, so it auto-clears each week
+        const week = getISOWeek(now);
+        const weeklyKey = 'thrivehq_weekly_' + user.id + '_' + now.getFullYear() + '_W' + week;
+        document.getElementById('weeklyInput').value = localStorage.getItem(weeklyKey) || '';
+
+        window.saveWeekly = function() {
+          const val = document.getElementById('weeklyInput').value.trim();
+          localStorage.setItem(weeklyKey, val);
+          const status = document.getElementById('saveStatus');
+          status.textContent = val ? 'Saved.' : 'Cleared.';
+          status.className = 'act-save-status saved';
+          setTimeout(() => { status.textContent = ''; status.className = 'act-save-status'; }, 2500);
+        };
+
+        document.getElementById('loadingMsg').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+      } catch (err) {
+        document.getElementById('loadingMsg').textContent = 'Error loading page. Please refresh.';
+      }
+    });
+
+    document.getElementById('headerVersion').textContent = 'v' + VERSION;
+  </script>
+</body>
+</html>
