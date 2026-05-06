@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/info.css">
   <style>
-    /* ---- Hero intro ---- */
+    /* ---- Hero ---- */
     .focushq-hero {
       background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
       border-radius: var(--radius);
@@ -17,19 +17,10 @@
       margin-bottom: 24px;
       color: white;
     }
-    .focushq-hero-heading {
-      font-size: 15px;
-      font-weight: 800;
-      margin-bottom: 8px;
-      letter-spacing: -0.2px;
-    }
-    .focushq-hero-text {
-      font-size: 14px;
-      line-height: 1.7;
-      opacity: 0.9;
-    }
+    .focushq-hero-heading { font-size: 15px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.2px; }
+    .focushq-hero-text { font-size: 14px; line-height: 1.7; opacity: 0.9; }
 
-    /* ---- Schedule table ---- */
+    /* ---- Schedule ---- */
     .schedule-card {
       background: #fff;
       border: 2px solid var(--accent);
@@ -44,9 +35,11 @@
       padding: 13px 18px;
       border-bottom: 1px solid #f0f2f5;
       gap: 12px;
+      text-decoration: none;
     }
     .schedule-row:last-child { border-bottom: none; }
     .schedule-row.session-active { background: rgba(13,148,136,0.04); }
+    .schedule-row.session-active:hover { background: rgba(13,148,136,0.08); }
     .schedule-day {
       font-size: 14px;
       font-weight: 600;
@@ -54,45 +47,19 @@
       width: 96px;
       flex-shrink: 0;
     }
-    .schedule-row.session-active .schedule-day {
-      color: var(--primary);
-      font-weight: 800;
-    }
-    .schedule-info {
-      flex: 1;
-      font-size: 14px;
-      color: var(--text-muted);
-    }
-    .schedule-row.session-active .schedule-info {
-      color: var(--text);
-      font-weight: 500;
-    }
-    .schedule-info .host-name {
-      color: var(--primary);
-      font-weight: 700;
-    }
-    .schedule-info .session-time {
-      color: var(--text-muted);
-      font-size: 13px;
-    }
+    .schedule-row.session-active .schedule-day { color: var(--primary); font-weight: 800; }
+    .schedule-info { flex: 1; font-size: 14px; color: var(--text-muted); }
+    .schedule-row.session-active .schedule-info { color: var(--text); font-weight: 500; }
+    .host-name { color: var(--primary); font-weight: 700; }
+    .session-time { color: var(--text-muted); font-size: 13px; }
     .schedule-join {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--accent);
-      white-space: nowrap;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 6px 0;
+      font-size: 13px; font-weight: 700; color: var(--accent);
+      white-space: nowrap; flex-shrink: 0;
     }
-    .schedule-join:hover { color: var(--accent-dark); text-decoration: none; }
 
     /* ---- Status badge ---- */
     .status-block {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      display: flex; align-items: center; gap: 10px;
       padding: 12px 16px;
       background: rgba(13,148,136,0.07);
       border-radius: var(--radius-sm);
@@ -100,94 +67,40 @@
       margin-bottom: 14px;
     }
     .status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--accent);
-      flex-shrink: 0;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent); flex-shrink: 0;
       box-shadow: 0 0 0 3px rgba(13,148,136,0.2);
     }
-    .status-text {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--primary);
-    }
-    .status-text span {
-      font-weight: 400;
-      color: var(--text-muted);
-    }
+    .status-text { font-size: 13px; font-weight: 600; color: var(--primary); }
+    .status-text span { font-weight: 400; color: var(--text-muted); }
 
     /* ---- Benefits grid ---- */
-    .benefit-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
+    .benefit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
     .benefit-tile {
-      background: #fff;
-      border: 2px solid var(--accent);
-      border-radius: var(--radius);
-      padding: 16px;
+      background: #fff; border: 2px solid var(--accent);
+      border-radius: var(--radius); padding: 16px;
       box-shadow: 0 2px 8px rgba(13,148,136,0.08);
     }
     .benefit-tile-icon { font-size: 24px; margin-bottom: 8px; }
-    .benefit-tile-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 4px;
-      line-height: 1.3;
-    }
-    .benefit-tile-desc {
-      font-size: 12px;
-      color: #888;
-      line-height: 1.5;
-    }
+    .benefit-tile-title { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 4px; line-height: 1.3; }
+    .benefit-tile-desc { font-size: 12px; color: #888; line-height: 1.5; }
 
     /* ---- Role steps ---- */
     .role-card {
-      background: #fff;
-      border: 2px solid var(--accent);
-      border-radius: var(--radius);
-      overflow: hidden;
+      background: #fff; border: 2px solid var(--accent);
+      border-radius: var(--radius); overflow: hidden;
       box-shadow: 0 2px 8px rgba(13,148,136,0.10);
     }
-    .role-step {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      padding: 14px 18px;
-      border-bottom: 1px solid #f0f2f5;
-    }
+    .role-step { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid #f0f2f5; }
     .role-step:last-child { border-bottom: none; }
     .role-step-num {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--accent);
-      color: white;
-      font-size: 13px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 1px;
+      width: 28px; height: 28px; border-radius: 50%; background: var(--accent);
+      color: white; font-size: 13px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
     }
-    .role-step-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--primary);
-      display: block;
-      margin-bottom: 2px;
-    }
-    .role-step-desc {
-      font-size: 13px;
-      color: #888;
-      line-height: 1.5;
-      display: block;
-    }
+    .role-step-title { font-size: 14px; font-weight: 700; color: var(--primary); display: block; margin-bottom: 2px; }
+    .role-step-desc { font-size: 13px; color: #888; line-height: 1.5; display: block; }
 
     @media (max-width: 480px) {
       .benefit-grid { grid-template-columns: 1fr; }
@@ -204,79 +117,34 @@
 
   <div class="info-content">
 
-    <!-- Hero -->
     <div class="focushq-hero">
       <div class="focushq-hero-heading">What is FocusHQ?</div>
       <div class="focushq-hero-text">A live, weekly body doubling space where members show up, set an intention, and work alongside each other. No facilitation required — just your presence and your work.</div>
     </div>
 
-    <!-- Weekly Schedule -->
     <h3 class="section-title">Weekly Sessions</h3>
+    <div class="schedule-card" id="scheduleCard"><div style="padding:16px 18px;font-size:14px;color:var(--text-muted);">Loading sessions…</div></div>
 
-    <div class="schedule-card">
-      <div class="schedule-row session-active">
-        <span class="schedule-day">Monday</span>
-        <span class="schedule-info">
-          <span class="host-name">Malcolm Joosse</span>
-          &nbsp;·&nbsp;
-          <span class="session-time">11:00 AM–12:00 PM AEST</span>
-        </span>
-        <a href="#" class="schedule-join">Join&nbsp;→</a>
-      </div>
-      <div class="schedule-row">
-        <span class="schedule-day">Tuesday</span>
-        <span class="schedule-info">No session</span>
-      </div>
-      <div class="schedule-row">
-        <span class="schedule-day">Wednesday</span>
-        <span class="schedule-info">No session</span>
-      </div>
-      <div class="schedule-row session-active">
-        <span class="schedule-day">Thursday</span>
-        <span class="schedule-info">
-          <span class="host-name">Cath</span>
-          &nbsp;·&nbsp;
-          <span class="session-time">12:00 PM–1:00 PM AEST</span>
-        </span>
-        <a href="#" class="schedule-join">Join&nbsp;→</a>
-      </div>
-      <div class="schedule-row">
-        <span class="schedule-day">Friday</span>
-        <span class="schedule-info">No session</span>
-      </div>
-      <div class="schedule-row">
-        <span class="schedule-day">Saturday</span>
-        <span class="schedule-info">No session</span>
-      </div>
-    </div>
-
-    <!-- Session dates / rhythm -->
-    <h3 class="section-title" style="margin-top: 24px;">2026 Session Dates</h3>
-
+    <h3 class="section-title" style="margin-top:24px;">2026 Session Dates</h3>
     <div class="status-block" id="sessionStatus">
       <div class="status-dot"></div>
       <div class="status-text">Sessions running <span id="currentBlock">—</span></div>
     </div>
+    <a href="session-rhythm.html" class="btn btn-outline btn-full" style="margin-bottom:4px;padding:11px 18px;">View full 2026 session calendar →</a>
 
-    <a href="session-rhythm.html" class="btn btn-outline btn-full" style="margin-bottom: 4px; padding: 11px 18px;">
-      View full 2026 session calendar →
-    </a>
-
-    <!-- Become a host -->
-    <h3 class="section-title" style="margin-top: 28px;">Become a Host</h3>
-
-    <p style="font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 18px;">Would you like a built-in reason to stay focused — while helping others do the same? You don't need to facilitate or lead. Just show up, open the room, and work alongside others.</p>
+    <h3 class="section-title" style="margin-top:28px;">Become a Host</h3>
+    <p style="font-size:14px;color:var(--text-muted);line-height:1.7;margin-bottom:18px;">Would you like a built-in reason to stay focused — while helping others do the same? You don’t need to facilitate or lead. Just show up, open the room, and work alongside others.</p>
 
     <div class="benefit-grid">
       <div class="benefit-tile">
         <div class="benefit-tile-icon">🗓️</div>
         <div class="benefit-tile-title">Your schedule, your choice</div>
-        <div class="benefit-tile-desc">Pick a time that fits — you're in full control of when it runs.</div>
+        <div class="benefit-tile-desc">Pick a time that fits — you’re in full control of when it runs.</div>
       </div>
       <div class="benefit-tile">
         <div class="benefit-tile-icon">🎯</div>
         <div class="benefit-tile-title">A built-in focus anchor</div>
-        <div class="benefit-tile-desc">Hosting gives you accountability too — you'll get things done alongside the group.</div>
+        <div class="benefit-tile-desc">Hosting gives you accountability too — you’ll get things done alongside the group.</div>
       </div>
       <div class="benefit-tile">
         <div class="benefit-tile-icon">🤝</div>
@@ -290,15 +158,13 @@
       </div>
     </div>
 
-    <!-- Your role -->
-    <h3 class="section-title" style="margin-top: 24px;">Your Role as Host</h3>
-
+    <h3 class="section-title" style="margin-top:24px;">Your Role as Host</h3>
     <div class="role-card">
       <div class="role-step">
         <div class="role-step-num">1</div>
         <span>
           <span class="role-step-title">Confirm the day before</span>
-          <span class="role-step-desc">Let the community know you'll be there and you're ready to host.</span>
+          <span class="role-step-desc">Let the community know you’ll be there and you’re ready to host.</span>
         </span>
       </div>
       <div class="role-step">
@@ -311,13 +177,13 @@
       <div class="role-step">
         <div class="role-step-num">3</div>
         <span>
-          <span class="role-step-title">That's it</span>
+          <span class="role-step-title">That’s it</span>
           <span class="role-step-desc">No facilitation, no agenda. Your presence is the whole thing.</span>
         </span>
       </div>
     </div>
 
-    <a href="links.html" class="btn btn-navy btn-full" style="margin-top: 28px; padding: 13px 24px;">← Back to Links</a>
+    <a href="links.html" class="btn btn-navy btn-full" style="margin-top:28px;padding:13px 24px;">← Back to Links</a>
 
     <p class="info-footer">
       Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a>
@@ -326,43 +192,75 @@
   </div>
 
   <script>
-    var blocks = [
-      { start: '2026-01-27', end: '2026-04-03', label: '27 Jan – 3 Apr' },
-      { start: '2026-04-20', end: '2026-07-03', label: '20 Apr – 3 Jul' },
-      { start: '2026-07-20', end: '2026-09-25', label: '20 Jul – 25 Sep' },
-      { start: '2026-10-12', end: '2026-12-12', label: '12 Oct – 12 Dec' }
-    ];
-    var breaks = [
-      { start: '2026-04-07', end: '2026-04-17', label: 'Autumn Holidays (back 20 Apr)' },
-      { start: '2026-07-06', end: '2026-07-17', label: 'Winter Holidays (back 20 Jul)' },
-      { start: '2026-09-28', end: '2026-10-09', label: 'Spring Holidays (back 12 Oct)' },
-      { start: '2026-12-15', end: '2027-01-27', label: 'Summer Break (back 27 Jan 2027)' }
-    ];
-    var today = new Date(); today.setHours(0,0,0,0);
-    var el = document.getElementById('currentBlock');
-    var statusBlock = document.getElementById('sessionStatus');
-    var found = false;
-    blocks.forEach(function(b) {
-      var s = new Date(b.start), e = new Date(b.end);
-      if (today >= s && today <= e) {
-        el.textContent = b.label;
-        found = true;
-      }
-    });
-    if (!found) {
-      breaks.forEach(function(b) {
-        var s = new Date(b.start), e = new Date(b.end);
-        if (today >= s && today <= e) {
-          statusBlock.style.background = 'rgba(0,0,0,0.04)';
-          statusBlock.style.borderLeftColor = '#aaa';
-          statusBlock.querySelector('.status-dot').style.background = '#aaa';
-          statusBlock.querySelector('.status-dot').style.boxShadow = 'none';
-          el.parentElement.innerHTML = 'Currently on break &mdash; <span>' + b.label + '</span>';
-          found = true;
+    /* --- Session rhythm status --- */
+    (function() {
+      var blocks = [
+        { start: '2026-01-27', end: '2026-04-03', label: '27 Jan – 3 Apr' },
+        { start: '2026-04-20', end: '2026-07-03', label: '20 Apr – 3 Jul' },
+        { start: '2026-07-20', end: '2026-09-25', label: '20 Jul – 25 Sep' },
+        { start: '2026-10-12', end: '2026-12-12', label: '12 Oct – 12 Dec' }
+      ];
+      var breaks = [
+        { start: '2026-04-07', end: '2026-04-17', label: 'Autumn Holidays (back 20 Apr)' },
+        { start: '2026-07-06', end: '2026-07-17', label: 'Winter Holidays (back 20 Jul)' },
+        { start: '2026-09-28', end: '2026-10-09', label: 'Spring Holidays (back 12 Oct)' },
+        { start: '2026-12-15', end: '2027-01-27', label: 'Summer Break (back 27 Jan 2027)' }
+      ];
+      var today = new Date(); today.setHours(0,0,0,0);
+      var el = document.getElementById('currentBlock');
+      var statusBlock = document.getElementById('sessionStatus');
+      var found = false;
+      blocks.forEach(function(b) {
+        if (today >= new Date(b.start) && today <= new Date(b.end)) {
+          el.textContent = b.label; found = true;
         }
       });
-    }
-    if (!found) { el.textContent = 'see calendar for dates'; }
+      if (!found) {
+        breaks.forEach(function(b) {
+          if (today >= new Date(b.start) && today <= new Date(b.end)) {
+            statusBlock.style.background = 'rgba(0,0,0,0.04)';
+            statusBlock.style.borderLeftColor = '#aaa';
+            statusBlock.querySelector('.status-dot').style.cssText = 'background:#aaa;box-shadow:none;';
+            el.parentElement.innerHTML = 'Currently on break — <span>' + b.label + '</span>';
+            found = true;
+          }
+        });
+      }
+      if (!found) el.textContent = 'see calendar for dates';
+    })();
+
+    /* --- Load sessions from Supabase --- */
+    (async function() {
+      var DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      var SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
+      var ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
+      var card = document.getElementById('scheduleCard');
+      var sessions = [];
+      try {
+        var res = await fetch(
+          SUPABASE_URL + '/rest/v1/body_doubling_sessions?active=eq.true&select=host_name,day_of_week,start_time,end_time,meeting_url',
+          { headers: { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + ANON_KEY } }
+        );
+        var data = await res.json();
+        if (res.ok && Array.isArray(data)) sessions = data;
+      } catch(e) {}
+
+      card.innerHTML = DAYS.map(function(day) {
+        var matches = sessions.filter(function(s) { return s.day_of_week === day; });
+        if (matches.length > 0) {
+          return matches.map(function(s) {
+            var url = s.meeting_url || '#';
+            return '<a href="' + url + '" target="_blank" rel="noopener" class="schedule-row session-active">' +
+              '<span class="schedule-day">' + day + '</span>' +
+              '<span class="schedule-info"><span class="host-name">' + s.host_name + '</span>' +
+              ' &nbsp;&middot;&nbsp; <span class="session-time">' + s.start_time + '–' + s.end_time + ' AEST</span></span>' +
+              '<span class="schedule-join">Join &nbsp;→</span>' +
+            '</a>';
+          }).join('');
+        }
+        return '<div class="schedule-row"><span class="schedule-day">' + day + '</span><span class="schedule-info">No session</span></div>';
+      }).join('');
+    })();
   </script>
 
 </body>
