@@ -9,7 +9,17 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/info.css">
   <style>
-    /* ---- Intro ---- */
+    .info-back-link {
+      display: inline-block;
+      color: rgba(255,255,255,0.75);
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      text-decoration: none;
+      letter-spacing: 0.1px;
+    }
+    .info-back-link:hover { color: white; text-decoration: none; }
+
     .focushq-intro {
       font-size: 14px;
       color: var(--text-muted);
@@ -17,7 +27,6 @@
       margin-bottom: 24px;
     }
 
-    /* ---- Session cards grid ---- */
     .session-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -88,11 +97,9 @@
       border-radius: var(--radius-sm);
       font-size: 13px;
       font-weight: 700;
-      letter-spacing: 0.1px;
     }
     .session-join-btn:hover { background: var(--accent-dark); color: white; text-decoration: none; }
 
-    /* Empty state when no sessions loaded */
     .no-sessions-note {
       font-size: 14px;
       color: var(--text-muted);
@@ -103,7 +110,6 @@
       border-radius: var(--radius);
     }
 
-    /* ---- Become a host CTA ---- */
     .host-cta {
       display: block;
       background: linear-gradient(135deg, var(--primary) 0%, #0a5a96 100%);
@@ -142,6 +148,7 @@
 <body class="info-page">
 
   <header class="info-brand-bar">
+    <a href="links.html" class="info-back-link">← Links</a>
     <div class="info-brand-name">FocusHQ</div>
     <div class="info-brand-sub">Get things done, together.</div>
   </header>
@@ -162,8 +169,6 @@
       <span class="host-cta-btn">Find out more →</span>
     </a>
 
-    <a href="links.html" class="btn btn-navy btn-full" style="margin-top:16px; padding:13px 24px;">← Back to Links</a>
-
     <p class="info-footer">
       Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a>
     </p>
@@ -174,7 +179,6 @@
     (async function() {
       var SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
       var ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-      var DAY_ORDER = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
       var grid = document.getElementById('sessionGrid');
 
       var sessions = [];
