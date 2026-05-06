@@ -9,129 +9,62 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/info.css">
   <style>
-    .focushq-intro {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
+    .focushq-intro { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; }
 
-    .session-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 8px;
-    }
+    .session-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 8px; }
     .session-card {
-      border-radius: var(--radius);
-      overflow: hidden;
+      border-radius: var(--radius); overflow: hidden;
       box-shadow: 0 4px 12px rgba(13,148,136,0.15);
-      text-decoration: none;
-      display: flex;
-      flex-direction: column;
+      text-decoration: none; display: flex; flex-direction: column;
       transition: transform 0.2s, box-shadow 0.2s;
     }
-    .session-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(13,148,136,0.25);
-      text-decoration: none;
-    }
+    .session-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(13,148,136,0.25); text-decoration: none; }
     .session-card-header {
       background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-      padding: 18px 20px 16px;
-      color: white;
+      padding: 18px 20px 16px; color: white;
     }
-    .session-day-label {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      opacity: 0.7;
-      margin-bottom: 3px;
-    }
-    .session-day-name {
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      line-height: 1;
-    }
+    .session-day-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; opacity: 0.7; margin-bottom: 3px; }
+    .session-day-name { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
     .session-card-body {
-      background: white;
-      padding: 14px 20px 16px;
-      border: 2px solid var(--accent);
-      border-top: none;
+      background: white; padding: 14px 20px 16px;
+      border: 2px solid var(--accent); border-top: none;
       border-radius: 0 0 var(--radius) var(--radius);
-      flex: 1;
-      display: flex;
-      flex-direction: column;
+      flex: 1; display: flex; flex-direction: column;
     }
-    .session-host {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 3px;
-    }
-    .session-time {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-      flex: 1;
-    }
+    .session-host { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+    .session-time { font-size: 14px; color: var(--text-muted); margin-bottom: 14px; flex: 1; }
     .session-join-btn {
-      display: block;
-      text-align: center;
-      background: var(--accent);
-      color: white;
-      padding: 8px 14px;
-      border-radius: var(--radius-sm);
-      font-size: 13px;
-      font-weight: 700;
+      display: block; text-align: center; background: var(--accent); color: white;
+      padding: 9px 14px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 700;
     }
     .session-join-btn:hover { background: var(--accent-dark); color: white; text-decoration: none; }
 
     .no-sessions-note {
-      font-size: 14px;
-      color: var(--text-muted);
-      padding: 20px;
-      text-align: center;
-      background: white;
-      border: 2px solid var(--accent);
-      border-radius: var(--radius);
+      font-size: 15px; color: var(--text-muted); padding: 20px;
+      text-align: center; background: white;
+      border: 2px solid var(--accent); border-radius: var(--radius);
     }
 
     .host-cta {
       display: block;
       background: linear-gradient(135deg, var(--primary) 0%, #0a5a96 100%);
-      border-radius: var(--radius);
-      padding: 22px 20px;
-      margin-top: 24px;
-      margin-bottom: 8px;
-      text-decoration: none;
+      border-radius: var(--radius); padding: 22px 20px;
+      margin-top: 24px; margin-bottom: 8px; text-decoration: none;
       box-shadow: 0 4px 12px rgba(0,51,102,0.25);
       transition: box-shadow 0.2s, transform 0.2s;
     }
-    .host-cta:hover {
-      box-shadow: 0 8px 20px rgba(0,51,102,0.35);
-      transform: translateY(-2px);
-      text-decoration: none;
-    }
+    .host-cta:hover { box-shadow: 0 8px 20px rgba(0,51,102,0.35); transform: translateY(-2px); text-decoration: none; }
     .host-cta-top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
     .host-cta-icon { font-size: 26px; flex-shrink: 0; }
-    .host-cta-title { font-size: 17px; font-weight: 800; color: #ffffff; font-family: var(--font-heading); letter-spacing: -0.2px; }
-    .host-cta-desc { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.55; margin-bottom: 14px; }
+    .host-cta-title { font-size: 18px; font-weight: 800; color: #ffffff; font-family: var(--font-heading); letter-spacing: -0.2px; }
+    .host-cta-desc { font-size: 15px; color: rgba(255,255,255,0.85); line-height: 1.6; margin-bottom: 14px; }
     .host-cta-btn {
-      display: inline-block;
-      background: rgba(255,255,255,0.15);
-      border: 1.5px solid rgba(255,255,255,0.5);
-      color: #ffffff;
-      font-size: 13px; font-weight: 700;
-      padding: 7px 16px;
-      border-radius: var(--radius-sm);
+      display: inline-block; background: rgba(255,255,255,0.15);
+      border: 1.5px solid rgba(255,255,255,0.5); color: #ffffff;
+      font-size: 14px; font-weight: 700; padding: 8px 18px; border-radius: var(--radius-sm);
     }
 
-    @media (max-width: 440px) {
-      .session-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 440px) { .session-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body class="info-page">
@@ -143,7 +76,6 @@
   </header>
 
   <div class="info-content">
-
     <p class="focushq-intro">Show up, set an intention, and work alongside others. No facilitation — just focused time with people who get it.</p>
 
     <h3 class="section-title">This Week’s Sessions</h3>
@@ -158,10 +90,7 @@
       <span class="host-cta-btn">Find out more →</span>
     </a>
 
-    <p class="info-footer">
-      Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a>
-    </p>
-
+    <p class="info-footer">Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a></p>
   </div>
 
   <script>
@@ -169,7 +98,6 @@
       var SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
       var ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
       var grid = document.getElementById('sessionGrid');
-
       var sessions = [];
       try {
         var res = await fetch(
@@ -184,7 +112,6 @@
         grid.outerHTML = '<div class="no-sessions-note">No sessions scheduled yet — why not become the first host?</div>';
         return;
       }
-
       grid.innerHTML = sessions.map(function(s) {
         var url = s.meeting_url || '#';
         return '<a href="' + url + '" target="_blank" rel="noopener" class="session-card">' +
@@ -201,6 +128,5 @@
       }).join('');
     })();
   </script>
-
 </body>
 </html>
