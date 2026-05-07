@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="login-page">
-  <div class="login-card">
+  <div class="login-card" id="loginCard" style="opacity:0;transition:opacity 0.15s ease">
     <div class="login-logo">
       <h1>ThriveHQ</h1>
     </div>
@@ -97,10 +97,11 @@
         const { data: { user } } = await sb.auth.getUser();
         if (user) {
           const { data: ud } = await sb.from('users').select('membership_status').eq('id', user.id).single();
-          if (ud?.membership_status === 'active') window.location.href = 'dashboard.html';
-          else if (ud) window.location.href = 'inactive.html';
+          if (ud?.membership_status === 'active') { window.location.href = 'dashboard.html'; return; }
+          else if (ud) { window.location.href = 'inactive.html'; return; }
         }
       } catch (_) {}
+      document.getElementById('loginCard').style.opacity = '1';
     });
 
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});

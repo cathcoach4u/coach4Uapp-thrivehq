@@ -26,7 +26,7 @@
     <div id="content" style="display:none;">
 
       <div class="membership-card">
-        <div class="member-name" id="memberName">—</div>
+        <div class="member-name" id="memberName"></div>
         <div class="member-email" id="memberEmail">—</div>
         <span class="membership-badge">Active Member</span>
       </div>
@@ -153,8 +153,12 @@
         }
 
         const displayName = userData?.name || userData?.full_name || userData?.first_name ||
-          user.user_metadata?.first_name || user.user_metadata?.full_name || user.user_metadata?.name || '—';
-        document.getElementById('memberName').textContent = displayName;
+          user.user_metadata?.first_name || user.user_metadata?.full_name || user.user_metadata?.name || null;
+        if (displayName) {
+          document.getElementById('memberName').textContent = displayName;
+        } else {
+          document.getElementById('memberName').style.display = 'none';
+        }
         document.getElementById('memberEmail').textContent = userData.email || '—';
 
         const now = new Date();
