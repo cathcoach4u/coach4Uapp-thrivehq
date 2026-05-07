@@ -101,6 +101,17 @@
       color: var(--act-dark-grey);
       line-height: 1.6;
     }
+
+    .pomo-attribution {
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: rgba(0,51,102,0.04);
+      border-radius: var(--act-radius-sm);
+      font-size: 0.8rem;
+      color: var(--act-dark-grey);
+      opacity: 0.75;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body class="activity-page">
@@ -152,21 +163,24 @@
       <div class="act-card" style="margin-top:0;">
         <div class="act-section-title">The Science Behind It</div>
         <p style="font-size:0.93rem;color:var(--act-dark-grey);line-height:1.7;margin-bottom:14px;">
-          The Pomodoro Technique isn't just a productivity hack — it works because it's aligned with how your brain actually functions.
+          The Pomodoro Technique isn’t just a productivity hack — it works because it’s aligned with how your brain actually functions.
         </p>
         <div style="display:flex;flex-direction:column;gap:10px;">
           <div class="pomo-tip-box">
             <strong>Why 25 minutes?</strong> Research in cognitive neuroscience shows that sustained attention naturally degrades after 20–30 minutes. The 25-minute window sits inside that peak focus zone — long enough to make real progress, short enough to avoid mental fatigue before the break kicks in.
           </div>
           <div class="pomo-tip-box">
-            <strong>Breaks prevent cognitive fatigue.</strong> Short rests allow the prefrontal cortex to recover, maintaining decision-making quality, working memory, and creative thinking. Skipping breaks doesn't mean more output — it means diminishing returns on everything you do next.
+            <strong>Breaks prevent cognitive fatigue.</strong> Short rests allow the prefrontal cortex to recover, maintaining decision-making quality, working memory, and creative thinking. Skipping breaks doesn’t mean more output — it means diminishing returns on everything you do next.
           </div>
           <div class="pomo-tip-box">
-            <strong>Time-boxing reduces procrastination.</strong> A fixed, short window lowers the barrier to starting. This taps into the <em>Zeigarnik effect</em> — once begun, your brain creates an urge to complete the task, overriding the avoidance that often keeps us stuck.
+            <strong>Time-boxing reduces procrastination.</strong> A fixed, short window lowers the barrier to starting. This taps into the <em>Zeigarnik effect</em> — first described by Soviet psychologist <strong>Bluma Zeigarnik</strong> in 1927 — where the brain creates a drive to finish tasks once started, overriding the avoidance that keeps us stuck.
           </div>
           <div class="pomo-tip-box">
             <strong>Especially effective for ADHD brains.</strong> The clear structure, external time pressure, and built-in reward (the break) all activate the dopamine pathways that ADHD affects. It creates urgency without overwhelm — a combination that works with your neurotype, not against it.
           </div>
+        </div>
+        <div class="pomo-attribution">
+          The Pomodoro Technique was created by <strong>Francesco Cirillo</strong> in the late 1980s while he was a university student, using a tomato-shaped kitchen timer (pomodoro = Italian for tomato) to structure his study sessions.
         </div>
       </div>
 
@@ -176,12 +190,9 @@
         <ul style="padding-left:18px;margin:0;line-height:1.9;font-size:0.93rem;color:var(--act-dark-grey);">
           <li>Put your phone out of reach for the 25 minutes.</li>
           <li>If a distraction pops into your head, jot it down and come back to it later.</li>
-          <li>The break is part of the technique — don't skip it.</li>
+          <li>The break is part of the technique — don’t skip it.</li>
           <li>Short tasks? Stack a few into one pomodoro.</li>
         </ul>
-        <div class="pomo-tip-box" style="margin-top:16px;">
-          Named after a tomato-shaped kitchen timer (pomodoro = Italian for tomato). Developed by Francesco Cirillo in the late 1980s.
-        </div>
       </div>
 
       <p class="act-footer">Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a></p>
@@ -193,7 +204,7 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
     const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-    const VERSION = '2026-05-06.1';
+    const VERSION = '2026-05-07.2';
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     window.signOut = async function() { await sb.auth.signOut(); window.location.href = 'index.html'; };
