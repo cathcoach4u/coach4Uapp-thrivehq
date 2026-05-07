@@ -62,17 +62,18 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
     const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-    const VERSION = '2026-05-06.1';
+    const VERSION = '2026-05-07.1';
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     window.signOut = async function() { await sb.auth.signOut(); window.location.href = 'index.html'; };
 
-    function getISOWeek(date) {
+    function getISOWeekKey(date) {
       const d = new Date(date);
       d.setHours(0, 0, 0, 0);
       d.setDate(d.getDate() + 4 - (d.getDay() || 7));
       const yearStart = new Date(d.getFullYear(), 0, 1);
-      return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+      const week = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+      return d.getFullYear() + '-W' + String(week).padStart(2, '0');
     }
 
     function getWeekLabel(date) {
@@ -94,17 +95,32 @@
         if (userData?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
 
         const now = new Date();
+        const weekKey = getISOWeekKey(now);
         document.getElementById('weekLabel').textContent = getWeekLabel(now);
 
-        // Keyed by user + ISO year + week number, so it auto-clears each week
-        const week = getISOWeek(now);
-        const weeklyKey = 'thrivehq_weekly_' + user.id + '_' + now.getFullYear() + '_W' + week;
-        document.getElementById('weeklyInput').value = localStorage.getItem(weeklyKey) || '';
+        // Load existing intention from Supabase
+        const { data: existing } = await sb.from('weekly_intentions')
+          .select('intention')
+          .eq('week_key', weekKey)
+          .maybeSingle();
+        if (existing?.intention) document.getElementById('weeklyInput').value = existing.intention;
 
-        window.saveWeekly = function() {
+        window.saveWeekly = async function() {
           const val = document.getElementById('weeklyInput').value.trim();
-          localStorage.setItem(weeklyKey, val);
           const status = document.getElementById('saveStatus');
+          status.textContent = 'Saving…';
+          status.className = 'act-save-status';
+
+          if (val) {
+            const { error } = await sb.from('weekly_intentions').upsert(
+              { user_id: user.id, week_key: weekKey, intention: val, updated_at: new Date().toISOString() },
+              { onConflict: 'user_id,week_key' }
+            );
+            if (error) { status.textContent = 'Error saving. Try again.'; status.className = 'act-save-status error'; return; }
+          } else {
+            await sb.from('weekly_intentions').delete().eq('user_id', user.id).eq('week_key', weekKey);
+          }
+
           status.textContent = val ? 'Saved.' : 'Cleared.';
           status.className = 'act-save-status saved';
           setTimeout(() => { status.textContent = ''; status.className = 'act-save-status'; }, 2500);
