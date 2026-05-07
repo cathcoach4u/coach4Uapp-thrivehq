@@ -120,8 +120,11 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
     const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-    const VERSION = '2026-05-07.1';
-    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const HUB_URL = 'https://uoixetfvboevjxlkfyqy.supabase.co';
+    const HUB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvaXhldGZ2Ym9ldmp4bGtmeXF5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDg0NjY4MCwiZXhwIjoyMDkwNDIyNjgwfQ.4jaM0CmkpstNjztwoWZ1Qn-d6rhctlNQfbkhyk--wO8';
+    const VERSION = '2026-05-07.2';
+    const sb    = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const sbHub = createClient(HUB_URL, HUB_KEY);
 
     function showError(msg) {
       document.getElementById('loading').style.display = 'none';
@@ -135,7 +138,7 @@
       d.setDate(d.getDate() + 4 - (d.getDay() || 7));
       const yearStart = new Date(d.getFullYear(), 0, 1);
       const week = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-      return d.getFullYear() + '-W' + String(week).padStart(2, '0');
+      return d.getFullYear() + '-W' + String(week).padStart(2, '00');
     }
 
     window.signOut = async function() { await sb.auth.signOut(); window.location.href = 'index.html'; };
@@ -152,8 +155,27 @@
           document.getElementById('pulseFormLink').href = 'brain-pulse-form.html?c=' + userData.hub_profile_id;
         }
 
-        const displayName = userData?.name || userData?.full_name || userData?.first_name ||
+        // Resolve display name — fall back to Hub if missing, then persist it
+        let displayName = userData?.name || userData?.full_name || userData?.first_name ||
           user.user_metadata?.first_name || user.user_metadata?.full_name || user.user_metadata?.name || null;
+
+        if (!displayName && userData?.hub_profile_id) {
+          try {
+            const { data: contact } = await sbHub.from('contacts')
+              .select('first_name, last_name')
+              .eq('id', userData.hub_profile_id)
+              .single();
+            const hubName = contact
+              ? [contact.first_name, contact.last_name].filter(Boolean).join(' ')
+              : null;
+            if (hubName) {
+              displayName = hubName;
+              // Persist so this lookup only happens once
+              sb.from('users').update({ name: hubName }).eq('id', user.id);
+            }
+          } catch (_) {}
+        }
+
         if (displayName) {
           document.getElementById('memberName').textContent = displayName;
         } else {
