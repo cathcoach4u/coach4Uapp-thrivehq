@@ -61,7 +61,7 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
     const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-    const VERSION = '2026-05-06.1';
+    const VERSION = '2026-05-07.1';
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     window.signOut = async function() { await sb.auth.signOut(); window.location.href = 'index.html'; };
@@ -73,21 +73,35 @@
         const { data: userData } = await sb.from('users').select('membership_status').eq('id', user.id).single();
         if (userData?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
 
-        // Set today's date display
         const today = new Date();
+        const focusDate = today.toISOString().slice(0, 10);
         document.getElementById('todayDate').textContent = today.toLocaleDateString('en-AU', {
           weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
         });
 
-        // Load today's MIT from localStorage (keyed by user + date so it auto-clears daily)
-        const todayKey = today.toISOString().slice(0, 10);
-        const mitKey = 'thrivehq_mit_' + user.id + '_' + todayKey;
-        document.getElementById('mitInput').value = localStorage.getItem(mitKey) || '';
+        // Load today's MIT from Supabase
+        const { data: existing } = await sb.from('daily_focus')
+          .select('mit_text')
+          .eq('focus_date', focusDate)
+          .maybeSingle();
+        if (existing?.mit_text) document.getElementById('mitInput').value = existing.mit_text;
 
-        window.saveMIT = function() {
+        window.saveMIT = async function() {
           const val = document.getElementById('mitInput').value.trim();
-          localStorage.setItem(mitKey, val);
           const status = document.getElementById('saveStatus');
+          status.textContent = 'Saving…';
+          status.className = 'act-save-status';
+
+          if (val) {
+            const { error } = await sb.from('daily_focus').upsert(
+              { user_id: user.id, focus_date: focusDate, mit_text: val, updated_at: new Date().toISOString() },
+              { onConflict: 'user_id,focus_date' }
+            );
+            if (error) { status.textContent = 'Error saving. Try again.'; status.className = 'act-save-status error'; return; }
+          } else {
+            await sb.from('daily_focus').delete().eq('user_id', user.id).eq('focus_date', focusDate);
+          }
+
           status.textContent = val ? 'Saved.' : 'Cleared.';
           status.className = 'act-save-status saved';
           setTimeout(() => { status.textContent = ''; status.className = 'act-save-status'; }, 2500);
