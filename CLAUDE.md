@@ -33,7 +33,7 @@ ThriveHQ serves two completely separate programmes. Keep pages, terminology, dat
   - `body-doubling.html` — shows session schedule (host + time) from Supabase; WhatsApp callout for joining; CTA to become a host
   - `hosting.html` — FocusHQ-branded page: become-a-host benefits and role steps. Static — no Supabase. Back link → `body-doubling.html`
 - **Data:** `body_doubling_sessions` table in Supabase. Only `body-doubling.html` fetches from it. `hosting.html` is fully static.
-- **Current hosts:** Cath Baker (Thursday 12–1pm AEST), Malcolm Joosse (Monday 11am–12pm AEST).
+- **Current hosts:** Cath (Thursday 12–1pm AEST), Malcolm (Monday 11am–12pm AEST), Sonia (Friday 12–1pm AEST).
 
 > **Critical distinction:** `session-rhythm.html` belongs to the Weekly Coaching Programme ONLY.
 > Do NOT link it from `hosting.html`, `body-doubling.html`, or any FocusHQ page.
