@@ -7,6 +7,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#003366">
   <link rel="stylesheet" href="css/style.css">
+  <style>body { opacity: 0; transition: opacity 0.2s ease; }</style>
   <style>
     .focushq-links {
       display: grid;
@@ -151,7 +152,7 @@
   </footer>
 
   <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
     const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
     const HUB_URL = 'https://uoixetfvboevjxlkfyqy.supabase.co';
@@ -243,6 +244,7 @@
 
         document.getElementById('loading').style.display = 'none';
         document.getElementById('content').style.display = 'block';
+        document.body.style.opacity = '1';
       } catch (err) {
         showError('Error loading dashboard. Please refresh.');
       }
