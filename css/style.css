@@ -227,7 +227,22 @@ img { max-width: 100%; display: block; }
 .loading { text-align: center; padding: 40px 20px; color: var(--text-muted); }
 .error { background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 16px; border-radius: var(--radius-sm); margin-bottom: 24px; }
 
+/* ----- Site Footer (gold standard v2.2) ----- */
+.site-footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 24px 20px 32px;
+  border-top: 1px solid var(--divider);
+  line-height: 1.8;
+}
+.site-footer a { color: var(--accent); }
+.site-footer a:hover { color: var(--accent-dark); text-decoration: underline; }
+
 /* ----- Membership Card ----- */
+/*
+  Gold standard v2.2: name ONLY. No email, no badge, no expires.
+*/
 .membership-card {
   background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   color: white;
@@ -337,18 +352,6 @@ img { max-width: 100%; display: block; }
 .value { font-size: 14px; color: var(--text); font-weight: 500; }
 .help-text { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
 .help-text a { color: var(--accent); font-weight: 600; }
-
-/* ----- Site Footer ----- */
-.site-footer {
-  text-align: center;
-  font-size: 12px;
-  color: var(--text-muted);
-  padding: 24px 20px 32px;
-  border-top: 1px solid var(--divider);
-  line-height: 1.8;
-}
-.site-footer a { color: var(--accent); }
-.site-footer a:hover { color: var(--accent-dark); text-decoration: underline; }
 
 /* ----- Responsive ----- */
 @media (max-width: 768px) {

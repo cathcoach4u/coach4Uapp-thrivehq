@@ -3,47 +3,256 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Thrive HQ</title>
+  <title>ThriveHQ — Dashboard</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#003366">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Your Thrive HQ">
+  <link rel="stylesheet" href="css/style.css">
+  <style>body { opacity: 0; transition: opacity 0.2s ease; }</style>
   <style>
-    body { margin: 0; font-family: system-ui, sans-serif; background: #f0f4f8;
-           display: flex; align-items: center; justify-content: center; min-height: 100vh; color: #003366; }
+    .focushq-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .focushq-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 12px;
+      background: #eef2ff;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #003366;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1px solid #d0d8f0;
+      transition: background 0.15s;
+    }
+    .focushq-link:hover { background: #dce4ff; }
   </style>
 </head>
 <body>
-  <div>Loading…</div>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="https://cathcoach4u.github.io/yourcoachingportal/" class="header-back">← Portal</a>
+        <span class="header-title">ThriveHQ</span>
+        <span class="header-version" id="headerVersion"></span>
+      </div>
+      <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div id="loading" class="loading">Loading your dashboard...</div>
+    <div id="error" class="error" style="display:none;"></div>
+    <div id="content" style="display:none;">
+
+      <div class="membership-card">
+        <div class="member-name" id="memberName"></div>
+      </div>
+
+      <div class="app-section-header">
+        <span class="app-section-title">Your Tools</span>
+        <span class="app-section-count">4 available</span>
+      </div>
+
+      <div class="app-grid" id="toolsGrid">
+        <div class="app-card">
+          <div class="app-card-icon">🧠</div>
+          <div class="app-card-title">Brain Pulse</div>
+          <div class="app-card-desc" id="pulseDesc">Check in with your four wellbeing pillars</div>
+          <div style="display:flex;gap:8px;margin-top:auto;">
+            <a id="pulseFormLink" href="brain-pulse-form.html" class="btn btn-primary" style="flex:1;text-align:center;">Check In</a>
+            <a href="brain-pulse.html" class="btn" style="flex:1;text-align:center;border:2px solid var(--accent);color:var(--accent);background:#fff;">Results</a>
+          </div>
+        </div>
+
+        <div class="app-card">
+          <div class="app-card-icon">📚</div>
+          <div class="app-card-title">Resources</div>
+          <div class="app-card-desc">Tools to help you thrive with ADHD</div>
+          <a href="resources.html" class="btn btn-primary">Coaching Materials</a>
+          <div class="focushq-links">
+            <a href="focushq-pomodoro.html" class="focushq-link">🍅 Pomodoro</a>
+            <a href="body-doubling.html" class="focushq-link">👥 Body Doubling</a>
+            <a href="focushq-mit.html" class="focushq-link">🎯 Today's Focus</a>
+            <a href="focushq-weekly.html" class="focushq-link">📅 Weekly Plan</a>
+          </div>
+        </div>
+
+        <div class="app-card">
+          <div class="app-card-icon">🔗</div>
+          <div class="app-card-title">Quick Links</div>
+          <div class="app-card-desc">Teams, WhatsApp, coaching flow and session calendar</div>
+          <a href="links.html" class="btn btn-primary">Open</a>
+        </div>
+
+        <div class="app-card">
+          <div class="app-card-icon">⚙️</div>
+          <div class="app-card-title">Account</div>
+          <div class="app-card-desc">Your profile and membership details</div>
+          <a href="account.html" class="btn btn-primary">Open</a>
+        </div>
+      </div>
+
+      <div class="app-section-header" style="margin-top:32px;">
+        <span class="app-section-title">FocusHQ</span>
+        <span class="app-section-count">Get things done, together.</span>
+      </div>
+
+      <div class="app-grid">
+        <div class="app-card">
+          <div class="app-card-icon">🍅</div>
+          <div class="app-card-title">Pomodoro Timer</div>
+          <div class="app-card-desc">Work in focused 25-minute sprints with built-in breaks.</div>
+          <a href="focushq-pomodoro.html" class="btn btn-primary" style="margin-top:auto;">Open Timer</a>
+        </div>
+
+        <div class="app-card">
+          <div class="app-card-icon">👥</div>
+          <div class="app-card-title">Body Doubling</div>
+          <div class="app-card-desc">Work alongside other members in a live FocusHQ session.</div>
+          <a href="body-doubling.html" class="btn btn-primary" style="margin-top:auto;">See Sessions</a>
+        </div>
+
+        <div class="app-card">
+          <div class="app-card-icon">🎯</div>
+          <div class="app-card-title">Today's Focus</div>
+          <div class="app-card-desc" id="mitDesc">Name your one most important task for the day.</div>
+          <a href="focushq-mit.html" class="btn btn-primary" style="margin-top:auto;" id="mitBtn">Set Focus</a>
+        </div>
+
+        <div class="app-card">
+          <div class="app-card-icon">📅</div>
+          <div class="app-card-title">Weekly Intention</div>
+          <div class="app-card-desc" id="weeklyDesc">Choose what this week is about before it begins.</div>
+          <a href="focushq-weekly.html" class="btn btn-primary" style="margin-top:auto;" id="weeklyBtn">Set Intention</a>
+        </div>
+
+        <div class="app-card">
+          <div class="app-card-icon">⚡</div>
+          <div class="app-card-title">2-Minute Rule</div>
+          <div class="app-card-desc">If a task takes less than 2 minutes — do it now. Don't list it, don't schedule it. Just do it.</div>
+          <div style="background:var(--divider);border-radius:6px;padding:10px 12px;font-size:12px;color:var(--text-muted);margin-top:auto;line-height:1.7;">
+            Reply to a message · Book an appointment · File a document · Send a quick update
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Strengths-Based Coaching and Counselling<br>
+    <a href="http://www.coach4u.com.au">www.coach4u.com.au</a> |
+    <a href="mailto:cath@coach4u.com.au">cath@coach4u.com.au</a> |
+    0402 313 337
+  </footer>
 
   <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
-
-    const SUPABASE_URL      = 'https://eekefsuaefgpqmjdyniy.supabase.co';
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const HUB_URL = 'https://uoixetfvboevjxlkfyqy.supabase.co';
+    const HUB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvaXhldGZ2Ym9ldmp4bGtmeXF5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDg0NjY4MCwiZXhwIjoyMDkwNDIyNjgwfQ.4jaM0CmkpstNjztwoWZ1Qn-d6rhctlNQfbkhyk--wO8';
+    const VERSION = '2026-05-07.3';
+    const sb    = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const sbHub = createClient(HUB_URL, HUB_KEY);
 
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      window.location.href = 'login.html';
-    } else {
-      const { data: profile } = await supabase
-        .from('users')
-        .select('membership_status')
-        .eq('id', session.user.id)
-        .single();
-
-      if (profile?.membership_status === 'active') {
-        window.location.href = 'dashboard.html';
-      } else {
-        window.location.href = 'inactive.html';
-      }
+    function showError(msg) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error').style.display = 'block';
+      document.getElementById('error').textContent = msg;
     }
-  </script>
 
-  <script>
+    function getISOWeekKey(date) {
+      const d = new Date(date);
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+      const yearStart = new Date(d.getFullYear(), 0, 1);
+      const week = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+      return d.getFullYear() + '-W' + String(week).padStart(2, '0');
+    }
+
+    window.signOut = async function() { await sb.auth.signOut(); window.location.href = 'login.html'; };
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const { data: { user }, error: authErr } = await sb.auth.getUser();
+        if (authErr || !user) { window.location.href = 'login.html'; return; }
+
+        const { data: userData } = await sb.from('users').select('*').eq('id', user.id).single();
+        if (userData?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
+
+        if (userData?.hub_profile_id) {
+          document.getElementById('pulseFormLink').href = 'brain-pulse-form.html?c=' + userData.hub_profile_id;
+        }
+
+        let displayName = userData?.name || userData?.full_name || userData?.first_name ||
+          user.user_metadata?.first_name || user.user_metadata?.full_name || user.user_metadata?.name || null;
+
+        if (!displayName && userData?.hub_profile_id) {
+          try {
+            const { data: contact } = await sbHub.from('contacts')
+              .select('first_name, last_name')
+              .eq('id', userData.hub_profile_id)
+              .single();
+            const hubName = contact
+              ? [contact.first_name, contact.last_name].filter(Boolean).join(' ')
+              : null;
+            if (hubName) {
+              displayName = hubName;
+              sb.from('users').update({ name: hubName }).eq('id', user.id);
+            }
+          } catch (_) {}
+        }
+
+        if (displayName) {
+          document.getElementById('memberName').textContent = displayName;
+        } else {
+          document.getElementById('memberName').style.display = 'none';
+        }
+
+        const now = new Date();
+        const todayStr = now.toISOString().slice(0, 10);
+        const weekKey = getISOWeekKey(now);
+
+        const [{ data: latestPulse }, { data: mitData }, { data: weeklyData }] = await Promise.all([
+          sb.from('brain_pulse_results').select('grand_total, stage, submitted_at')
+            .eq('user_id', user.id).order('submitted_at', { ascending: false }).limit(1).maybeSingle(),
+          sb.from('daily_focus').select('mit_text').eq('user_id', user.id).eq('focus_date', todayStr).maybeSingle(),
+          sb.from('weekly_intentions').select('intention').eq('user_id', user.id).eq('week_key', weekKey).maybeSingle()
+        ]);
+
+        if (latestPulse) {
+          const dateStr = new Date(latestPulse.submitted_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+          document.getElementById('pulseDesc').textContent =
+            latestPulse.stage + ' · ' + latestPulse.grand_total + '/200 · ' + dateStr;
+        }
+
+        if (mitData?.mit_text) {
+          document.getElementById('mitDesc').textContent = mitData.mit_text;
+          document.getElementById('mitBtn').textContent = 'Edit Focus';
+        }
+
+        if (weeklyData?.intention) {
+          document.getElementById('weeklyDesc').textContent = weeklyData.intention;
+          document.getElementById('weeklyBtn').textContent = 'Edit Intention';
+        }
+
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+        document.body.style.opacity = '1';
+      } catch (err) {
+        showError('Error loading dashboard. Please refresh.');
+      }
+    });
+
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+
+    document.getElementById('headerVersion').textContent = 'v' + VERSION;
   </script>
 </body>
 </html>
