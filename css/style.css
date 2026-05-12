@@ -1,6 +1,6 @@
 /* ============================================
    ThriveHQ — css/style.css
-   Synced with coach4u-shared design system v2.1
+   Synced with coach4u-shared design system v2.2
    ============================================ */
 
 /*
@@ -8,7 +8,7 @@
   Do NOT add Google Fonts link tags to HTML pages.
 */
 
-/* ----- CSS Variables (synced with coach4u-shared v2.1) ----- */
+/* ----- CSS Variables (synced with coach4u-shared v2.2) ----- */
 :root {
   /* Brand Lock — must match templates/PROFILE.md */
   --primary:        #003366;   /* navy: headings, titles, header */
@@ -226,11 +226,23 @@ img { max-width: 100%; display: block; }
 .main-content { max-width: 700px; margin: 0 auto; padding: 28px 20px; }
 .loading { text-align: center; padding: 40px 20px; color: var(--text-muted); }
 .error { background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 16px; border-radius: var(--radius-sm); margin-bottom: 24px; }
-.site-footer { text-align: center; padding: 12px 0; font-size: 14px; color: var(--text-muted); position: sticky; top: 100vh; }
-.site-footer a { color: var(--text-muted); }
-.site-footer a:hover { color: var(--accent); }
+
+/* ----- Site Footer (gold standard v2.2) ----- */
+.site-footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 24px 20px 32px;
+  border-top: 1px solid var(--divider);
+  line-height: 1.8;
+}
+.site-footer a { color: var(--accent); }
+.site-footer a:hover { color: var(--accent-dark); text-decoration: underline; }
 
 /* ----- Membership Card ----- */
+/*
+  Gold standard v2.2: name ONLY. No email, no badge, no expires.
+*/
 .membership-card {
   background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   color: white;
@@ -249,10 +261,7 @@ img { max-width: 100%; display: block; }
   background: rgba(255,255,255,0.06);
   border-radius: 50%;
 }
-.member-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-.member-email { font-size: 13px; opacity: 0.9; margin-bottom: 14px; }
-.membership-badge { display: inline-block; background: rgba(255,255,255,0.2); color: #fff; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
-.membership-expires { font-size: 12px; opacity: 0.7; margin-top: 10px; }
+.member-name { font-size: 18px; font-weight: 700; }
 
 /* ----- App Card Grid (portal dashboard pattern) ----- */
 .app-section-header {

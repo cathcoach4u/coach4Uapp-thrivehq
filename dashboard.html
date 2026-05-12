@@ -50,8 +50,6 @@
 
       <div class="membership-card">
         <div class="member-name" id="memberName"></div>
-        <div class="member-email" id="memberEmail">—</div>
-        <span class="membership-badge">Active Member</span>
       </div>
 
       <div class="app-section-header">
@@ -78,7 +76,7 @@
           <div class="focushq-links">
             <a href="focushq-pomodoro.html" class="focushq-link">🍅 Pomodoro</a>
             <a href="body-doubling.html" class="focushq-link">👥 Body Doubling</a>
-            <a href="focushq-mit.html" class="focushq-link">🎯 Today’s Focus</a>
+            <a href="focushq-mit.html" class="focushq-link">🎯 Today's Focus</a>
             <a href="focushq-weekly.html" class="focushq-link">📅 Weekly Plan</a>
           </div>
         </div>
@@ -120,7 +118,7 @@
 
         <div class="app-card">
           <div class="app-card-icon">🎯</div>
-          <div class="app-card-title">Today’s Focus</div>
+          <div class="app-card-title">Today's Focus</div>
           <div class="app-card-desc" id="mitDesc">Name your one most important task for the day.</div>
           <a href="focushq-mit.html" class="btn btn-primary" style="margin-top:auto;" id="mitBtn">Set Focus</a>
         </div>
@@ -135,7 +133,7 @@
         <div class="app-card">
           <div class="app-card-icon">⚡</div>
           <div class="app-card-title">2-Minute Rule</div>
-          <div class="app-card-desc">If a task takes less than 2 minutes — do it now. Don’t list it, don’t schedule it. Just do it.</div>
+          <div class="app-card-desc">If a task takes less than 2 minutes — do it now. Don't list it, don't schedule it. Just do it.</div>
           <div style="background:var(--divider);border-radius:6px;padding:10px 12px;font-size:12px;color:var(--text-muted);margin-top:auto;line-height:1.7;">
             Reply to a message · Book an appointment · File a document · Send a quick update
           </div>
@@ -144,6 +142,13 @@
 
     </div>
   </main>
+
+  <footer class="site-footer">
+    Strengths-Based Coaching and Counselling<br>
+    <a href="http://www.coach4u.com.au">www.coach4u.com.au</a> |
+    <a href="mailto:cath@coach4u.com.au">cath@coach4u.com.au</a> |
+    0402 313 337
+  </footer>
 
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
@@ -170,12 +175,12 @@
       return d.getFullYear() + '-W' + String(week).padStart(2, '0');
     }
 
-    window.signOut = async function() { await sb.auth.signOut(); window.location.href = 'index.html'; };
+    window.signOut = async function() { await sb.auth.signOut(); window.location.href = 'login.html'; };
 
     window.addEventListener('DOMContentLoaded', async () => {
       try {
         const { data: { user }, error: authErr } = await sb.auth.getUser();
-        if (authErr || !user) { window.location.href = 'index.html'; return; }
+        if (authErr || !user) { window.location.href = 'login.html'; return; }
 
         const { data: userData } = await sb.from('users').select('*').eq('id', user.id).single();
         if (userData?.membership_status !== 'active') { window.location.href = 'inactive.html'; return; }
@@ -184,7 +189,6 @@
           document.getElementById('pulseFormLink').href = 'brain-pulse-form.html?c=' + userData.hub_profile_id;
         }
 
-        // Resolve display name — fall back to Hub if missing, then persist it
         let displayName = userData?.name || userData?.full_name || userData?.first_name ||
           user.user_metadata?.first_name || user.user_metadata?.full_name || user.user_metadata?.name || null;
 
@@ -199,7 +203,6 @@
               : null;
             if (hubName) {
               displayName = hubName;
-              // Persist so this lookup only happens once — name will be in DB2 from here on
               sb.from('users').update({ name: hubName }).eq('id', user.id);
             }
           } catch (_) {}
@@ -210,7 +213,6 @@
         } else {
           document.getElementById('memberName').style.display = 'none';
         }
-        document.getElementById('memberEmail').textContent = userData.email || '—';
 
         const now = new Date();
         const todayStr = now.toISOString().slice(0, 10);
