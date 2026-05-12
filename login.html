@@ -3,15 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Thrive HQ — Sign In</title>
+  <title>Your Thrive HQ &mdash; Sign In</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#003366">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Your Thrive HQ">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="login-page">
@@ -46,7 +43,7 @@
       <a href="forgot-password.html" class="login-forgot">Forgot password?</a>
     </div>
 
-    <p style="margin-top:20px;font-family:'Montserrat',sans-serif;font-size:9pt;color:rgba(255,255,255,0.75);text-align:center;line-height:1.6;">
+    <p style="margin-top:20px;font-size:9pt;color:rgba(255,255,255,0.75);text-align:center;line-height:1.6;">
       Strengths-Based Coaching and Counselling<br>
       <a href="http://www.coach4u.com.au" style="color:rgba(255,255,255,0.75);">www.coach4u.com.au</a> |
       <a href="mailto:cath@coach4u.com.au" style="color:rgba(255,255,255,0.75);">cath@coach4u.com.au</a> |
@@ -56,14 +53,14 @@
   </div>
 
   <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
     const SUPABASE_URL      = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const { data: { session } } = await supabase.auth.getSession();
-    if (session) window.location.href = 'index.html';
+    if (session) window.location.href = 'dashboard.html';
 
     const form    = document.getElementById('loginForm');
     const msgEl   = document.getElementById('message');
@@ -100,7 +97,7 @@
         btn.disabled = false;
         btn.textContent = 'Sign In';
       } else {
-        window.location.href = 'index.html';
+        window.location.href = 'dashboard.html';
       }
     });
   </script>
@@ -108,5 +105,6 @@
   <script>
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
   </script>
+
 </body>
 </html>
