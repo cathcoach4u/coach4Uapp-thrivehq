@@ -3,107 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ThriveHQ — Sign In</title>
+  <title>Your Thrive HQ</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#003366">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="ThriveHQ">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23003366' width='100' height='100'/><text x='50' y='65' font-size='60' fill='white' text-anchor='middle' font-weight='bold'>T</text></svg>">
-  <link rel="stylesheet" href="css/style.css">
+  <meta name="apple-mobile-web-app-title" content="Your Thrive HQ">
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #f0f4f8;
+           display: flex; align-items: center; justify-content: center; min-height: 100vh; color: #003366; }
+  </style>
 </head>
-<body class="login-page">
-  <div class="login-card" id="loginCard" style="opacity:0;transition:opacity 0.15s ease">
-    <div class="login-logo">
-      <h1>ThriveHQ</h1>
-    </div>
-    <p class="login-subtitle">Sign in to access your coaching resources.</p>
-
-    <form id="signInForm">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" required autocomplete="email">
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <div class="password-wrapper">
-          <input type="password" id="password" required autocomplete="current-password">
-          <button type="button" class="toggle-password" onclick="togglePassword()">Show</button>
-        </div>
-      </div>
-      <div id="message" class="login-message"></div>
-      <button type="submit" class="login-btn" id="submitBtn">Sign In</button>
-    </form>
-
-    <a href="forgot-password.html" class="login-forgot">Forgot password?</a>
-  </div>
-
-  <footer class="site-footer">
-    Strengths-Based Coaching and Counselling | <a href="https://coach4u.com.au">coach4u.com.au</a>
-  </footer>
+<body>
+  <div>Loading…</div>
 
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.1/+esm';
-    const SUPABASE_URL = 'https://eekefsuaefgpqmjdyniy.supabase.co';
+
+    const SUPABASE_URL      = 'https://eekefsuaefgpqmjdyniy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_pcXHwQVMpvEojb4K3afEMw_RMvgZM-Y';
-    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    function showMessage(text, type) {
-      const msg = document.getElementById('message');
-      msg.textContent = text;
-      msg.className = 'login-message ' + type;
-      msg.style.display = 'block';
-    }
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      window.location.href = 'login.html';
+    } else {
+      const { data: profile } = await supabase
+        .from('users')
+        .select('membership_status')
+        .eq('id', session.user.id)
+        .single();
 
-    window.togglePassword = function() {
-      const input = document.getElementById('password');
-      const btn = document.querySelector('.toggle-password');
-      if (input.type === 'password') { input.type = 'text'; btn.textContent = 'Hide'; }
-      else { input.type = 'password'; btn.textContent = 'Show'; }
-    };
-
-    document.getElementById('signInForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-      btn.textContent = 'Signing in...';
-      document.getElementById('message').style.display = 'none';
-
-      try {
-        const { data, error } = await sb.auth.signInWithPassword({
-          email: document.getElementById('email').value.trim(),
-          password: document.getElementById('password').value
-        });
-        if (error) throw error;
-
-        const { data: userData } = await sb
-          .from('users').select('membership_status').eq('id', data.user.id).single();
-
-        if (userData?.membership_status !== 'active') {
-          window.location.href = 'inactive.html';
-          return;
-        }
-
+      if (profile?.membership_status === 'active') {
         window.location.href = 'dashboard.html';
-      } catch (err) {
-        showMessage(err.message || 'Invalid email or password.', 'error');
-        btn.disabled = false;
-        btn.textContent = 'Sign In';
+      } else {
+        window.location.href = 'inactive.html';
       }
-    });
+    }
+  </script>
 
-    window.addEventListener('DOMContentLoaded', async () => {
-      try {
-        const { data: { user } } = await sb.auth.getUser();
-        if (user) {
-          const { data: ud } = await sb.from('users').select('membership_status').eq('id', user.id).single();
-          if (ud?.membership_status === 'active') { window.location.href = 'dashboard.html'; return; }
-          else if (ud) { window.location.href = 'inactive.html'; return; }
-        }
-      } catch (_) {}
-      document.getElementById('loginCard').style.opacity = '1';
-    });
-
+  <script>
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
   </script>
 </body>
